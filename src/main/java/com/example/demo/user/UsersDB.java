@@ -44,7 +44,19 @@ public class UsersDB {
         return null ;
     }
 
-    public ArrayList<UUID> getAll() {
+    public ArrayList<User> getUsersByFirstName (String firstName) {
+        ArrayList<User> usersList = new ArrayList<User>();
+
+        for(User user : users) {
+            if (user.getFirstname().equals(firstName)){
+                usersList.add(user);
+            }
+        }
+
+        return usersList;
+    }
+
+    public ArrayList<UUID> getAllIds() {
         ArrayList<UUID> usersIds = new ArrayList<UUID>();
 
         for (User user : users) {
@@ -54,8 +66,8 @@ public class UsersDB {
         return usersIds;
     }
 
-    enum Status{
-        NOT_FOUND
+    public ArrayList<User> getAllUsers() {
+        return users;
     }
 
 }

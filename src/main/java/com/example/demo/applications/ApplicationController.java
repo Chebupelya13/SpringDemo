@@ -22,10 +22,15 @@ public class ApplicationController {
     public List<Application> getUsersApplications (
             @PathVariable
             String user_id
-    ){
+    ) {
         UUID userUUID = UUID.fromString(user_id);
         ArrayList<Application> usersApplications = appDB.getApplicationsByUser(userUUID);
         return usersApplications;
+    }
+
+    @GetMapping("/accepted")
+    public List<Application> getAllAccepted() {
+
     }
 
     @PostMapping

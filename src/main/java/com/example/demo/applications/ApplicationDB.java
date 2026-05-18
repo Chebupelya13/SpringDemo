@@ -32,6 +32,16 @@ public class ApplicationDB {
         return usersApplications;
     }
 
+    public ArrayList<Application> getAllAccepted () {
+        ArrayList<Application> acceptedApplications = new ArrayList<Application>();
+
+        for (Application application : applications){
+            if (application.getStatus().equals(Application.ApplicationStatus.ACCEPTED))
+                acceptedApplications.add(application);
+        }
+        return acceptedApplications;
+    }
+
     public ArrayList<Application> getApplicationsByUser(UUID userId){
         ArrayList<Application> usersApplications = new ArrayList<Application>();
 
