@@ -13,6 +13,18 @@ public class UsersDB {
         return DB;
     }
 
+    public User getFirst() {
+
+        User user = users.get(0);
+
+        if (user == null) {
+            user = new User();
+        }
+
+        return user;
+
+    }
+
     public void addUser(User user) {
         users.add(user);
     }

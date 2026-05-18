@@ -13,22 +13,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final Map<String, User> repository;
+    private final UsersDB db = UsersDB.getDB();
 
-    public UserController(Map<String, User> repository) {
-        this.repository = repository;
+    @GetMapping
+    public User getUser() {
+        return db.getFirst();
     }
 
     @Operation(description = "Создание записи о новом клиенте")
-    @PostMapping(value = "/create_user")
+    @PostMapping
     public HttpStatus createUser(
             @RequestBody
             User user
     ) {
-
-        UsersDB db = UsersDB.getDB();
         db.addUser(user);
 
+        System.out.println(user.getId());
         return HttpStatus.CREATED;
     }
 
