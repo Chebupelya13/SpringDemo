@@ -11,13 +11,12 @@ public class DemoApplication {
 
     @RequestMapping("/")
     String index() {
-        return "Hello world!";
-    }
 
+        return "hello";
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
-
 
 }
