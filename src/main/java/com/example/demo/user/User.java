@@ -90,6 +90,42 @@ public class User {
         this.employmentPeriod = employmentPeriod;
     }
 
+    public EmploymentPeriod getEmploymentPeriod() {
+        return employmentPeriod;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public MaritalStatus getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
     public User() {}
 
 }
