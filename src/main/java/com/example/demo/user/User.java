@@ -11,7 +11,7 @@ public class User {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID id = UUID.randomUUID();
 
-    @Schema(example = "Иван", accessMode = Schema.AccessMode.AUTO)
+    @Schema(example = "Иван")
     private String firstname;
     @Schema(example = "Иванов")
     private String surname;

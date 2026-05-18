@@ -29,14 +29,19 @@ public class UsersDB {
         users.add(user);
     }
 
-    public User getUserById(UUID userId) {
+    public User getUserByPassport(String passport) {
         for (User user: users){
-            if (user.getId() == userId) {
+            if (
+                    user.getPassport().replace(" ", "")
+                            .equals(
+                                    passport.replace(" ", "")
+                            )
+            ) {
                 return user;
             }
         }
 
-        return new User();
+        return null ;
     }
 
     public ArrayList<UUID> getAll() {
@@ -47,6 +52,10 @@ public class UsersDB {
         }
 
         return usersIds;
+    }
+
+    enum Status{
+        NOT_FOUND
     }
 
 }
