@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,26 @@ public class UserController {
     @GetMapping
     public List<User> getAllUsers() {
         return usersDB.getAllUsers();
+    }
+
+    @GetMapping("/{firstName}")
+    public ArrayList<User> getUserByName(
+            @PathVariable
+            String firstName
+    ) {
+        ArrayList<User> user = usersDB.getUsersByFirstName(firstName);
+
+        return user;
+    }
+
+    @GetMapping("/{phone}")
+    public ArrayList<User> getUserByPhone(
+            @PathVariable
+            String phone
+    ) {
+        ArrayList<User> user = usersDB.getUsersByPhone(phone);
+
+        return user;
     }
 
     @GetMapping("/{passport}")

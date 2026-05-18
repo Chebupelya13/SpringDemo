@@ -56,6 +56,18 @@ public class UsersDB {
         return usersList;
     }
 
+    public ArrayList<User> getUsersByPhone (String phone) {
+        ArrayList<User> usersList = new ArrayList<User>();
+
+        for(User user : users) {
+            if (user.getPhoneNumber().equals(phone)){
+                usersList.add(user);
+            }
+        }
+
+        return usersList;
+    }
+
     public ArrayList<UUID> getAllIds() {
         ArrayList<UUID> usersIds = new ArrayList<UUID>();
 
