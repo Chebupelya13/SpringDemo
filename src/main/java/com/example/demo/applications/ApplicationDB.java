@@ -3,6 +3,7 @@ package com.example.demo.applications;
 import com.example.demo.user.User;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ApplicationDB {
 
@@ -10,7 +11,7 @@ public class ApplicationDB {
 
     private static final ApplicationDB DB = new ApplicationDB();
     private ApplicationDB(){}
-    public ApplicationDB getDB(){
+    public static ApplicationDB getDB(){
         return DB;
     }
 
@@ -24,10 +25,24 @@ public class ApplicationDB {
         ArrayList<Application> usersApplications = new ArrayList<Application>();
 
         for (Application application : applications){
-            if (application.getUser() == user){
+            if (application.getUserId() == user.getId()){
                 usersApplications.add(application);
             }
         }
+        return usersApplications;
+    }
+
+    public ArrayList<Application> getApplicationsByUser(UUID userId){
+        ArrayList<Application> usersApplications = new ArrayList<Application>();
+
+
+        for (Application application : applications){
+            System.out.println(userId.equals(application.getUserId()));
+            if (userId.equals(application.getUserId())){
+                usersApplications.add(application);
+            }
+        }
+
         return usersApplications;
     }
 }

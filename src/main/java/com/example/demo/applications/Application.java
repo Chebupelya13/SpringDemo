@@ -13,8 +13,8 @@ public class Application {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID id = UUID.randomUUID();
 
-    @Schema(description = "Клиент")
-    private User user;
+    @Schema(description = "id клиента")
+    private UUID userId;
 
     @Schema(description = "статус заявки", accessMode = Schema.AccessMode.READ_ONLY)
     private ApplicationStatus status = ApplicationStatus.IN_PROGRESS;
@@ -25,8 +25,8 @@ public class Application {
     @Schema(example = "4", description = "Срок погашения кредита (1 - 12)")
     private int termMonths;
 
-    public User getUser() {
-        return user;
+    public UUID getUserId() {
+        return userId;
     }
 
     @Schema
