@@ -50,6 +50,10 @@ public class Application {
         return amount;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public ApplicationStatus getStatus() {
         return status;
     }

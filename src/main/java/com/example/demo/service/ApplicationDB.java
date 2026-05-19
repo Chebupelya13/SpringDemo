@@ -16,6 +16,15 @@ public class ApplicationDB {
         applications.add(application);
     }
 
+    public Application getApplicationById(UUID applicationId) {
+        for (Application application : applications) {
+            if (application.getId().equals(applicationId))
+                return application;
+        }
+
+        return null;
+    }
+
     public ArrayList<Application> getApplicationsByUser(User user){
         ArrayList<Application> usersApplications = new ArrayList<Application>();
 

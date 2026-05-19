@@ -27,6 +27,14 @@ public class UsersDB {
         users.add(user);
     }
 
+    public User getUserById(UUID userId) {
+        for (User user : users) {
+            if (user.getId().equals(userId))
+                return user;
+        }
+        return null;
+    }
+
     public User getUserByPassport(String passport) {
         String soughtForPassport = passport.replace(" ", "");
 

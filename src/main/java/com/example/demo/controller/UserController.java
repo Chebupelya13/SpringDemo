@@ -31,7 +31,7 @@ public class UserController {
         return usersDB.getAllUsers();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/name")
     @Operation(description = "Поиск пользователя по имени")
     public ArrayList<User> getUserByName(
             @RequestParam
@@ -44,7 +44,7 @@ public class UserController {
         return user;
     }
 
-    @GetMapping("/{phone}")
+    @GetMapping("/phone/{phone}")
     @Operation(description = "Поиск пользователя по номеру телефона")
     public ResponseEntity<User> getUserByPhone(
             @PathVariable
@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{passport}")
+    @GetMapping("/passport/{passport}")
     @Operation(description = "Поиск пользователя по серии и номеру паспорта")
     public ResponseEntity<User> getUserByPassport(
             @PathVariable
