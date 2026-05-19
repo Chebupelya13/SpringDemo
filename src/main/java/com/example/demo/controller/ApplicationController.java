@@ -24,6 +24,12 @@ public class ApplicationController {
         this.appDB = appDB;
     }
 
+    @GetMapping
+    @Operation(description = "Получение всех заявок")
+    public List<Application> getApplications() {
+        return appDB.getApplications();
+    }
+
     @GetMapping("/{user_id}")
     @Operation(description = "Получение заявок пользователя")
     public List<Application> getUsersApplications (
@@ -37,7 +43,7 @@ public class ApplicationController {
 
     @GetMapping("/accepted")
     @Operation(description = "Получение списка всех одобренных заявок")
-    public List<Application> getAllAccepted() {
+    public List<Application> getAllAcceptedApplications() {
         ArrayList<Application>acceptedApplications = appDB.getAllAccepted();
 
         return acceptedApplications;
@@ -45,7 +51,7 @@ public class ApplicationController {
 
     @PostMapping
     @Operation(description = "Создание новой заявки на кредит")
-    public HttpStatus create_application(
+    public HttpStatus createApplication(
             @RequestBody
             Application application
     ) {

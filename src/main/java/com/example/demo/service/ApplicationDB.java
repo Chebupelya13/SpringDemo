@@ -39,6 +39,10 @@ public class ApplicationDB {
         return acceptedApplications;
     }
 
+    public ArrayList<Application> getApplications() {
+        return applications;
+    }
+
     public ArrayList<Application> getApplicationsByUser(UUID userId){
         ArrayList<Application> usersApplications = new ArrayList<Application>();
 
