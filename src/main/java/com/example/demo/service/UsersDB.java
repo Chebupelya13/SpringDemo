@@ -45,7 +45,9 @@ public class UsersDB {
         ArrayList<User> usersList = new ArrayList<User>();
 
         for(User user : users) {
-            if (user.getFirstname().equals(firstName) && user.getSurname().equals(surName)) {
+            if (
+                    user.getFirstname().equalsIgnoreCase(firstName) && user.getSurname().equalsIgnoreCase(surName)
+            ) {
                 usersList.add(user);
             }
         }

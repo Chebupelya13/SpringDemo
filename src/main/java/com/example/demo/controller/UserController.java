@@ -31,7 +31,7 @@ public class UserController {
         return usersDB.getAllUsers();
     }
 
-    @GetMapping("/{firstName}")
+    @GetMapping("/search")
     @Operation(description = "Поиск пользователя по имени")
     public ArrayList<User> getUserByName(
             @RequestParam
