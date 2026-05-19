@@ -41,11 +41,11 @@ public class UsersDB {
         return null ;
     }
 
-    public ArrayList<User> getUsersByFirstName (String firstName) {
+    public ArrayList<User> getUsersByName (String firstName, String surName) {
         ArrayList<User> usersList = new ArrayList<User>();
 
         for(User user : users) {
-            if (user.getFirstname().equals(firstName)){
+            if (user.getFirstname().equals(firstName) && user.getSurname().equals(surName)) {
                 usersList.add(user);
             }
         }

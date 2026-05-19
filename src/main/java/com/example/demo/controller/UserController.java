@@ -34,10 +34,12 @@ public class UserController {
     @GetMapping("/{firstName}")
     @Operation(description = "Поиск пользователя по имени")
     public ArrayList<User> getUserByName(
-            @PathVariable
-            String firstName
+            @RequestParam
+            String firstName,
+            @RequestParam
+            String surName
     ) {
-        ArrayList<User> user = usersDB.getUsersByFirstName(firstName);
+        ArrayList<User> user = usersDB.getUsersByName(firstName, surName);
 
         return user;
     }
@@ -50,7 +52,7 @@ public class UserController {
     ) {
         User user = usersDB.getUsersByPhone(phone);
 
-        if( user != null)
+        if ( user != null )
             return ResponseEntity.ok(user);
 
         return ResponseEntity.notFound().build();
