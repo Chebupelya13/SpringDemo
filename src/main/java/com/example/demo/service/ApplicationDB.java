@@ -1,23 +1,18 @@
-package com.example.demo.applications;
+package com.example.demo.service;
 
-import com.example.demo.user.User;
+import com.example.demo.model.Application;
+import com.example.demo.model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
+@Service
 public class ApplicationDB {
 
     private static ArrayList<Application> applications = new ArrayList<Application>();
 
-    private static final ApplicationDB DB = new ApplicationDB();
-    private ApplicationDB(){}
-    public static ApplicationDB getDB(){
-        return DB;
-    }
-
     public void addApplication(Application application) {
-
-
         applications.add(application);
     }
 
@@ -29,6 +24,7 @@ public class ApplicationDB {
                 usersApplications.add(application);
             }
         }
+
         return usersApplications;
     }
 
@@ -39,6 +35,7 @@ public class ApplicationDB {
             if (application.getStatus().equals(Application.ApplicationStatus.ACCEPTED))
                 acceptedApplications.add(application);
         }
+
         return acceptedApplications;
     }
 

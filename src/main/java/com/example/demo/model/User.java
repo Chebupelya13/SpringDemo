@@ -1,4 +1,4 @@
-package com.example.demo.user;
+package com.example.demo.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -67,7 +67,7 @@ public class User {
         }
     }
 
-    enum MaritalStatus {
+    public enum MaritalStatus {
         MARRIED, NOT_MARRIED
     }
 

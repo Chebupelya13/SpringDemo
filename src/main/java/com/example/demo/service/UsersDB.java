@@ -1,17 +1,15 @@
-package com.example.demo.user;
+package com.example.demo.service;
+
+import com.example.demo.model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
+@Service
 public class UsersDB {
 
     private static ArrayList<User> users = new ArrayList<User>();
-
-    private static final UsersDB DB = new UsersDB();
-    private UsersDB() {}
-    public static UsersDB getDB() {
-        return DB;
-    }
 
     public User getFirst() {
 
@@ -30,13 +28,12 @@ public class UsersDB {
     }
 
     public User getUserByPassport(String passport) {
+        String soughtForPassport = passport.replace(" ", "");
+
         for (User user: users){
-            if (
-                    user.getPassport().replace(" ", "")
-                            .equals(
-                                    passport.replace(" ", "")
-                            )
-            ) {
+            String usersPassport = user.getPassport().replace(" ", "");
+
+            if ( usersPassport.equals(soughtForPassport) ) {
                 return user;
             }
         }

@@ -1,8 +1,11 @@
-package com.example.demo.user;
+package com.example.demo.controller;
 
 
+import com.example.demo.model.User;
+import com.example.demo.service.UsersDB;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +18,21 @@ import java.util.List;
 @Tag(description = "Операции с пользователями", name = "Пользователи")
 public class UserController {
 
-    private final UsersDB usersDB = UsersDB.getDB();
+    private final UsersDB usersDB;
+
+    @Autowired
+    public UserController(UsersDB usersDB) {
+        this.usersDB = usersDB;
+    }
 
     @GetMapping
+    @Operation(description = "Получение списка всех пользователей")
     public List<User> getAllUsers() {
         return usersDB.getAllUsers();
     }
 
     @GetMapping("/{firstName}")
+    @Operation(description = "Поиск пользователя по имени")
     public ArrayList<User> getUserByName(
             @PathVariable
             String firstName
@@ -33,6 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/{phone}")
+    @Operation(description = "Поиск пользователя по номеру телефона")
     public ArrayList<User> getUserByPhone(
             @PathVariable
             String phone
@@ -43,6 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/{passport}")
+    @Operation(description = "Поиск пользователя по серии и номеру паспорта")
     public ResponseEntity<User> getUserByPassport(
             @PathVariable
             String passport
@@ -56,7 +68,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @Operation(description = "Создание записи о новом клиенте")
+    @Operation(description = "Создание записи о новом пользователе")
     @PostMapping
     public HttpStatus createUser(
             @RequestBody

@@ -1,6 +1,5 @@
-package com.example.demo.applications;
+package com.example.demo.model;
 
-import com.example.demo.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -30,12 +29,13 @@ public class Application {
     }
 
     @Schema
-    enum ApplicationStatus{
+    public enum ApplicationStatus{
         ACCEPTED, DECLINED, IN_PROGRESS
     }
 
     public void setTermMonths(byte termMonths) {
-        this.termMonths = termMonths;
+        if ( 1 <= termMonths && termMonths <= 12)
+            this.termMonths = termMonths;
     }
 
     public int getTermMonths() {

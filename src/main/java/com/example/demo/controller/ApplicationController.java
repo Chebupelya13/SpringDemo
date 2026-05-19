@@ -1,8 +1,10 @@
-package com.example.demo.applications;
+package com.example.demo.controller;
 
-import com.example.demo.user.User;
+import com.example.demo.service.ApplicationDB;
+import com.example.demo.model.Application;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,12 @@ import java.util.UUID;
 @RequestMapping("/api/applications")
 @Tag(description = "Операции с заявками", name = "Заявки")
 public class ApplicationController {
-    ApplicationDB appDB = ApplicationDB.getDB();
+    private final ApplicationDB appDB;
+
+    @Autowired
+    public ApplicationController(ApplicationDB appDB) {
+        this.appDB = appDB;
+    }
 
     @GetMapping("/{user_id}")
     @Operation(description = "Получение заявок пользователя")
@@ -29,8 +36,11 @@ public class ApplicationController {
     }
 
     @GetMapping("/accepted")
+    @Operation(description = "Получение списка всех одобренных заявок")
     public List<Application> getAllAccepted() {
+        ArrayList<Application>acceptedApplications = appDB.getAllAccepted();
 
+        return acceptedApplications;
     }
 
     @PostMapping
