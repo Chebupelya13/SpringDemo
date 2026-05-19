@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.info.Info;
         info = @Info(
                 title = "Bank System Api",
                 description = "API для обработки кредитных заявок",
-                version = "1.0.0",
+                version = "1.0.2",
                 contact = @Contact(
                         name = "tg => syntax3900"
                 )
