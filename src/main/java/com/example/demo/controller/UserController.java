@@ -44,13 +44,16 @@ public class UserController {
 
     @GetMapping("/{phone}")
     @Operation(description = "Поиск пользователя по номеру телефона")
-    public ArrayList<User> getUserByPhone(
+    public ResponseEntity<User> getUserByPhone(
             @PathVariable
             String phone
     ) {
-        ArrayList<User> user = usersDB.getUsersByPhone(phone);
+        User user = usersDB.getUsersByPhone(phone);
 
-        return user;
+        if( user != null)
+            return ResponseEntity.ok(user);
+
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{passport}")
@@ -76,7 +79,6 @@ public class UserController {
     ) {
         usersDB.addUser(user);
 
-        System.out.println(user.getId());
         return HttpStatus.CREATED;
     }
 

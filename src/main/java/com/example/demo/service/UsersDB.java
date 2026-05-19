@@ -53,16 +53,15 @@ public class UsersDB {
         return usersList;
     }
 
-    public ArrayList<User> getUsersByPhone (String phone) {
-        ArrayList<User> usersList = new ArrayList<User>();
+    public User getUsersByPhone (String phone) {
 
         for(User user : users) {
             if (user.getPhoneNumber().equals(phone)){
-                usersList.add(user);
+                return user;
             }
         }
 
-        return usersList;
+        return null;
     }
 
     public ArrayList<UUID> getAllIds() {
