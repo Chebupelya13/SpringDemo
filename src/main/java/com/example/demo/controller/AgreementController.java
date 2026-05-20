@@ -33,8 +33,10 @@ public class AgreementController {
 
     @GetMapping
     @Operation(description = "Получение списка всех договоров")
-    public List<Agreement> getAllAgreements() {
-        return agreementsDB.getAgreements();
+    public ResponseEntity<List<Agreement>> getAllAgreements() {
+        List<Agreement> agreements = agreementsDB.getAgreements();
+
+        return agreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreements);
     }
 
     @PostMapping
@@ -62,11 +64,13 @@ public class AgreementController {
 
     @GetMapping("/findByUser/{userId}")
     @Operation(description = "Получение договоров пользователя")
-    public List<Agreement> getUsersAgreements( @PathVariable String userId ) {
+    public ResponseEntity<List<Agreement>> getUsersAgreements( @PathVariable String userId ) {
         try {
-            return agreementsDB.getUsersAgreements(UUID.fromString(userId));
+            ArrayList<Agreement> usersAgreements = agreementsDB.getUsersAgreements(UUID.fromString(userId));
+            return usersAgreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersAgreements);
+
         } catch (IllegalArgumentException e) {
-            return new ArrayList<>();
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -91,11 +95,7 @@ public class AgreementController {
         try {
             Agreement agreement = agreementsDB.getAgreementByApplicationId(UUID.fromString(applicationId));
 
-            if (agreement != null) {
-                return ResponseEntity.ok(agreement);
-            }
-
-            return ResponseEntity.notFound().build();
+            return agreement == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreement);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

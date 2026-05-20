@@ -27,21 +27,23 @@ public class UserController {
 
     @GetMapping
     @Operation(description = "Получение списка всех пользователей")
-    public List<User> getAllUsers() {
-        return usersDB.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = usersDB.getAllUsers();
+
+        return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
     @GetMapping("/findByFullName")
     @Operation(description = "Поиск пользователя по имени")
-    public ArrayList<User> getUserByName(
+    public ResponseEntity<ArrayList<User>> getUserByName(
             @RequestParam
             String firstName,
             @RequestParam
             String surName
     ) {
-        ArrayList<User> user = usersDB.getUsersByName(firstName, surName);
+        ArrayList<User> users = usersDB.getUsersByName(firstName, surName);
 
-        return user;
+        return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
     @GetMapping("/findByPhone/{phone}")
@@ -52,10 +54,7 @@ public class UserController {
     ) {
         User user = usersDB.getUsersByPhone(phone);
 
-        if ( user != null )
-            return ResponseEntity.ok(user);
-
-        return ResponseEntity.notFound().build();
+        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
 
     @GetMapping("/findByPassport/{passport}")
@@ -66,11 +65,7 @@ public class UserController {
     ) {
         User user = usersDB.getUserByPassport(passport);
 
-        if (user != null){
-            return ResponseEntity.ok(user);
-        }
-
-        return ResponseEntity.notFound().build();
+        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
 
     @Operation(description = "Создание записи о новом пользователе")
