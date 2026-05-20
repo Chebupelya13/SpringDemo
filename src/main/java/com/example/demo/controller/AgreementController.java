@@ -60,9 +60,9 @@ public class AgreementController {
         }
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/findByUser/{userId}")
     @Operation(description = "Получение договоров пользователя")
-    public List<Agreement> getUsersAgreements( @RequestParam String userId ) {
+    public List<Agreement> getUsersAgreements( @PathVariable String userId ) {
         try {
             return agreementsDB.getUsersAgreements(UUID.fromString(userId));
         } catch (IllegalArgumentException e) {
@@ -70,9 +70,9 @@ public class AgreementController {
         }
     }
 
-    @PutMapping("/sign")
+    @PutMapping("/sign/{agreementId}")
     @Operation(description = "Изменение статуса договора на 'подписано'")
-    public HttpStatus signAgreement( @RequestParam String agreementId ) {
+    public HttpStatus signAgreement( @PathVariable String agreementId ) {
         try {
             boolean signStatus = agreementsDB.singAgreement(UUID.fromString(agreementId));
             if (signStatus)
@@ -85,9 +85,9 @@ public class AgreementController {
         }
     }
 
-    @GetMapping("/application/{applicationId}")
+    @GetMapping("/findByApplication/{applicationId}")
     @Operation(description = "Получение договоров пользователя")
-    public ResponseEntity<Agreement> getAgreementByApplication(@RequestParam String applicationId ) {
+    public ResponseEntity<Agreement> getAgreementByApplication(@PathVariable String applicationId ) {
         try {
             Agreement agreement = agreementsDB.getAgreementByApplicationId(UUID.fromString(applicationId));
 

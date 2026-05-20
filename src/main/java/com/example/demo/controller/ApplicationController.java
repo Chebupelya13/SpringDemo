@@ -30,7 +30,7 @@ public class ApplicationController {
         return appDB.getApplications();
     }
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/findByUser/{user_id}")
     @Operation(description = "Получение заявок пользователя")
     public List<Application> getUsersApplications (
             @PathVariable
