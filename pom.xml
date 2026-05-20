@@ -49,6 +49,12 @@
             <type>pom</type>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- Source: https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
         <dependency>
             <groupId>javax.persistence</groupId>

@@ -33,40 +33,40 @@ public class UserController {
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
-    @GetMapping("/findByFullName")
-    @Operation(description = "Поиск пользователя по имени")
-    public ResponseEntity<ArrayList<User>> getUserByName(
-            @RequestParam
-            String firstName,
-            @RequestParam
-            String surName
-    ) {
-        ArrayList<User> users = usersDB.getUsersByName(firstName, surName);
-
-        return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
-    }
-
-    @GetMapping("/findByPhone/{phone}")
-    @Operation(description = "Поиск пользователя по номеру телефона")
-    public ResponseEntity<User> getUserByPhone(
-            @PathVariable
-            String phone
-    ) {
-        User user = usersDB.getUsersByPhone(phone);
-
-        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
-    }
-
-    @GetMapping("/findByPassport/{passport}")
-    @Operation(description = "Поиск пользователя по серии и номеру паспорта")
-    public ResponseEntity<User> getUserByPassport(
-            @PathVariable
-            String passport
-    ) {
-        User user = usersDB.getUserByPassport(passport);
-
-        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
-    }
+//    @GetMapping("/findByFullName")
+//    @Operation(description = "Поиск пользователя по имени")
+//    public ResponseEntity<ArrayList<User>> getUserByName(
+//            @RequestParam
+//            String firstName,
+//            @RequestParam
+//            String surName
+//    ) {
+//        ArrayList<User> users = usersDB.getUsersByName(firstName, surName);
+//
+//        return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
+//    }
+//
+//    @GetMapping("/findByPhone/{phone}")
+//    @Operation(description = "Поиск пользователя по номеру телефона")
+//    public ResponseEntity<User> getUserByPhone(
+//            @PathVariable
+//            String phone
+//    ) {
+//        User user = usersDB.getUsersByPhone(phone);
+//
+//        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+//    }
+//
+//    @GetMapping("/findByPassport/{passport}")
+//    @Operation(description = "Поиск пользователя по серии и номеру паспорта")
+//    public ResponseEntity<User> getUserByPassport(
+//            @PathVariable
+//            String passport
+//    ) {
+//        User user = usersDB.getUserByPassport(passport);
+//
+//        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+//    }
 
     @Operation(description = "Создание записи о новом пользователе")
     @PostMapping
