@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Agreement;
-import com.example.demo.model.Application;
-import com.example.demo.model.User;
+import com.example.demo.entity.Agreement;
+import com.example.demo.entity.Application;
+import com.example.demo.entity.User;
 import com.example.demo.service.AgreementsDB;
 import com.example.demo.service.ApplicationDB;
 import com.example.demo.service.UsersDB;

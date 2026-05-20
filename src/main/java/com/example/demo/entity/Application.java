@@ -1,30 +1,63 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Schema
+@Entity
+@Table(name = "applications")
 public class Application {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue
+    @Column(name = "id", nullable = false)
+    private int id;
 
     @Schema(description = "id клиента")
-    private UUID userId;
+    @Column(name = "user_id", nullable = false)
+    private int userId;
 
     @Schema(description = "статус заявки", accessMode = Schema.AccessMode.READ_ONLY)
+    @Column(name = "status", nullable = false)
     private ApplicationStatus status = ApplicationStatus.IN_PROGRESS;
+
     @Schema(description = "Сумма кредита")
+    @Column(name = "amount", nullable = false)
     private int amount;
 
     @Min(1) @Max(12)
     @Schema(example = "4", description = "Срок погашения кредита (1 - 12)")
+    @Column(name = "tem_months", nullable = false)
     private int termMonths;
 
-    public UUID getUserId() {
+    public Application(int userId, ApplicationStatus status, int amount, int termMonths) {
+        this.userId = userId;
+        this.status = status;
+        this.amount = amount;
+        this.termMonths = termMonths;
+    }
+
+    public Application() {    }
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", status=" + status +
+                ", amount=" + amount +
+                ", termMonths=" + termMonths +
+                '}';
+    }
+
+    public int getUserId() {
         return userId;
     }
 
@@ -50,7 +83,7 @@ public class Application {
         return amount;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

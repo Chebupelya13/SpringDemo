@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.ApplicationDB;
-import com.example.demo.model.Application;
+import com.example.demo.entity.Application;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
