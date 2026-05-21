@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Schema
@@ -17,6 +14,7 @@ public class Application {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @GeneratedValue
+    @Id
     @Column(name = "id", nullable = false)
     private int id;
 
@@ -34,7 +32,7 @@ public class Application {
 
     @Min(1) @Max(12)
     @Schema(example = "4", description = "Срок погашения кредита (1 - 12)")
-    @Column(name = "tem_months", nullable = false)
+    @Column(name = "term_months", nullable = false)
     private int termMonths;
 
     public Application(int userId, ApplicationStatus status, int amount, int termMonths) {

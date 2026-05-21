@@ -2,67 +2,70 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ApplicationDB {
 
-    private static ArrayList<Application> applications = new ArrayList<Application>();
+    @Autowired
+    private final EntityManagerFactory entityManagerFactory;
+
+    public ApplicationDB(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
     public void addApplication(Application application) {
-        applications.add(application);
+        entityManagerFactory.runInTransaction(entityManager -> {
+            entityManager.persist(application);
+        });
     }
 
-    public Application getApplicationById(UUID applicationId) {
-        for (Application application : applications) {
-            if (application.getId().equals(applicationId))
-                return application;
-        }
-
-        return null;
+    public Application getApplicationById(int applicationId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Application application = entityManager.createQuery("from Application", Application.class)
+                .getSingleResultOrNull();
+        entityManager.close();
+        return application;
     }
 
-    public ArrayList<Application> getApplicationsByUser(User user){
-        ArrayList<Application> usersApplications = new ArrayList<Application>();
+    public List<Application> getApplicationsByUser(int userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Application> applications = entityManager.createQuery(
+                "from Application where userId=:userId", Application.class
+                )
+                .setParameter("userId", userId)
+                .getResultList();
+        entityManager.close();
 
-        for (Application application : applications){
-            if (application.getUserId() == user.getId()){
-                usersApplications.add(application);
-            }
-        }
-
-        return usersApplications;
-    }
-
-    public ArrayList<Application> getAllAccepted () {
-        ArrayList<Application> acceptedApplications = new ArrayList<Application>();
-
-        for (Application application : applications){
-            if (application.getStatus().equals(Application.ApplicationStatus.ACCEPTED))
-                acceptedApplications.add(application);
-        }
-
-        return acceptedApplications;
-    }
-
-    public ArrayList<Application> getApplications() {
         return applications;
     }
 
-    public ArrayList<Application> getApplicationsByUser(UUID userId){
-        ArrayList<Application> usersApplications = new ArrayList<Application>();
+    public List<Application> getAllAccepted () {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Application> applications = entityManager.createQuery(
+                        "from Application where a.status=:status", Application.class
+                )
+                .setParameter("status", Application.ApplicationStatus.ACCEPTED)
+                .getResultList();
+        entityManager.close();
 
-
-        for (Application application : applications){
-            System.out.println(userId.equals(application.getUserId()));
-            if (userId.equals(application.getUserId())){
-                usersApplications.add(application);
-            }
-        }
-
-        return usersApplications;
+        return applications;
     }
+
+    public List<Application> getApplications() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Application> applications = entityManager.createQuery("from Application", Application.class)
+                .getResultList();
+        entityManager.close();
+        return applications;
+
+    }
+
 }

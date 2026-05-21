@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.ApplicationDB;
 import com.example.demo.entity.Application;
+import com.example.demo.service.ApplicationDB;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -33,21 +31,20 @@ public class ApplicationController {
         return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
     }
 
-    @GetMapping("/findByUser/{user_id}")
+    @GetMapping("/findByUser/{userId}")
     @Operation(description = "Получение заявок пользователя")
     public ResponseEntity<List<Application>> getUsersApplications (
             @PathVariable
-            String user_id
+            int userId
     ) {
-        UUID userUUID = UUID.fromString(user_id);
-        ArrayList<Application> usersApplications = appDB.getApplicationsByUser(userUUID);
+        List<Application> usersApplications = appDB.getApplicationsByUser(userId);
         return usersApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersApplications);
     }
 
     @GetMapping("/accepted")
     @Operation(description = "Получение списка всех одобренных заявок")
     public ResponseEntity<List<Application>> getAllAcceptedApplications() {
-        ArrayList<Application> acceptedApplications = appDB.getAllAccepted();
+        List<Application> acceptedApplications = appDB.getAllAccepted();
 
         return acceptedApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(acceptedApplications);
     }

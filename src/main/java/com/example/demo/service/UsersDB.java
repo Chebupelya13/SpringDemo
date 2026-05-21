@@ -1,91 +1,70 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class UsersDB {
 
-    private static ArrayList<User> users = new ArrayList<User>();
+    @Autowired
+    private final EntityManagerFactory entityManagerFactory;
 
-    public User getFirst() {
-
-        User user = users.get(0);
-
-        if (user == null) {
-            user = new User();
-        }
-
-        return user;
-
+    public UsersDB(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public void addUser(User user) {
-        users.add(user);
+        entityManagerFactory.runInTransaction(entityManager -> {
+            entityManager.persist(user);
+        });
     }
 
-    public User getUserById(UUID userId) {
-        for (User user : users) {
-            if (user.getId().equals(userId))
-                return user;
-        }
-        return null;
+    public List<User> getAllUsers() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<User> users = entityManager.createQuery("from User", User.class).getResultList();
+        entityManager.close();
+        return users;
+    }
+
+    public User getUserById(int userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        User user = entityManager.createQuery("from User where id=:userId", User.class)
+                .setParameter("userId", userId).getSingleResultOrNull();
+        entityManager.close();
+        return user;
     }
 
     public User getUserByPassport(String passport) {
-        String soughtForPassport = passport.replace(" ", "");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        User user = entityManager.createQuery("from User where passport=:passport", User.class)
+                .setParameter("passport", passport).getSingleResultOrNull();
+        entityManager.close();
 
-        for (User user: users){
-            String usersPassport = user.getPassport().replace(" ", "");
-
-            if ( usersPassport.equals(soughtForPassport) ) {
-                return user;
-            }
-        }
-
-        return null ;
+        return user;
     }
 
-    public ArrayList<User> getUsersByName (String firstName, String surName) {
-        ArrayList<User> usersList = new ArrayList<User>();
-
-        for(User user : users) {
-            if (
-                    user.getFirstname().equalsIgnoreCase(firstName) && user.getSurname().equalsIgnoreCase(surName)
-            ) {
-                usersList.add(user);
-            }
-        }
-
-        return usersList;
+    public List<User> getUsersByName (String firstName, String surName) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<User> users = entityManager.createQuery(
+                "from User where firstname=:firstname and surname=:surname", User.class)
+                .setParameter("firstname", firstName)
+                .setParameter("surname", surName)
+                .getResultList();
+        entityManager.close();
+        return users;
     }
 
     public User getUsersByPhone (String phone) {
-
-        for(User user : users) {
-            if (user.getPhoneNumber().equals(phone)){
-                return user;
-            }
-        }
-
-        return null;
-    }
-
-    public ArrayList<UUID> getAllIds() {
-        ArrayList<UUID> usersIds = new ArrayList<UUID>();
-
-        for (User user : users) {
-            usersIds.add(user.getId());
-        }
-
-        return usersIds;
-    }
-
-    public ArrayList<User> getAllUsers() {
-        return users;
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        User user = entityManager.createQuery("from User where phoneNumber=:phoneNumber", User.class)
+                .setParameter("phoneNumber", phone).getSingleResultOrNull();
+        entityManager.close();
+        return user;
     }
 
 }

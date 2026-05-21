@@ -1,57 +1,68 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Agreement;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class AgreementsDB {
+    @Autowired
+    private final EntityManagerFactory entityManagerFactory;
 
-    private ArrayList<Agreement> agreements = new ArrayList<Agreement>();
+    public AgreementsDB(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
-    public ArrayList<Agreement> getAgreements() {
+    public List<Agreement> getAgreements () {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Agreement> agreements = entityManager.createQuery("from Agreement", Agreement.class).getResultList();
+        entityManager.close();
+
         return agreements;
     }
 
-    public void addAgreement(UUID userId, UUID applicationId) {
-        Agreement agreement = new Agreement(userId, applicationId);
-
-        agreements.add(agreement);
+    public void addAgreement(int userId, int applicationId) {
+       entityManagerFactory.runInTransaction(entityManager -> {
+            entityManager.persist(new Agreement(userId, applicationId));
+        });
     }
 
-    public boolean singAgreement(UUID agreementId) {
-        for (Agreement agreement : agreements) {
-            if ( agreement.getId().equals(agreementId) ) {
-                agreement.setStatus(Agreement.AgreementStatus.SIGNED);
-                return true;
-            }
-        }
+    public boolean singAgreement(int agreementId) {
+        entityManagerFactory.runInTransaction(entityManager -> {
+            entityManager.createQuery(
+                            "update Agreement set status=:status where Id=:agreementId"
+                    ).setParameter("status", Agreement.AgreementStatus.SIGNED)
+                    .setParameter("agreementId", agreementId).executeUpdate();
 
-        return false;
+        });
+        return true;
     }
 
-    public ArrayList<Agreement> getUsersAgreements(UUID userId) {
-        ArrayList<Agreement> usersAgreements = new ArrayList<Agreement>();
-
-        for (Agreement agreement : agreements) {
-            if ( agreement.getUserId().equals(userId) ) {
-                usersAgreements.add(agreement);
-            }
-        }
-
-        return usersAgreements;
+    public List<Agreement> getUsersAgreements(int userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Agreement> agreements = entityManager.createQuery(
+                "from Agreement where userId=:userId", Agreement.class
+                )
+                .setParameter("userId", userId)
+                .getResultList();
+        entityManager.close();
+        return agreements;
     }
 
-    public Agreement getAgreementByApplicationId(UUID applicationId) {
-        for (Agreement agreement: agreements) {
-            if (agreement.getApplicationId().equals(applicationId)) {
-                return agreement;
-            }
-        }
+    public Agreement getAgreementByApplicationId(int applicationId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Agreement agreement = entityManager.createQuery(
+                        "from Agreement where applicationId=:applicationId", Agreement.class
+                )
+                .setParameter("applicationId", applicationId)
+                .getSingleResultOrNull();
+        entityManager.close();
 
-        return null;
+        return agreement;
     }
 
 }

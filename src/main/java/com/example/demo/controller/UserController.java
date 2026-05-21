@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,19 +28,19 @@ public class UserController {
     @Operation(description = "Получение списка всех пользователей")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = usersDB.getAllUsers();
-
+        System.out.println(users.get(0));
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
     @GetMapping("/findByFullName")
     @Operation(description = "Поиск пользователя по имени")
-    public ResponseEntity<ArrayList<User>> getUserByName(
+    public ResponseEntity<List<User>> getUserByName(
             @RequestParam
             String firstName,
             @RequestParam
             String surName
     ) {
-        ArrayList<User> users = usersDB.getUsersByName(firstName, surName);
+        List<User> users = usersDB.getUsersByName(firstName, surName);
 
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }

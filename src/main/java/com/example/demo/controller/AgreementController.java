@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Agreement;
 import com.example.demo.entity.Application;
-import com.example.demo.entity.User;
 import com.example.demo.service.AgreementsDB;
 import com.example.demo.service.ApplicationDB;
 import com.example.demo.service.UsersDB;
@@ -13,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/agreement")
@@ -43,44 +42,40 @@ public class AgreementController {
     @Operation(description = "Создание нового договора")
     public HttpStatus createAgreement(
             @RequestParam
-            String userId,
+            int userId,
             @RequestParam
-            String applicationId
+            int applicationId
     ) {
         try {
-            User user = usersDB.getUserById(UUID.fromString(userId));
-            Application application = applicationsDB.getApplicationById(UUID.fromString(applicationId));
-            if (user == null || application == null) {
-                return HttpStatus.NOT_FOUND;
-            }
+            Application application = applicationsDB.getApplicationById(applicationId);
+            agreementsDB.addAgreement(userId, applicationId);
 
-            agreementsDB.addAgreement(UUID.fromString(userId), UUID.fromString(applicationId));
             return HttpStatus.CREATED;
 
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return HttpStatus.NOT_FOUND;
         }
     }
 
     @GetMapping("/findByUser/{userId}")
     @Operation(description = "Получение договоров пользователя")
-    public ResponseEntity<List<Agreement>> getUsersAgreements( @PathVariable String userId ) {
+    public ResponseEntity<List<Agreement>> getUsersAgreements( @PathVariable int userId ) {
         try {
-            ArrayList<Agreement> usersAgreements = agreementsDB.getUsersAgreements(UUID.fromString(userId));
+            List<Agreement> usersAgreements = agreementsDB.getUsersAgreements(userId);
             return usersAgreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersAgreements);
 
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PutMapping("/sign/{agreementId}")
     @Operation(description = "Изменение статуса договора на 'подписано'")
-    public HttpStatus signAgreement( @PathVariable String agreementId ) {
+    public HttpStatus signAgreement( @PathVariable int agreementId ) {
         try {
-            boolean signStatus = agreementsDB.singAgreement(UUID.fromString(agreementId));
+            boolean signStatus = agreementsDB.singAgreement(agreementId);
             if (signStatus)
-                return HttpStatus.ACCEPTED;
+            return HttpStatus.ACCEPTED;
 
             return HttpStatus.NOT_FOUND;
 
@@ -91,13 +86,13 @@ public class AgreementController {
 
     @GetMapping("/findByApplication/{applicationId}")
     @Operation(description = "Получение договоров пользователя")
-    public ResponseEntity<Agreement> getAgreementByApplication(@PathVariable String applicationId ) {
+    public ResponseEntity<Agreement> getAgreementByApplication(@PathVariable int applicationId ) {
         try {
-            Agreement agreement = agreementsDB.getAgreementByApplicationId(UUID.fromString(applicationId));
+            Agreement agreement = agreementsDB.getAgreementByApplicationId(applicationId);
 
             return agreement == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreement);
 
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
