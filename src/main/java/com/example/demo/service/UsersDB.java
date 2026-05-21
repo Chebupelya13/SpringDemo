@@ -1,16 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.User;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UsersDB {
@@ -24,72 +20,51 @@ public class UsersDB {
 
     public void addUser(User user) {
         entityManagerFactory.runInTransaction(entityManager -> {
-            entityManager.createNativeQuery("insert :user into users");
+            entityManager.persist(user);
         });
     }
 
     public List<User> getAllUsers() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        return entityManager.createNativeQuery("select * from users", User.class).getResultList();
+        List<User> users = entityManager.createQuery("from User", User.class).getResultList();
+        entityManager.close();
+        return users;
     }
+
+    public User getUserById(int userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        User user = entityManager.createQuery("from User where id=:userId", User.class)
+                .setParameter("userId", userId).getSingleResultOrNull();
+        entityManager.close();
+        return user;
+    }
+
+    public User getUserByPassport(String passport) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        User user = entityManager.createQuery("from User where passport=:passport", User.class)
+                .setParameter("passport", passport).getSingleResultOrNull();
+        entityManager.close();
+
+        return user;
+    }
+
+    public List<User> getUsersByName (String firstName, String surName) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<User> users = entityManager.createQuery(
+                "from User where firstname=:firstname and surname=:surname", User.class)
+                .setParameter("firstname", firstName)
+                .setParameter("surname", surName)
+                .getResultList();
+        entityManager.close();
+        return users;
+    }
+
+    public User getUsersByPhone (String phone) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        User user = entityManager.createQuery("from User where phoneNumber=:phoneNumber", User.class)
+                .setParameter("phoneNumber", phone).getSingleResultOrNull();
+        entityManager.close();
+        return user;
+    }
+
 }
-//
-//    public User getUserById(UUID userId) {
-//        for (User user : users) {
-//            if (user.getId().equals(userId))
-//                return user;
-//        }
-//        return null;
-//    }
-//
-//    public User getUserByPassport(String passport) {
-//        String soughtForPassport = passport.replace(" ", "");
-//
-//        for (User user: users){
-//            String usersPassport = user.getPassport().replace(" ", "");
-//
-//            if ( usersPassport.equals(soughtForPassport) ) {
-//                return user;
-//            }
-//        }
-//
-//        return null ;
-//    }
-//
-//    public ArrayList<User> getUsersByName (String firstName, String surName) {
-//        ArrayList<User> usersList = new ArrayList<User>();
-//
-//        for(User user : users) {
-//            if (
-//                    user.getFirstname().equalsIgnoreCase(firstName) && user.getSurname().equalsIgnoreCase(surName)
-//            ) {
-//                usersList.add(user);
-//            }
-//        }
-//
-//        return usersList;
-//    }
-//
-//    public User getUsersByPhone (String phone) {
-//
-//        for(User user : users) {
-//            if (user.getPhoneNumber().equals(phone)){
-//                return user;
-//            }
-//        }
-//
-//        return null;
-//    }
-//
-//    public ArrayList<UUID> getAllIds() {
-//        ArrayList<UUID> usersIds = new ArrayList<UUID>();
-//
-//        for (User user : users) {
-//            usersIds.add(user.getId());
-//        }
-//
-//        return usersIds;
-//    }
-//
-//
-//}
