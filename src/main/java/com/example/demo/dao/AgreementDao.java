@@ -1,19 +1,21 @@
-package com.example.demo.service;
+package com.example.demo.dao;
 
 import com.example.demo.entity.Agreement;
+import com.example.demo.entity.Application;
+import com.example.demo.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Service
-public class AgreementsDB {
+@Repository
+public class AgreementDao {
     @Autowired
     private final EntityManagerFactory entityManagerFactory;
 
-    public AgreementsDB(EntityManagerFactory entityManagerFactory) {
+    public AgreementDao(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
@@ -25,9 +27,9 @@ public class AgreementsDB {
         return agreements;
     }
 
-    public void addAgreement(int userId, int applicationId) {
+    public void addAgreement(User user, Application application) {
        entityManagerFactory.runInTransaction(entityManager -> {
-            entityManager.persist(new Agreement(userId, applicationId));
+            entityManager.persist(new Agreement(application, user));
         });
     }
 
@@ -45,7 +47,7 @@ public class AgreementsDB {
     public List<Agreement> getUsersAgreements(int userId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Agreement> agreements = entityManager.createQuery(
-                "from Agreement where userId=:userId", Agreement.class
+                "from Agreement where user.id=:userId", Agreement.class
                 )
                 .setParameter("userId", userId)
                 .getResultList();
@@ -56,7 +58,7 @@ public class AgreementsDB {
     public Agreement getAgreementByApplicationId(int applicationId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Agreement agreement = entityManager.createQuery(
-                        "from Agreement where applicationId=:applicationId", Agreement.class
+                        "from Agreement where application.id=:applicationId", Agreement.class
                 )
                 .setParameter("applicationId", applicationId)
                 .getSingleResultOrNull();

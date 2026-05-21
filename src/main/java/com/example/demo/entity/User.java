@@ -1,10 +1,9 @@
 package com.example.demo.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import jakarta.persistence.*;
+
 import java.util.Date;
-import java.util.UUID;
 
 @Schema
 @Entity
@@ -33,9 +32,13 @@ public class User {
     @Column(name = "birthday", nullable = false)
     private Date birthday;
 
-    @Schema(example = "12 34 567890")
+    @Schema(example = "1234")
     @Column(name = "passport", nullable = false)
-    private String passport;
+    private int passportSeries;
+
+    @Schema(example = "567890")
+    @Column(name = "passport", nullable = false)
+    private int passportNumber;
 
     @Schema(example = "г. Иваново, ул Иванова, д. -1")
     @Column(name = "address", nullable = false)
@@ -58,13 +61,14 @@ public class User {
     }
 
     public User(String firstname, String surname, String patronymic,
-                  Date birthday, String passport, String address,
-                  MaritalStatus maritalStatus, String phoneNumber) {
+                Date birthday, int passportSeries, int passportNumber,
+                String address, MaritalStatus maritalStatus, String phoneNumber) {
         this.firstname = firstname;
         this.surname = surname;
         this.patronymic = patronymic;
         this.birthday = birthday;
-        this.passport = passport;
+        this.passportSeries = passportSeries;
+        this.passportNumber = passportNumber;
         this.address = address;
         this.maritalStatus = maritalStatus;
         this.phoneNumber = phoneNumber;
@@ -72,23 +76,24 @@ public class User {
 
     public User() {}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstname='" + firstname + '\'' +
-                ", surname='" + surname + '\'' +
-                ", patronymic='" + patronymic + '\'' +
-                ", birthday=" + birthday +
-                ", passport='" + passport + '\'' +
-                ", address='" + address + '\'' +
-                ", maritalStatus=" + maritalStatus +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setPassportSeria(int passportSeries) {
+        this.passportSeries = passportSeries;
+    }
+
+    public void setPassportNumber(int passportNumber) {
+        this.passportNumber = passportNumber;
+    }
+
+    public int getPassportSeria() {
+        return passportSeries;
+    }
+
+    public int getPassportNumber() {
+        return passportNumber;
     }
 
     public void setFirstname(String firstname) {
@@ -105,10 +110,6 @@ public class User {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
-    }
-
-    public void setPassport(String passport) {
-        this.passport = passport;
     }
 
     public void setAddress(String address) {
@@ -129,10 +130,6 @@ public class User {
 
     public String getAddress() {
         return address;
-    }
-
-    public String getPassport() {
-        return passport;
     }
 
     public Date getBirthday() {

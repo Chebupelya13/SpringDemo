@@ -1,9 +1,7 @@
 package com.example.demo.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import jakarta.persistence.*;
-import java.util.UUID;
 
 @Schema
 @Entity
@@ -16,18 +14,18 @@ public class Agreement {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "application_id", nullable = false)
-    private int applicationId;
+    @OneToOne @JoinColumn(name = "application_id", nullable = false)
+    private Application application;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @ManyToOne @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "status", nullable = false)
     private AgreementStatus status = AgreementStatus.WAITING_TO_SIGN;
 
-    public Agreement(int applicationId, int userId) {
-        this.applicationId = applicationId;
-        this.userId = userId;
+    public Agreement(Application application, User user) {
+        this.application = application;
+        this.user = user;
     }
 
     public Agreement() {
@@ -37,8 +35,8 @@ public class Agreement {
     public String toString() {
         return "Agreement{" +
                 "id=" + id +
-                ", applicationId=" + applicationId +
-                ", userId=" + userId +
+                ", applicationId=" + application.getId() +
+                ", userId=" + user.getId() +
                 ", status=" + status +
                 '}';
     }
@@ -47,16 +45,16 @@ public class Agreement {
         SIGNED, WAITING_TO_SIGN
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setStatus(AgreementStatus status) {
         this.status = status;
     }
 
-    public void setApplicationId(int applicationId) {
-        this.applicationId = applicationId;
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public AgreementStatus getStatus() {
@@ -67,11 +65,11 @@ public class Agreement {
         return id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public int getApplicationId() {
-        return applicationId;
+    public Application getApplication() {
+        return application;
     }
 }

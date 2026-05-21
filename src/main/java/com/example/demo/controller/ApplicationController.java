@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Application;
-import com.example.demo.service.ApplicationDB;
+import com.example.demo.service.ApplicationService;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,24 +11,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/applications")
 @Tag(description = "Операции с заявками", name = "Заявки")
 public class ApplicationController {
-    private final ApplicationDB appDB;
+    private final ApplicationService applicationService;
+    private final UserService userService;
 
     @Autowired
-    public ApplicationController(ApplicationDB appDB) {
-        this.appDB = appDB;
+    public ApplicationController(ApplicationService applicationService, UserService userService) {
+        this.applicationService = applicationService;
+        this.userService = userService;
     }
 
     @GetMapping
     @Operation(description = "Получение всех заявок")
     public ResponseEntity<List<Application>> getApplications() {
-        List<Application> applications = appDB.getApplications();
-
+        List<Application> applications = applicationService.getAllApplications();
         return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
     }
 
@@ -37,38 +38,25 @@ public class ApplicationController {
             @PathVariable
             int userId
     ) {
-        List<Application> usersApplications = appDB.getApplicationsByUser(userId);
+        List<Application> usersApplications = applicationService.getApplicationsByUser(userId);
         return usersApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersApplications);
     }
 
     @GetMapping("/accepted")
     @Operation(description = "Получение списка всех одобренных заявок")
     public ResponseEntity<List<Application>> getAllAcceptedApplications() {
-        List<Application> acceptedApplications = appDB.getAllAccepted();
-
+        List<Application> acceptedApplications = applicationService.getAllAccepted();
         return acceptedApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(acceptedApplications);
     }
 
     @PostMapping
     @Operation(description = "Создание новой заявки на кредит")
     public HttpStatus createApplication(
-            @RequestBody
-            Application application
+            @RequestParam int amount,
+            @RequestParam int termMonths,
+            @RequestParam int userId
     ) {
-        Random rand = new Random();
-        boolean decision = rand.nextBoolean();
-
-        if ( decision ) {
-            application.setStatus(Application.ApplicationStatus.ACCEPTED);
-            appDB.addApplication(application);
-
-            return HttpStatus.ACCEPTED;
-        }
-
-        application.setStatus(Application.ApplicationStatus.DECLINED);
-        appDB.addApplication(application);
-
-        return HttpStatus.NOT_ACCEPTABLE;
-
+        boolean isCreated = applicationService.createApplication(userId, amount, termMonths);
+        return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
     }
 }

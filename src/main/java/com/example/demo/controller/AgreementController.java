@@ -2,9 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Agreement;
 import com.example.demo.entity.Application;
-import com.example.demo.service.AgreementsDB;
-import com.example.demo.service.ApplicationDB;
-import com.example.demo.service.UsersDB;
+import com.example.demo.entity.User;
+import com.example.demo.dao.AgreementDao;
+import com.example.demo.dao.ApplicationDao;
+import com.example.demo.dao.UserDao;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +20,21 @@ import java.util.List;
 @Tag(name = "Договоры", description = "Операции с кредитными договорами")
 public class AgreementController {
 
-    private final AgreementsDB agreementsDB;
-    private final UsersDB usersDB;
-    private final ApplicationDB applicationsDB;
+    private final AgreementDao agreementDao;
+    private final UserDao userDao;
+    private final ApplicationDao applicationsDB;
 
     @Autowired
-    public AgreementController(AgreementsDB agreementsDB, UsersDB usersDB, ApplicationDB applicationsDB) {
+    public AgreementController(AgreementDao agreementDao, UserDao userDao, ApplicationDao applicationsDB) {
         this.applicationsDB = applicationsDB;
-        this.agreementsDB = agreementsDB;
-        this.usersDB = usersDB;
+        this.agreementDao = agreementDao;
+        this.userDao = userDao;
     }
 
     @GetMapping
     @Operation(description = "Получение списка всех договоров")
     public ResponseEntity<List<Agreement>> getAllAgreements() {
-        List<Agreement> agreements = agreementsDB.getAgreements();
+        List<Agreement> agreements = agreementDao.getAgreements();
 
         return agreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreements);
     }
@@ -48,7 +49,8 @@ public class AgreementController {
     ) {
         try {
             Application application = applicationsDB.getApplicationById(applicationId);
-            agreementsDB.addAgreement(userId, applicationId);
+            User user = userDao.getUserById(userId);
+            agreementDao.addAgreement(user, application);
 
             return HttpStatus.CREATED;
 
@@ -61,7 +63,7 @@ public class AgreementController {
     @Operation(description = "Получение договоров пользователя")
     public ResponseEntity<List<Agreement>> getUsersAgreements( @PathVariable int userId ) {
         try {
-            List<Agreement> usersAgreements = agreementsDB.getUsersAgreements(userId);
+            List<Agreement> usersAgreements = agreementDao.getUsersAgreements(userId);
             return usersAgreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersAgreements);
 
         } catch (Exception e) {
@@ -73,9 +75,9 @@ public class AgreementController {
     @Operation(description = "Изменение статуса договора на 'подписано'")
     public HttpStatus signAgreement( @PathVariable int agreementId ) {
         try {
-            boolean signStatus = agreementsDB.singAgreement(agreementId);
+            boolean signStatus = agreementDao.singAgreement(agreementId);
             if (signStatus)
-            return HttpStatus.ACCEPTED;
+                return HttpStatus.ACCEPTED;
 
             return HttpStatus.NOT_FOUND;
 
@@ -88,7 +90,7 @@ public class AgreementController {
     @Operation(description = "Получение договоров пользователя")
     public ResponseEntity<Agreement> getAgreementByApplication(@PathVariable int applicationId ) {
         try {
-            Agreement agreement = agreementsDB.getAgreementByApplicationId(applicationId);
+            Agreement agreement = agreementDao.getAgreementByApplicationId(applicationId);
 
             return agreement == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreement);
 

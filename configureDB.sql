@@ -32,7 +32,7 @@ CREATE TABLE applications (
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     status VARCHAR(50) DEFAULT 'IN_PROGRESS' CHECK (status IN ('ACCEPTED', 'DECLINED', 'IN_PROGRESS')),
     amount INTEGER NOT NULL,
-    term_months INTEGER CHECK (term_months >= 1 AND term_months <= 12)
+    term_months INTEGER
 );
 
 CREATE TABLE agreements (

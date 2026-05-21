@@ -1,20 +1,20 @@
-package com.example.demo.service;
+package com.example.demo.dao;
 
 import com.example.demo.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Service
-public class UsersDB {
+@Repository
+public class UserDao {
 
     @Autowired
     private final EntityManagerFactory entityManagerFactory;
 
-    public UsersDB(EntityManagerFactory entityManagerFactory) {
+    public UserDao(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
@@ -39,10 +39,19 @@ public class UsersDB {
         return user;
     }
 
-    public User getUserByPassport(String passport) {
+    public User getUserByPassportSeries(int passportSeries) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        User user = entityManager.createQuery("from User where passport=:passport", User.class)
-                .setParameter("passport", passport).getSingleResultOrNull();
+        User user = entityManager.createQuery("from User where passportSeries=:passportSeries", User.class)
+                .setParameter("passportSeries", passportSeries).getSingleResultOrNull();
+        entityManager.close();
+
+        return user;
+    }
+
+    public User getUserByPassportNumber(int passportNumber) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        User user = entityManager.createQuery("from User where passportNumber=:passportNumber", User.class)
+                .setParameter("passportNumber", passportNumber).getSingleResultOrNull();
         entityManager.close();
 
         return user;

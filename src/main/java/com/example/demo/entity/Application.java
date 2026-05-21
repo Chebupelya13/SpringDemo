@@ -1,11 +1,10 @@
 package com.example.demo.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-
-import jakarta.persistence.*;
-import java.util.UUID;
+import org.hibernate.annotations.Check;
 
 @Schema
 @Entity
@@ -18,9 +17,9 @@ public class Application {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Schema(description = "id клиента")
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @Schema(description = "id клиента", accessMode = Schema.AccessMode.READ_ONLY)
+    @ManyToOne @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Schema(description = "статус заявки", accessMode = Schema.AccessMode.READ_ONLY)
     @Column(name = "status", nullable = false)
@@ -30,14 +29,13 @@ public class Application {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    @Min(1) @Max(12)
+    @Min(value = 1) @Max(value = 12)
     @Schema(example = "4", description = "Срок погашения кредита (1 - 12)")
-    @Column(name = "term_months", nullable = false)
+    @Column(name = "term_months", nullable = false, columnDefinition = "integer check (term_months >= 1 and term_months <= 12)")
     private int termMonths;
 
-    public Application(int userId, ApplicationStatus status, int amount, int termMonths) {
-        this.userId = userId;
-        this.status = status;
+    public Application(User user, int amount, int termMonths) {
+        this.user = user;
         this.amount = amount;
         this.termMonths = termMonths;
     }
@@ -48,15 +46,15 @@ public class Application {
     public String toString() {
         return "Application{" +
                 "id=" + id +
-                ", userId=" + userId +
+                ", user=" + user.getId() +
                 ", status=" + status +
                 ", amount=" + amount +
                 ", termMonths=" + termMonths +
                 '}';
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     @Schema

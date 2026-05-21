@@ -2,7 +2,8 @@ package com.example.demo.controller;
 
 
 import com.example.demo.entity.User;
-import com.example.demo.service.UsersDB;
+import com.example.demo.dao.UserDao;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +18,17 @@ import java.util.List;
 @Tag(description = "Операции с пользователями", name = "Пользователи")
 public class UserController {
 
-    private final UsersDB usersDB;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UsersDB usersDB) {
-        this.usersDB = usersDB;
+    public UserController(UserDao userDao) {
+        this.userService = userDao;
     }
 
     @GetMapping
     @Operation(description = "Получение списка всех пользователей")
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = usersDB.getAllUsers();
-        System.out.println(users.get(0));
+        List<User> users = userService.getAllUsers();
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
@@ -40,7 +40,7 @@ public class UserController {
             @RequestParam
             String surName
     ) {
-        List<User> users = usersDB.getUsersByName(firstName, surName);
+        List<User> users = userService.getUsersByName(firstName, surName);
 
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
@@ -51,7 +51,7 @@ public class UserController {
             @PathVariable
             String phone
     ) {
-        User user = usersDB.getUsersByPhone(phone);
+        User user = userService.getUsersByPhone(phone);
 
         return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
@@ -62,7 +62,7 @@ public class UserController {
             @PathVariable
             String passport
     ) {
-        User user = usersDB.getUserByPassport(passport);
+        User user = userService.getUserByPassport(passport);
 
         return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
@@ -73,7 +73,7 @@ public class UserController {
             @RequestBody
             User user
     ) {
-        usersDB.addUser(user);
+        userService.addUser(user);
 
         return HttpStatus.CREATED;
     }

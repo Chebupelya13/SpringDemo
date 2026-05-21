@@ -1,10 +1,8 @@
 package com.example.demo.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.Date;
 
 @Schema(description = "Информация о месте работы")
@@ -14,8 +12,8 @@ public class EmploymentPeriod {
 
     @Column(name = "id")
     private int id;
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne @JoinColumn(name = "user_id")
+    private User user;
     @Column(name = "since")
     private Date since;
     @Column(name = "up_to")

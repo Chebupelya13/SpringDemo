@@ -1,23 +1,20 @@
-package com.example.demo.service;
+package com.example.demo.dao;
 
 import com.example.demo.entity.Application;
-import com.example.demo.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-@Service
-public class ApplicationDB {
+@Repository
+public class ApplicationDao {
 
     @Autowired
     private final EntityManagerFactory entityManagerFactory;
 
-    public ApplicationDB(EntityManagerFactory entityManagerFactory) {
+    public ApplicationDao(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
@@ -38,7 +35,7 @@ public class ApplicationDB {
     public List<Application> getApplicationsByUser(int userId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Application> applications = entityManager.createQuery(
-                "from Application where userId=:userId", Application.class
+                "from Application where user.id=:userId", Application.class
                 )
                 .setParameter("userId", userId)
                 .getResultList();
@@ -50,7 +47,7 @@ public class ApplicationDB {
     public List<Application> getAllAccepted () {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Application> applications = entityManager.createQuery(
-                        "from Application where a.status=:status", Application.class
+                        "from Application where status=:status", Application.class
                 )
                 .setParameter("status", Application.ApplicationStatus.ACCEPTED)
                 .getResultList();
@@ -59,7 +56,7 @@ public class ApplicationDB {
         return applications;
     }
 
-    public List<Application> getApplications() {
+    public List<Application> getAllApplications() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Application> applications = entityManager.createQuery("from Application", Application.class)
                 .getResultList();
