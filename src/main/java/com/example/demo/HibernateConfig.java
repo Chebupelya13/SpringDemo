@@ -5,13 +5,10 @@ import com.example.demo.entity.Application;
 import com.example.demo.entity.EmploymentPeriod;
 import com.example.demo.entity.User;
 import jakarta.persistence.PersistenceConfiguration;
-import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.JdbcSettings;
 import org.hibernate.tool.schema.Action;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 
 @org.springframework.context.annotation.Configuration
 public class HibernateConfig {
