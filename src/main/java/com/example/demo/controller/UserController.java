@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/findByFilters")
     @Operation(description = "Получение пользователя по фильтрам")
     public ResponseEntity<User> getUserByFilters(
-            @RequestParam User user
+            @RequestBody User user
     ) {
         User findUser = userService.getUserByFilters(user);
         return findUser == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(findUser);
@@ -51,10 +51,10 @@ public class UserController {
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
-    @GetMapping("/findByPhone/{phone}")
+    @GetMapping("/findByPhone")
     @Operation(description = "Поиск пользователя по номеру телефона")
     public ResponseEntity<User> getUserByPhone(
-            @PathVariable String phone
+            @RequestParam String phone
     ) {
         User user = userService.getUserByPhone(phone);
 

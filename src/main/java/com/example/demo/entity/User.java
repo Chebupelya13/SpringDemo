@@ -80,7 +80,7 @@ public class User {
         return phoneNumber;
     }
 
-    public void setPassportSeria(int passportSeries) {
+    public void setPassportSeries(int passportSeries) {
         this.passportSeries = passportSeries;
     }
 
@@ -88,7 +88,7 @@ public class User {
         this.passportNumber = passportNumber;
     }
 
-    public int getPassportSeria() {
+    public int getPassportSeries() {
         return passportSeries;
     }
 
