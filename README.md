@@ -64,7 +64,7 @@ mvn spring-boot:run
 Приложение включает встроенную документацию API, сгенерированную с помощью Springdoc OpenAPI.
 После успешного запуска приложения, интерфейс Swagger UI доступен в браузере по следующему адресу:
 
-**[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
+**[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui.html)**
 
 Здесь вы можете посмотреть описание всех доступных эндпоинтов для `UserController`, `ApplicationController` и `AgreementController`, а также протестировать их прямо из браузера.
 
