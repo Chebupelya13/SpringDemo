@@ -3,6 +3,8 @@ package com.example.demo.dao;
 import com.example.demo.entity.Application;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -11,29 +13,31 @@ import java.util.List;
 @Repository
 public class ApplicationDao {
 
-    @Autowired
-    private final EntityManagerFactory entityManagerFactory;
+    private final SessionFactory sessionFactory;
 
-    public ApplicationDao(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    @Autowired
+    public ApplicationDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     public void addApplication(Application application) {
-        entityManagerFactory.runInTransaction(entityManager -> {
+        sessionFactory.runInTransaction(entityManager -> {
             entityManager.persist(application);
         });
     }
 
     public Application getApplicationById(int applicationId) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Application application = entityManager.createQuery("from Application", Application.class)
-                .getSingleResultOrNull();
-        entityManager.close();
-        return application;
+        try (Session session = sessionFactory.openSession()) {
+            Application application = session.get(Application.class, applicationId);
+
+            return application;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public List<Application> getApplicationsByUser(int userId) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = sessionFactory.createEntityManager();
         List<Application> applications = entityManager.createQuery(
                 "from Application where user.id=:userId", Application.class
                 )
@@ -45,7 +49,7 @@ public class ApplicationDao {
     }
 
     public List<Application> getAllAccepted () {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = sessionFactory.createEntityManager();
         List<Application> applications = entityManager.createQuery(
                         "from Application where status=:status", Application.class
                 )
@@ -57,12 +61,11 @@ public class ApplicationDao {
     }
 
     public List<Application> getAllApplications() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        List<Application> applications = entityManager.createQuery("from Application", Application.class)
-                .getResultList();
-        entityManager.close();
-        return applications;
-
+        try (Session session = sessionFactory.openSession()) {
+            List<Application> applications = session.createQuery("from Application", Application.class)
+                    .getResultList();
+            return applications;
+        }
     }
 
 }

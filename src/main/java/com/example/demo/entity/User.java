@@ -33,11 +33,11 @@ public class User {
     private Date birthday;
 
     @Schema(example = "1234")
-    @Column(name = "passport", nullable = false)
+    @Column(name = "passport_series", nullable = false)
     private int passportSeries;
 
     @Schema(example = "567890")
-    @Column(name = "passport", nullable = false)
+    @Column(name = "passport_number", nullable = false)
     private int passportNumber;
 
     @Schema(example = "г. Иваново, ул Иванова, д. -1")

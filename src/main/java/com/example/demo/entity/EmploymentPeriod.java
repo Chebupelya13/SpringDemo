@@ -11,6 +11,7 @@ import java.util.Date;
 public class EmploymentPeriod {
 
     @Column(name = "id")
+    @Id
     private int id;
     @ManyToOne @JoinColumn(name = "user_id")
     private User user;

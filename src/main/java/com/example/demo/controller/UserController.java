@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 
 import com.example.demo.entity.User;
-import com.example.demo.dao.UserDao;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,8 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserDao userDao) {
-        this.userService = userDao;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
@@ -32,13 +31,20 @@ public class UserController {
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
+    @PostMapping("/findByFilters")
+    @Operation(description = "Получение пользователя по фильтрам")
+    public ResponseEntity<User> getUserByFilters(
+            @RequestParam User user
+    ) {
+        User findUser = userService.getUserByFilters(user);
+        return findUser == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(findUser);
+    }
+
     @GetMapping("/findByFullName")
     @Operation(description = "Поиск пользователя по имени")
     public ResponseEntity<List<User>> getUserByName(
-            @RequestParam
-            String firstName,
-            @RequestParam
-            String surName
+            @RequestParam String firstName,
+            @RequestParam String surName
     ) {
         List<User> users = userService.getUsersByName(firstName, surName);
 
@@ -48,21 +54,20 @@ public class UserController {
     @GetMapping("/findByPhone/{phone}")
     @Operation(description = "Поиск пользователя по номеру телефона")
     public ResponseEntity<User> getUserByPhone(
-            @PathVariable
-            String phone
+            @PathVariable String phone
     ) {
-        User user = userService.getUsersByPhone(phone);
+        User user = userService.getUserByPhone(phone);
 
         return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
 
-    @GetMapping("/findByPassport/{passport}")
+    @GetMapping("/findByPassport")
     @Operation(description = "Поиск пользователя по серии и номеру паспорта")
     public ResponseEntity<User> getUserByPassport(
-            @PathVariable
-            String passport
+            @RequestParam int passportSeries,
+            @RequestParam int passportNumber
     ) {
-        User user = userService.getUserByPassport(passport);
+        User user = userService.getUserByFullPassport(passportSeries, passportNumber);
 
         return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
@@ -70,8 +75,7 @@ public class UserController {
     @Operation(description = "Создание записи о новом пользователе")
     @PostMapping
     public HttpStatus createUser(
-            @RequestBody
-            User user
+            @RequestBody User user
     ) {
         userService.addUser(user);
 

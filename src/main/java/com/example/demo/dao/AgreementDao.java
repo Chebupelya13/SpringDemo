@@ -5,6 +5,7 @@ import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,15 +13,15 @@ import java.util.List;
 
 @Repository
 public class AgreementDao {
-    @Autowired
-    private final EntityManagerFactory entityManagerFactory;
 
-    public AgreementDao(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    private final SessionFactory sessionFactory;
+    @Autowired
+    public AgreementDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     public List<Agreement> getAgreements () {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = sessionFactory.createEntityManager();
         List<Agreement> agreements = entityManager.createQuery("from Agreement", Agreement.class).getResultList();
         entityManager.close();
 
@@ -28,13 +29,13 @@ public class AgreementDao {
     }
 
     public void addAgreement(User user, Application application) {
-       entityManagerFactory.runInTransaction(entityManager -> {
+       sessionFactory.runInTransaction(entityManager -> {
             entityManager.persist(new Agreement(application, user));
         });
     }
 
     public boolean singAgreement(int agreementId) {
-        entityManagerFactory.runInTransaction(entityManager -> {
+        sessionFactory.runInTransaction(entityManager -> {
             entityManager.createQuery(
                             "update Agreement set status=:status where Id=:agreementId"
                     ).setParameter("status", Agreement.AgreementStatus.SIGNED)
@@ -45,7 +46,7 @@ public class AgreementDao {
     }
 
     public List<Agreement> getUsersAgreements(int userId) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = sessionFactory.createEntityManager();
         List<Agreement> agreements = entityManager.createQuery(
                 "from Agreement where user.id=:userId", Agreement.class
                 )
@@ -56,7 +57,7 @@ public class AgreementDao {
     }
 
     public Agreement getAgreementByApplicationId(int applicationId) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = sessionFactory.createEntityManager();
         Agreement agreement = entityManager.createQuery(
                         "from Agreement where application.id=:applicationId", Agreement.class
                 )
