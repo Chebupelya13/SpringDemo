@@ -31,10 +31,10 @@
         <spring.version>7.0.7</spring.version>
         <postgresql.version>42.6.0</postgresql.version>
         <hibernate.version>7.3.5.Final</hibernate.version>
-        <jakarta.version>4.0.0-M3</jakarta.version>
+        <javax.version>2.2</javax.version>
     </properties>
 
-<!--DB-->
+<!--    DB-->
     <dependencies>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -57,13 +57,13 @@
         </dependency>
         <!-- Source: https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
         <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>${jakarta.version}</version>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>${javax.version}</version>
             <scope>compile</scope>
         </dependency>
 
-<!--Spring-->
+<!--        Spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
