@@ -3,9 +3,6 @@ package com.example.demo.dao;
 import com.example.demo.entity.Agreement;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,7 +20,6 @@ public class AgreementDao {
 
     public List<Agreement> getAgreements () {
         return sessionFactory.openSession().createQuery("from Agreement", Agreement.class).getResultList();
-
     }
 
     public void addAgreement(User user, Application application) {

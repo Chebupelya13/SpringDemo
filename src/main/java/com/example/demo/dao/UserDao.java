@@ -86,7 +86,6 @@ public class UserDao {
                 .setParameter("passportSeries", passportSeries)
                 .setParameter("passportNumber", passportNumber)
                 .getSingleResultOrNull();
-
     }
 
     public List<User> getUsersByName (String firstName, String surName) {
