@@ -39,10 +39,8 @@ public class UserDao {
             List<Predicate> predicates = new ArrayList<>();
             for (Field field : User.class.getDeclaredFields()) {
                 field.setAccessible(true);
-                System.out.println(field.getName());
                 Object value = field.get(user);
                 if (value != null) {
-                    System.out.println(field.getName());
                     if (field.getType() == int.class && (Integer) value == 0) {
                         continue;
                     }
