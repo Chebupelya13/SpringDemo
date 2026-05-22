@@ -55,39 +55,33 @@ public class UserDao {
     }
 
     public User getUserById(int userId) {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("from User where id=:userId", User.class)
+        return sessionFactory.openSession().createQuery("from User where id=:userId", User.class)
                 .setParameter("userId", userId).getSingleResultOrNull();
     }
 
     public User getUserByPassportSeries(int passportSeries) {
-        Session session = sessionFactory.openSession();
-
-        return session.createQuery("from User where passportSeries=:passportSeries", User.class)
+        return sessionFactory.openSession().createQuery("from User where passportSeries=:passportSeries", User.class)
                 .setParameter("passportSeries", passportSeries).getSingleResultOrNull();
     }
 
     public User getUserByPassportNumber(int passportNumber) {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("from User where passportNumber=:passportNumber", User.class)
+        return sessionFactory.openSession().createQuery("from User where passportNumber=:passportNumber", User.class)
                 .setParameter("passportNumber", passportNumber).getSingleResultOrNull();
     }
 
     public User getUserByFullPassport(int passportSeries, int passportNumber) {
-        try (Session session = sessionFactory.openSession()){
-            return session.createQuery(
-                    "from User where passportSeries=:passportSeries and passportNumber=:passportNumber",
-                    User.class
-                    )
-                    .setParameter("passportSeries", passportSeries)
-                    .setParameter("passportNumber", passportNumber)
-                    .getSingleResultOrNull();
-        }
+        return sessionFactory.openSession().createQuery(
+                "from User where passportSeries=:passportSeries and passportNumber=:passportNumber",
+                User.class
+                )
+                .setParameter("passportSeries", passportSeries)
+                .setParameter("passportNumber", passportNumber)
+                .getSingleResultOrNull();
+
     }
 
     public List<User> getUsersByName (String firstName, String surName) {
-        Session session = sessionFactory.openSession();
-        return session.createQuery(
+        return sessionFactory.openSession().createQuery(
                 "from User where firstname=:firstname and surname=:surname", User.class)
                 .setParameter("firstname", firstName)
                 .setParameter("surname", surName)
@@ -95,8 +89,7 @@ public class UserDao {
     }
 
     public User getUsersByPhone (String phone) {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("from User where phoneNumber=:phoneNumber", User.class)
+        return sessionFactory.openSession().createQuery("from User where phoneNumber=:phoneNumber", User.class)
                 .setParameter("phoneNumber", phone).getSingleResultOrNull();
     }
 

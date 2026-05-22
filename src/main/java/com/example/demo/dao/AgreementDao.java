@@ -22,11 +22,8 @@ public class AgreementDao {
     }
 
     public List<Agreement> getAgreements () {
-        EntityManager entityManager = sessionFactory.createEntityManager();
-        List<Agreement> agreements = entityManager.createQuery("from Agreement", Agreement.class).getResultList();
-        entityManager.close();
+        return sessionFactory.openSession().createQuery("from Agreement", Agreement.class).getResultList();
 
-        return agreements;
     }
 
     public void addAgreement(User user, Application application) {
@@ -47,8 +44,8 @@ public class AgreementDao {
     }
 
     public List<Agreement> getUsersAgreements(int userId) {
-        Session session = sessionFactory.openSession();
-        return session.createQuery(
+
+        return sessionFactory.openSession().createQuery(
                 "from Agreement where user.id=:userId", Agreement.class
                 )
                 .setParameter("userId", userId)
@@ -56,9 +53,7 @@ public class AgreementDao {
     }
 
     public Agreement getAgreementByApplicationId(int applicationId) {
-        Session session = sessionFactory.openSession();
-
-        return session.createQuery(
+        return sessionFactory.openSession().createQuery(
                         "from Agreement where application.id=:applicationId", Agreement.class
                 )
                 .setParameter("applicationId", applicationId)

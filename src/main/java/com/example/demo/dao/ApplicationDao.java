@@ -1,9 +1,6 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.Application;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,17 +24,15 @@ public class ApplicationDao {
     }
 
     public Application getApplicationById(int applicationId) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(Application.class, applicationId);
+        try {
+            return sessionFactory.openSession().get(Application.class, applicationId);
         } catch (Exception e) {
             return null;
         }
     }
 
     public List<Application> getApplicationsByUser(int userId) {
-        Session session = sessionFactory.openSession();
-
-        return session.createQuery(
+        return sessionFactory.openSession().createQuery(
                 "from Application where user.id=:userId", Application.class
                 )
                 .setParameter("userId", userId)
@@ -45,9 +40,7 @@ public class ApplicationDao {
     }
 
     public List<Application> getAllAccepted () {
-        Session session = sessionFactory.openSession();
-
-        return session.createQuery(
+        return sessionFactory.openSession().createQuery(
                         "from Application where status=:status", Application.class
                 )
                 .setParameter("status", Application.ApplicationStatus.ACCEPTED)
@@ -55,10 +48,7 @@ public class ApplicationDao {
     }
 
     public List<Application> getAllApplications() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Application", Application.class)
-                    .getResultList();
-        }
+        return sessionFactory.openSession().createQuery("from Application", Application.class).getResultList();
     }
 
 }
