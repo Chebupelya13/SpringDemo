@@ -53,8 +53,6 @@ public class UserDao {
                 critQuery.where(critBuilder.and(predicates));
             }
 
-            System.out.println(session.createQuery(critQuery).getQueryOptions().toString());
-
             return session.createQuery(critQuery).getResultList();
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
