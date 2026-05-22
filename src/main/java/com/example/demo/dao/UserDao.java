@@ -1,11 +1,17 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.User;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -24,31 +30,38 @@ public class UserDao {
         });
     }
 
-//    public List<User> getUserByFilters(User user) {
-//        try (Session session = sessionFactory.openSession()) {
-//            CriteriaBuilder critBuilder = session.getCriteriaBuilder();
-//            CriteriaQuery<User> critQuery = critBuilder.createQuery(User.class);
-//            Root<User> root = critQuery.from(User.class);
-//
-//            List<Predicate> predicates = new ArrayList<>();
-//            for (Field field : User.class.getDeclaredFields()) {
-//                field.setAccessible(true);
-//                Object value = field.get(user);
-//                if (value != null) {
-//                    if (field.getType() == int.class && (Integer) value == 0) {
-//                        continue;
-//                    }
-//                    predicates.add(critBuilder.equal(root.get(field.getName()), value));
-//                }
-//            }
-//
-//            if (!predicates.isEmpty()) {
-//                critQuery.where(critBuilder.and(predicates));
-//            }
-//
-//            return session.createQuery(critQuery).getResultList();
-//        }
-//    }
+    public List<User> getUserByFilters(User user) {
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder critBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> critQuery = critBuilder.createQuery(User.class);
+            Root<User> root = critQuery.from(User.class);
+
+            List<Predicate> predicates = new ArrayList<>();
+            for (Field field : User.class.getDeclaredFields()) {
+                field.setAccessible(true);
+                System.out.println(field.getName());
+                Object value = field.get(user);
+                if (value != null) {
+                    System.out.println(field.getName());
+                    if (field.getType() == int.class && (Integer) value == 0) {
+                        continue;
+                    }
+
+                    predicates.add(critBuilder.equal(root.get(field.getName()), value));
+                }
+            }
+
+            if (!predicates.isEmpty()) {
+                critQuery.where(critBuilder.and(predicates));
+            }
+
+            System.out.println(session.createQuery(critQuery).getQueryOptions().toString());
+
+            return session.createQuery(critQuery).getResultList();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public List<User> getAllUsers() {
         return sessionFactory.openSession().createQuery("from User", User.class).getResultList();
