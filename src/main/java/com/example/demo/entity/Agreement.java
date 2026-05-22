@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Table(name = "agreements")
 public class Agreement {
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "Идектификатор договора в БД", accessMode = Schema.AccessMode.READ_ONLY)
     @GeneratedValue
     @Id
     @Column(name = "id", nullable = false)
@@ -17,15 +17,12 @@ public class Agreement {
     @OneToOne @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 
-    @ManyToOne @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private AgreementStatus status = AgreementStatus.WAITING_TO_SIGN;
 
     public Agreement(Application application, User user) {
         this.application = application;
-        this.user = user;
     }
 
     public Agreement() {
@@ -36,17 +33,12 @@ public class Agreement {
         return "Agreement{" +
                 "id=" + id +
                 ", applicationId=" + application.getId() +
-                ", userId=" + user.getId() +
                 ", status=" + status +
                 '}';
     }
 
     public enum AgreementStatus {
         SIGNED, WAITING_TO_SIGN
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public void setStatus(AgreementStatus status) {
@@ -63,10 +55,6 @@ public class Agreement {
 
     public int getId() {
         return id;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public Application getApplication() {

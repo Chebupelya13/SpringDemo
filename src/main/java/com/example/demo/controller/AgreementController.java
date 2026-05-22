@@ -32,7 +32,7 @@ public class AgreementController {
     }
 
     @GetMapping
-    @Operation(description = "Получение списка всех договоров")
+    @Operation(summary = "Получение списка всех договоров")
     public ResponseEntity<List<Agreement>> getAllAgreements() {
         List<Agreement> agreements = agreementDao.getAgreements();
 
@@ -40,12 +40,10 @@ public class AgreementController {
     }
 
     @PostMapping
-    @Operation(description = "Создание нового договора")
+    @Operation(summary = "Создание нового договора")
     public HttpStatus createAgreement(
-            @RequestParam
-            int userId,
-            @RequestParam
-            int applicationId
+            @RequestParam int userId,
+            @RequestParam int applicationId
     ) {
         try {
             Application application = applicationsDB.getApplicationById(applicationId);
@@ -59,9 +57,9 @@ public class AgreementController {
         }
     }
 
-    @GetMapping("/findByUser/{userId}")
-    @Operation(description = "Получение договоров пользователя")
-    public ResponseEntity<List<Agreement>> getUsersAgreements( @PathVariable int userId ) {
+    @GetMapping("/findByUser")
+    @Operation(summary = "Получение договоров пользователя")
+    public ResponseEntity<List<Agreement>> getUsersAgreements( @RequestParam int userId ) {
         try {
             List<Agreement> usersAgreements = agreementDao.getUsersAgreements(userId);
             return usersAgreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersAgreements);
@@ -71,9 +69,9 @@ public class AgreementController {
         }
     }
 
-    @PutMapping("/sign/{agreementId}")
-    @Operation(description = "Изменение статуса договора на 'подписано'")
-    public HttpStatus signAgreement( @PathVariable int agreementId ) {
+    @PutMapping("/sign")
+    @Operation(summary = "Изменение статуса договора на 'подписано'")
+    public HttpStatus signAgreement( @RequestParam int agreementId ) {
         try {
             boolean signStatus = agreementDao.singAgreement(agreementId);
             if (signStatus)
@@ -86,9 +84,9 @@ public class AgreementController {
         }
     }
 
-    @GetMapping("/findByApplication/{applicationId}")
-    @Operation(description = "Получение договоров пользователя")
-    public ResponseEntity<Agreement> getAgreementByApplication(@PathVariable int applicationId ) {
+    @GetMapping("/findByApplication")
+    @Operation(summary = "Получение договора по идентификатору заявки")
+    public ResponseEntity<Agreement> getAgreementByApplication(@RequestParam int applicationId ) {
         try {
             Agreement agreement = agreementDao.getAgreementByApplicationId(applicationId);
 

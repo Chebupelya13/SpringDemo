@@ -46,6 +46,7 @@ public class User {
 
     @Schema(allowableValues = {"MARRIED", "NOT_MARRIED"})
     @Column(name = "marital_status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
 
     @Schema(example = "+71234567890")

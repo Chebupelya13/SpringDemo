@@ -25,14 +25,14 @@ public class UserController {
     }
 
     @GetMapping
-    @Operation(description = "Получение списка всех пользователей")
+    @Operation(summary = "Получение списка всех пользователей")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
     @PostMapping("/findByFilters")
-    @Operation(description = "Получение пользователя по фильтрам")
+    @Operation(summary = "Получение пользователя по фильтрам")
     public ResponseEntity<List<User>> getUserByFilters(
             @RequestBody User user
     ) {
@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/findByFullName")
-    @Operation(description = "Поиск пользователя по имени")
+    @Operation(summary = "Поиск пользователя по имени")
     public ResponseEntity<List<User>> getUserByName(
             @RequestParam String firstName,
             @RequestParam String surName
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/findByPhone")
-    @Operation(description = "Поиск пользователя по номеру телефона")
+    @Operation(summary = "Поиск пользователя по номеру телефона")
     public ResponseEntity<User> getUserByPhone(
             @RequestParam String phone
     ) {
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/findByPassport")
-    @Operation(description = "Поиск пользователя по серии и номеру паспорта")
+    @Operation(summary = "Поиск пользователя по серии и номеру паспорта")
     public ResponseEntity<User> getUserByPassport(
             @RequestParam int passportSeries,
             @RequestParam int passportNumber
@@ -73,7 +73,7 @@ public class UserController {
         return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
 
-    @Operation(description = "Создание записи о новом пользователе")
+    @Operation(summary = "Создание записи о новом пользователе")
     @PostMapping
     public HttpStatus createUser(
             @RequestBody User user

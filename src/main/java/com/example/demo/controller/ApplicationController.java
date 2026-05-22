@@ -26,31 +26,30 @@ public class ApplicationController {
     }
 
     @GetMapping
-    @Operation(description = "Получение всех заявок")
+    @Operation(summary = "Получение всех заявок")
     public ResponseEntity<List<Application>> getApplications() {
         List<Application> applications = applicationService.getAllApplications();
         return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
     }
 
-    @GetMapping("/findByUser/{userId}")
-    @Operation(description = "Получение заявок пользователя")
+    @GetMapping("/findByUser")
+    @Operation(summary = "Получение заявок пользователя")
     public ResponseEntity<List<Application>> getUsersApplications (
-            @PathVariable
-            int userId
+            @RequestParam int userId
     ) {
         List<Application> usersApplications = applicationService.getApplicationsByUser(userId);
         return usersApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersApplications);
     }
 
     @GetMapping("/accepted")
-    @Operation(description = "Получение списка всех одобренных заявок")
+    @Operation(summary = "Получение списка всех одобренных заявок")
     public ResponseEntity<List<Application>> getAllAcceptedApplications() {
         List<Application> acceptedApplications = applicationService.getAllAccepted();
         return acceptedApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(acceptedApplications);
     }
 
     @PostMapping
-    @Operation(description = "Создание новой заявки на кредит")
+    @Operation(summary = "Создание новой заявки на кредит")
     public HttpStatus createApplication(
             @RequestParam int amount,
             @RequestParam int termMonths,

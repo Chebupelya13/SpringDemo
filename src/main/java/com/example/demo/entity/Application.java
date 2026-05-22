@@ -22,6 +22,7 @@ public class Application {
 
     @Schema(description = "статус заявки", accessMode = Schema.AccessMode.READ_ONLY)
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ApplicationStatus status = ApplicationStatus.IN_PROGRESS;
 
     @Schema(description = "Сумма кредита")
@@ -57,6 +58,7 @@ public class Application {
     }
 
     @Schema
+
     public enum ApplicationStatus{
         ACCEPTED, DECLINED, IN_PROGRESS
     }
