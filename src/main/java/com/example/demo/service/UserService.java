@@ -17,7 +17,7 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public User getUserByFilters(User user) {
+    public List<User> getUserByFilters(User user) {
         return userDao.getUserByFilters(user);
     }
 

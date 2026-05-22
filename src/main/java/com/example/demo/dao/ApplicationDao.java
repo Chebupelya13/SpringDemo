@@ -21,50 +21,43 @@ public class ApplicationDao {
     }
 
     public void addApplication(Application application) {
-        sessionFactory.runInTransaction(entityManager -> {
-            entityManager.persist(application);
+        sessionFactory.runInTransaction(session -> {
+            session.persist(application);
         });
     }
 
     public Application getApplicationById(int applicationId) {
         try (Session session = sessionFactory.openSession()) {
-            Application application = session.get(Application.class, applicationId);
-
-            return application;
+            return session.get(Application.class, applicationId);
         } catch (Exception e) {
             return null;
         }
     }
 
     public List<Application> getApplicationsByUser(int userId) {
-        EntityManager entityManager = sessionFactory.createEntityManager();
-        List<Application> applications = entityManager.createQuery(
+        Session session = sessionFactory.openSession();
+
+        return session.createQuery(
                 "from Application where user.id=:userId", Application.class
                 )
                 .setParameter("userId", userId)
                 .getResultList();
-        entityManager.close();
-
-        return applications;
     }
 
     public List<Application> getAllAccepted () {
-        EntityManager entityManager = sessionFactory.createEntityManager();
-        List<Application> applications = entityManager.createQuery(
+        Session session = sessionFactory.openSession();
+
+        return session.createQuery(
                         "from Application where status=:status", Application.class
                 )
                 .setParameter("status", Application.ApplicationStatus.ACCEPTED)
                 .getResultList();
-        entityManager.close();
-
-        return applications;
     }
 
     public List<Application> getAllApplications() {
         try (Session session = sessionFactory.openSession()) {
-            List<Application> applications = session.createQuery("from Application", Application.class)
+            return session.createQuery("from Application", Application.class)
                     .getResultList();
-            return applications;
         }
     }
 

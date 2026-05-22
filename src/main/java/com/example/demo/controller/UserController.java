@@ -31,15 +31,6 @@ public class UserController {
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
-    @PostMapping("/findByFilters")
-    @Operation(description = "Получение пользователя по фильтрам")
-    public ResponseEntity<User> getUserByFilters(
-            @RequestBody User user
-    ) {
-        User findUser = userService.getUserByFilters(user);
-        return findUser == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(findUser);
-    }
-
     @GetMapping("/findByFullName")
     @Operation(description = "Поиск пользователя по имени")
     public ResponseEntity<List<User>> getUserByName(

@@ -5,6 +5,7 @@ import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,8 +36,8 @@ public class AgreementDao {
     }
 
     public boolean singAgreement(int agreementId) {
-        sessionFactory.runInTransaction(entityManager -> {
-            entityManager.createQuery(
+        sessionFactory.runInTransaction(session -> {
+            session.createQuery(
                             "update Agreement set status=:status where Id=:agreementId"
                     ).setParameter("status", Agreement.AgreementStatus.SIGNED)
                     .setParameter("agreementId", agreementId).executeUpdate();
@@ -46,26 +47,22 @@ public class AgreementDao {
     }
 
     public List<Agreement> getUsersAgreements(int userId) {
-        EntityManager entityManager = sessionFactory.createEntityManager();
-        List<Agreement> agreements = entityManager.createQuery(
+        Session session = sessionFactory.openSession();
+        return session.createQuery(
                 "from Agreement where user.id=:userId", Agreement.class
                 )
                 .setParameter("userId", userId)
                 .getResultList();
-        entityManager.close();
-        return agreements;
     }
 
     public Agreement getAgreementByApplicationId(int applicationId) {
-        EntityManager entityManager = sessionFactory.createEntityManager();
-        Agreement agreement = entityManager.createQuery(
+        Session session = sessionFactory.openSession();
+
+        return session.createQuery(
                         "from Agreement where application.id=:applicationId", Agreement.class
                 )
                 .setParameter("applicationId", applicationId)
                 .getSingleResultOrNull();
-        entityManager.close();
-
-        return agreement;
     }
 
 }
