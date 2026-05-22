@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -32,7 +34,7 @@ public class User {
     @Column(name = "birthday", nullable = false)
     private Date birthday;
 
-    @Schema(example = "1234")
+    @Schema(nullable = true, example = "1234")
     @Column(name = "passport_series", nullable = false)
     private int passportSeries;
 
