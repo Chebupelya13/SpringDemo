@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.UserDao;
+import com.example.demo.dto.request.UserDto;
 import com.example.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -18,8 +21,10 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public List<User> getUserByFilters(User user) {
-        return userDao.getUserByFilters(user);
+    public List<User> getUserByFilters(UserDto user) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        return userDao.getUserByFilters(mapper.convertValue(user, HashMap.class));
     }
 
     public List<User> getAllUsers() {

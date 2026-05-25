@@ -1,14 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Agreement;
-import com.example.demo.entity.Application;
-import com.example.demo.entity.User;
-import com.example.demo.dao.AgreementDao;
-import com.example.demo.dao.ApplicationDao;
-import com.example.demo.dao.UserDao;
 import com.example.demo.service.AgreementService;
-import com.example.demo.service.ApplicationService;
-import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

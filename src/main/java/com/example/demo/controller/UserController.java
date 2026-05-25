@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.dto.request.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public class UserController {
     @PostMapping("/findByFilters")
     @Operation(summary = "Получение пользователя по фильтрам")
     public ResponseEntity<List<User>> getUserByFilters(
-            @RequestBody User user
+            @RequestBody UserDto user
     ) {
         List<User> findUser = userService.getUserByFilters(user);
 
