@@ -20,7 +20,7 @@ CREATE TABLE users (
 
 CREATE TABLE employment_periods (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id),
     since DATE,
     up_to DATE,
     company_title VARCHAR(255),
@@ -29,7 +29,7 @@ CREATE TABLE employment_periods (
 
 CREATE TABLE applications (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id),
     status VARCHAR(50) DEFAULT 'IN_PROGRESS' CHECK (status IN ('ACCEPTED', 'DECLINED', 'IN_PROGRESS')),
     amount INTEGER NOT NULL,
     term_months INTEGER
@@ -37,8 +37,8 @@ CREATE TABLE applications (
 
 CREATE TABLE agreements (
     id SERIAL PRIMARY KEY,
-    application_id INT NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    application_id INT NOT NULL REFERENCES applications(id),
+    user_id INT NOT NULL REFERENCES users(id),
     status VARCHAR(50) DEFAULT 'WAITING_TO_SIGN' CHECK (status IN ('SIGNED', 'WAITING_TO_SIGN'))
 );
 
