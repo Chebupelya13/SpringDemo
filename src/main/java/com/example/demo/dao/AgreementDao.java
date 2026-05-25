@@ -19,7 +19,7 @@ public class AgreementDao {
     }
 
     public List<Agreement> getAgreements () {
-        return sessionFactory.openSession().createQuery("from Agreement", Agreement.class).getResultList();
+        return sessionFactory.getCurrentSession().createQuery("from Agreement", Agreement.class).getResultList();
     }
 
     public void addAgreement(User user, Application application) {
@@ -41,7 +41,7 @@ public class AgreementDao {
 
     public List<Agreement> getUsersAgreements(int userId) {
 
-        return sessionFactory.openSession().createQuery(
+        return sessionFactory.getCurrentSession().createQuery(
                 "from Agreement where user.id=:userId", Agreement.class
                 )
                 .setParameter("userId", userId)
@@ -49,7 +49,7 @@ public class AgreementDao {
     }
 
     public Agreement getAgreementByApplicationId(int applicationId) {
-        return sessionFactory.openSession().createQuery(
+        return sessionFactory.getCurrentSession().createQuery(
                         "from Agreement where application.id=:applicationId", Agreement.class
                 )
                 .setParameter("applicationId", applicationId)

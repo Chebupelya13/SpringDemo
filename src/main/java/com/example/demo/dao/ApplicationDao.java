@@ -25,14 +25,14 @@ public class ApplicationDao {
 
     public Application getApplicationById(int applicationId) {
         try {
-            return sessionFactory.openSession().get(Application.class, applicationId);
+            return sessionFactory.getCurrentSession().get(Application.class, applicationId);
         } catch (Exception e) {
             return null;
         }
     }
 
     public List<Application> getApplicationsByUser(int userId) {
-        return sessionFactory.openSession().createQuery(
+        return sessionFactory.getCurrentSession().createQuery(
                 "from Application where user.id=:userId", Application.class
                 )
                 .setParameter("userId", userId)
@@ -40,7 +40,7 @@ public class ApplicationDao {
     }
 
     public List<Application> getAllAccepted () {
-        return sessionFactory.openSession().createQuery(
+        return sessionFactory.getCurrentSession().createQuery(
                         "from Application where status=:status", Application.class
                 )
                 .setParameter("status", Application.ApplicationStatus.ACCEPTED)
@@ -48,7 +48,7 @@ public class ApplicationDao {
     }
 
     public List<Application> getAllApplications() {
-        return sessionFactory.openSession().createQuery("from Application", Application.class).getResultList();
+        return sessionFactory.getCurrentSession().createQuery("from Application", Application.class).getResultList();
     }
 
 }
