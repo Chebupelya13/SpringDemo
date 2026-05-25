@@ -4,10 +4,12 @@ import com.example.demo.dao.UserDao;
 import com.example.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
     private final UserDao userDao;
 
@@ -40,5 +42,8 @@ public class UserService {
         userDao.addUser(user);
     }
 
+    public User getUserById(int userId) {
+        return userDao.getUserById(userId);
+    }
 
 }

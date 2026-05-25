@@ -6,11 +6,13 @@ import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Random;
 
 @Service
+@Transactional
 public class ApplicationService {
     private final ApplicationDao applicationDao;
     private final UserDao userDao;

@@ -6,6 +6,9 @@ import com.example.demo.entity.User;
 import com.example.demo.dao.AgreementDao;
 import com.example.demo.dao.ApplicationDao;
 import com.example.demo.dao.UserDao;
+import com.example.demo.service.AgreementService;
+import com.example.demo.service.ApplicationService;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +23,17 @@ import java.util.List;
 @Tag(name = "Договоры", description = "Операции с кредитными договорами")
 public class AgreementController {
 
-    private final AgreementDao agreementDao;
-    private final UserDao userDao;
-    private final ApplicationDao applicationsDB;
+    private final AgreementService agreementService;
 
     @Autowired
-    public AgreementController(AgreementDao agreementDao, UserDao userDao, ApplicationDao applicationsDB) {
-        this.applicationsDB = applicationsDB;
-        this.agreementDao = agreementDao;
-        this.userDao = userDao;
+    public AgreementController(AgreementService agreementService) {
+        this.agreementService = agreementService;
     }
 
     @GetMapping
     @Operation(summary = "Получение списка всех договоров")
     public ResponseEntity<List<Agreement>> getAllAgreements() {
-        List<Agreement> agreements = agreementDao.getAgreements();
+        List<Agreement> agreements = agreementService.getAgreements();
 
         return agreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreements);
     }
@@ -42,13 +41,10 @@ public class AgreementController {
     @PostMapping
     @Operation(summary = "Создание нового договора")
     public HttpStatus createAgreement(
-            @RequestParam int userId,
             @RequestParam int applicationId
     ) {
         try {
-            Application application = applicationsDB.getApplicationById(applicationId);
-            User user = userDao.getUserById(userId);
-            agreementDao.addAgreement(user, application);
+            agreementService.addAgreement(applicationId);
 
             return HttpStatus.CREATED;
 
@@ -61,7 +57,7 @@ public class AgreementController {
     @Operation(summary = "Получение договоров пользователя")
     public ResponseEntity<List<Agreement>> getUsersAgreements( @RequestParam int userId ) {
         try {
-            List<Agreement> usersAgreements = agreementDao.getUsersAgreements(userId);
+            List<Agreement> usersAgreements = agreementService.getUsersAgreements(userId);
             return usersAgreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersAgreements);
 
         } catch (Exception e) {
@@ -73,7 +69,7 @@ public class AgreementController {
     @Operation(summary = "Изменение статуса договора на 'подписано'")
     public HttpStatus signAgreement( @RequestParam int agreementId ) {
         try {
-            boolean signStatus = agreementDao.singAgreement(agreementId);
+            boolean signStatus = agreementService.signAgreement(agreementId);
             if (signStatus)
                 return HttpStatus.ACCEPTED;
 
@@ -88,7 +84,7 @@ public class AgreementController {
     @Operation(summary = "Получение договора по идентификатору заявки")
     public ResponseEntity<Agreement> getAgreementByApplication(@RequestParam int applicationId ) {
         try {
-            Agreement agreement = agreementDao.getAgreementByApplicationId(applicationId);
+            Agreement agreement = agreementService.getAgreementByApplicationId(applicationId);
 
             return agreement == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreement);
 

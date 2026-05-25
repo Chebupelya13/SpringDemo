@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.Application;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,9 +19,8 @@ public class ApplicationDao {
     }
 
     public void addApplication(Application application) {
-        sessionFactory.runInTransaction(session -> {
-            session.persist(application);
-        });
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(application);
     }
 
     public Application getApplicationById(int applicationId) {

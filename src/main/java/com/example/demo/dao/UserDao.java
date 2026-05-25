@@ -25,9 +25,8 @@ public class UserDao {
     }
 
     public void addUser(User user) {
-        sessionFactory.runInTransaction(entityManager -> {
-            entityManager.persist(user);
-        });
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(user);
     }
 
     public List<User> getUserByFilters(User user) {

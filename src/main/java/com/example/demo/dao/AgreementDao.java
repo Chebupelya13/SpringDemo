@@ -3,6 +3,7 @@ package com.example.demo.dao;
 import com.example.demo.entity.Agreement;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,20 +24,22 @@ public class AgreementDao {
     }
 
     public void addAgreement(User user, Application application) {
-       sessionFactory.runInTransaction(entityManager -> {
-            entityManager.persist(new Agreement(application, user));
-        });
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(new Agreement(application, user));
     }
 
     public boolean singAgreement(int agreementId) {
-        sessionFactory.runInTransaction(session -> {
+        Session session = sessionFactory.getCurrentSession();
+        try {
             session.createQuery(
                             "update Agreement set status=:status where Id=:agreementId"
                     ).setParameter("status", Agreement.AgreementStatus.SIGNED)
                     .setParameter("agreementId", agreementId).executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
 
-        });
-        return true;
     }
 
     public List<Agreement> getUsersAgreements(int userId) {
