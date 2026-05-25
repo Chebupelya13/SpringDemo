@@ -1,11 +1,11 @@
 package com.example.demo.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.persistence.*;
 
 import java.util.Date;
 
-@Schema(description = "Информация о месте работы")
+
 @Entity
 @Table(name = "employment_periods")
 public class EmploymentPeriod {
@@ -21,6 +21,22 @@ public class EmploymentPeriod {
     private Date upTo;
     @Column(name = "company_title")
     private String companyTitle;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Date getSince() {
         return since;

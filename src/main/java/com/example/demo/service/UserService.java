@@ -44,25 +44,36 @@ public class UserService {
         return foundResponseDto;
     }
 
-    public List<User> getAllUsers() {
-
-
-        return userDao.getAllUsers();
+    public List<UserResponseDto> getAllUsers() {
+        List<User> users = userDao.getAllUsers();
+        List<UserResponseDto> result = new ArrayList<>();
+        for (User user : users) {
+            result.add(userMapper.toResponseDto(user));
+        }
+        return result;
     }
 
-    public List<User> getUsersByName(String firstName, String surName) {
-        return userDao.getUsersByName(firstName, surName);
+    public List<UserResponseDto> getUsersByName(String firstName, String surName) {
+        List<User> users = userDao.getUsersByName(firstName, surName);
+        List<UserResponseDto> result = new ArrayList<>();
+        for (User user : users) {
+            result.add(userMapper.toResponseDto(user));
+        }
+        return result;
     }
 
-    public User getUserByFullPassport(int passportSeries, int passportNumber) {
-        return userDao.getUserByFullPassport(passportSeries, passportNumber);
+    public UserResponseDto getUserByFullPassport(int passportSeries, int passportNumber) {
+        User user = userDao.getUserByFullPassport(passportSeries, passportNumber);
+        return user == null ? null : userMapper.toResponseDto(user);
     }
 
-    public User getUserByPhone(String phoneNumber) {
-        return userDao.getUsersByPhone(phoneNumber);
+    public UserResponseDto getUserByPhone(String phoneNumber) {
+        User user = userDao.getUsersByPhone(phoneNumber);
+        return user == null ? null : userMapper.toResponseDto(user);
     }
 
-    public void addUser(User user) {
+    public void addUser(UserRequestDto requestDto) {
+        User user = userMapper.toEntityFromRequest(requestDto);
         userDao.addUser(user);
     }
 

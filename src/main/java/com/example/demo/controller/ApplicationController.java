@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Application;
+import com.example.demo.dto.request.ApplicationRequestDto;
+import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.service.ApplicationService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,35 +28,33 @@ public class ApplicationController {
 
     @GetMapping
     @Operation(summary = "Получение всех заявок")
-    public ResponseEntity<List<Application>> getApplications() {
-        List<Application> applications = applicationService.getAllApplications();
+    public ResponseEntity<List<ApplicationResponseDto>> getApplications() {
+        List<ApplicationResponseDto> applications = applicationService.getAllApplications();
         return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
     }
 
     @GetMapping("/findByUser")
     @Operation(summary = "Получение заявок пользователя")
-    public ResponseEntity<List<Application>> getUsersApplications (
+    public ResponseEntity<List<ApplicationResponseDto>> getUsersApplications (
             @RequestParam int userId
     ) {
-        List<Application> usersApplications = applicationService.getApplicationsByUser(userId);
+        List<ApplicationResponseDto> usersApplications = applicationService.getApplicationsByUser(userId);
         return usersApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersApplications);
     }
 
     @GetMapping("/accepted")
     @Operation(summary = "Получение списка всех одобренных заявок")
-    public ResponseEntity<List<Application>> getAllAcceptedApplications() {
-        List<Application> acceptedApplications = applicationService.getAllAccepted();
+    public ResponseEntity<List<ApplicationResponseDto>> getAllAcceptedApplications() {
+        List<ApplicationResponseDto> acceptedApplications = applicationService.getAllAccepted();
         return acceptedApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(acceptedApplications);
     }
 
     @PostMapping
     @Operation(summary = "Создание новой заявки на кредит")
     public HttpStatus createApplication(
-            @RequestParam int amount,
-            @RequestParam int termMonths,
-            @RequestParam int userId
+            @RequestBody ApplicationRequestDto requestDto
     ) {
-        boolean isCreated = applicationService.createApplication(userId, amount, termMonths);
+        boolean isCreated = applicationService.createApplication(requestDto);
         return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.demo.dto.response;
 
-import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -35,7 +34,7 @@ public class UserResponseDto {
     public String phoneNumber;
 
     @Schema
-    public List<Application> applications = new ArrayList<>();
+    public List<ApplicationResponseDto> applications = new ArrayList<>();
 
     public void setId(int id) {
         this.id = id;
@@ -77,7 +76,7 @@ public class UserResponseDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setApplications(List<Application> applications) {
+    public void setApplications(List<ApplicationResponseDto> applications) {
         this.applications = applications;
     }
 
@@ -121,7 +120,7 @@ public class UserResponseDto {
         return phoneNumber;
     }
 
-    public List<Application> getApplications() {
+    public List<ApplicationResponseDto> getApplications() {
         return applications;
     }
 }

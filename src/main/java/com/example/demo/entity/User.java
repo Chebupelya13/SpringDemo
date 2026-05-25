@@ -1,62 +1,62 @@
 package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Schema
+
 @Entity
 @Table(name = "users")
 public class User {
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+
     @GeneratedValue
     @Id
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Schema(example = "Иван")
+
     @Column(name = "firstname", nullable = false)
     private String firstname;
 
-    @Schema(example = "Иванов")
+
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Schema(example = "Иванович")
+
     @Column(name = "patronymic")
     private String patronymic;
 
-    @Schema(example = "1970-01-01")
+
     @Column(name = "birthday", nullable = false)
     private Date birthday;
 
-    @Schema(nullable = true, example = "1234")
+
     @Column(name = "passport_series", nullable = false)
     private int passportSeries;
 
-    @Schema(example = "567890")
+
     @Column(name = "passport_number", nullable = false)
     private int passportNumber;
 
-    @Schema(example = "г. Иваново, ул Иванова, д. -1")
+
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Schema(allowableValues = {"MARRIED", "NOT_MARRIED"})
+
     @Column(name = "marital_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
 
-    @Schema(example = "+71234567890")
+
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Schema
+
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     @Column(name = "applications")
