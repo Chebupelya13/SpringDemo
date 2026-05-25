@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dto.request.UserDto;
+import com.example.demo.dto.request.UserRequestDto;
+import com.example.demo.dto.response.UserResponseDto;
+import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,12 +34,20 @@ public class UserController {
         return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
     }
 
+    @PostMapping("/applications")
+    @Operation(summary = "Получение всех заявок пользователя")
+    public List<Application> getUsersApplications(
+            @RequestParam int userId
+    ){
+        return userService.getUsersApplications(userId);
+    }
+
     @PostMapping("/findByFilters")
     @Operation(summary = "Получение пользователя по фильтрам")
-    public ResponseEntity<List<User>> getUserByFilters(
-            @RequestBody UserDto user
+    public ResponseEntity<List<UserResponseDto>> getUserByFilters(
+            @RequestBody UserRequestDto user
     ) {
-        List<User> findUser = userService.getUserByFilters(user);
+        List<UserResponseDto> findUser = userService.getUserByFilters(user);
 
         return findUser == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(findUser);
     }

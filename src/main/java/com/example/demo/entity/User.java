@@ -1,9 +1,12 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Schema
 @Entity
@@ -53,6 +56,12 @@ public class User {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @Schema
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    @Column(name = "applications")
+    private List<Application> applications = new ArrayList<>();
+
     public enum MaritalStatus {
         MARRIED, NOT_MARRIED
     }
@@ -76,6 +85,14 @@ public class User {
     }
 
     public User() {}
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;

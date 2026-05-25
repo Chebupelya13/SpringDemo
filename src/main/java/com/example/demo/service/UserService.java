@@ -1,13 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.UserDao;
-import com.example.demo.dto.request.UserDto;
+import com.example.demo.dto.request.UserRequestDto;
+import com.example.demo.dto.response.UserResponseDto;
+import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import com.example.demo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,19 +19,34 @@ import java.util.List;
 @Transactional
 public class UserService {
     private final UserDao userDao;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserDao userDao) {
+    public UserService(UserDao userDao, UserMapper userMapper) {
         this.userDao = userDao;
+        this.userMapper = userMapper;
     }
 
-    public List<User> getUserByFilters(UserDto user) {
+    public List<Application> getUsersApplications(int userId) {
+        return userDao.getUsersApplications(userId);
+    }
+
+    public List<UserResponseDto> getUserByFilters(UserRequestDto user) {
         ObjectMapper mapper = new ObjectMapper();
 
-        return userDao.getUserByFilters(mapper.convertValue(user, HashMap.class));
+        List<User> foundUsers = userDao.getUserByFilters(mapper.convertValue(user, HashMap.class));
+        List<UserResponseDto> foundResponseDto = new ArrayList<>();
+
+        for (User foundUser : foundUsers) {
+            foundResponseDto.add(userMapper.toResponseDto(foundUser));
+        }
+
+        return foundResponseDto;
     }
 
     public List<User> getAllUsers() {
+
+
         return userDao.getAllUsers();
     }
 
@@ -47,8 +66,8 @@ public class UserService {
         userDao.addUser(user);
     }
 
-    public User getUserById(int userId) {
-        return userDao.getUserById(userId);
+    public UserResponseDto getUserById(int userId) {
+        return userMapper.toResponseDto(userDao.getUserById(userId));
     }
 
 }

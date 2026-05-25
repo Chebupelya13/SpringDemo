@@ -1,20 +1,17 @@
 package com.example.demo.dao;
 
-import com.example.demo.dto.request.UserDto;
+import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +93,14 @@ public class UserDao {
     public User getUsersByPhone (String phone) {
         return sessionFactory.getCurrentSession().createQuery("from User where phoneNumber=:phoneNumber", User.class)
                 .setParameter("phoneNumber", phone).getSingleResultOrNull();
+    }
+
+    public List<Application> getUsersApplications(int userId) {
+        User user = sessionFactory.getCurrentSession().createQuery("from User where id=:userId", User.class)
+                .setParameter("userId", userId)
+                .getSingleResultOrNull();
+
+        return user.getApplications();
     }
 
 }

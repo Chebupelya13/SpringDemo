@@ -1,14 +1,17 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto.response;
 
-
+import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-@Schema
-public class UserDto {
+public class UserResponseDto {
 
+    @Schema
+    public int id;
     @Schema(description = "Имя", example = "Иван")
     public String firstname;
     @Schema(description = "Фамилия", example = "Иванов")
@@ -30,6 +33,13 @@ public class UserDto {
     public Date birthday;
     @Schema(description = "Номер телефона", example = "79998886655")
     public String phoneNumber;
+
+    @Schema
+    public List<Application> applications = new ArrayList<>();
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
@@ -67,6 +77,14 @@ public class UserDto {
         this.phoneNumber = phoneNumber;
     }
 
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public String getFirstname() {
         return firstname;
     }
@@ -101,5 +119,9 @@ public class UserDto {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
     }
 }
