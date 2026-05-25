@@ -1,14 +1,14 @@
 package com.example.demo.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.persistence.*;
 
-@Schema
+
 @Entity
 @Table(name = "agreements")
 public class Agreement {
 
-    @Schema(description = "Идектификатор договора в БД", accessMode = Schema.AccessMode.READ_ONLY)
+
     @GeneratedValue
     @Id
     @Column(name = "id", nullable = false)

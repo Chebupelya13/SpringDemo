@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Agreement;
+import com.example.demo.dto.request.AgreementRequestDto;
+import com.example.demo.dto.response.AgreementResponseDto;
 import com.example.demo.service.AgreementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,8 +26,8 @@ public class AgreementController {
 
     @GetMapping
     @Operation(summary = "Получение списка всех договоров")
-    public ResponseEntity<List<Agreement>> getAllAgreements() {
-        List<Agreement> agreements = agreementService.getAgreements();
+    public ResponseEntity<List<AgreementResponseDto>> getAllAgreements() {
+        List<AgreementResponseDto> agreements = agreementService.getAgreements();
 
         return agreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreements);
     }
@@ -34,10 +35,10 @@ public class AgreementController {
     @PostMapping
     @Operation(summary = "Создание нового договора")
     public HttpStatus createAgreement(
-            @RequestParam int applicationId
+            @RequestBody AgreementRequestDto requestDto
     ) {
         try {
-            agreementService.addAgreement(applicationId);
+            agreementService.addAgreement(requestDto);
 
             return HttpStatus.CREATED;
 
@@ -48,9 +49,9 @@ public class AgreementController {
 
     @GetMapping("/findByUser")
     @Operation(summary = "Получение договоров пользователя")
-    public ResponseEntity<List<Agreement>> getUsersAgreements( @RequestParam int userId ) {
+    public ResponseEntity<List<AgreementResponseDto>> getUsersAgreements( @RequestParam int userId ) {
         try {
-            List<Agreement> usersAgreements = agreementService.getUsersAgreements(userId);
+            List<AgreementResponseDto> usersAgreements = agreementService.getUsersAgreements(userId);
             return usersAgreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersAgreements);
 
         } catch (Exception e) {
@@ -75,9 +76,9 @@ public class AgreementController {
 
     @GetMapping("/findByApplication")
     @Operation(summary = "Получение договора по идентификатору заявки")
-    public ResponseEntity<Agreement> getAgreementByApplication(@RequestParam int applicationId ) {
+    public ResponseEntity<AgreementResponseDto> getAgreementByApplication(@RequestParam int applicationId ) {
         try {
-            Agreement agreement = agreementService.getAgreementByApplicationId(applicationId);
+            AgreementResponseDto agreement = agreementService.getAgreementByApplicationId(applicationId);
 
             return agreement == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreement);
 

@@ -2,44 +2,59 @@ package com.example.demo.service;
 
 import com.example.demo.dao.ApplicationDao;
 import com.example.demo.dao.UserDao;
+import com.example.demo.dto.request.ApplicationRequestDto;
+import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
-import org.springframework.http.HttpStatus;
+import com.example.demo.mapper.ApplicationMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ApplicationService {
     private final ApplicationDao applicationDao;
     private final UserDao userDao;
+    private final ApplicationMapper applicationMapper;
 
-    public ApplicationService(ApplicationDao applicationDao, UserDao userDao) {
+    @Autowired
+    public ApplicationService(ApplicationDao applicationDao, UserDao userDao, ApplicationMapper applicationMapper) {
         this.applicationDao = applicationDao;
         this.userDao = userDao;
+        this.applicationMapper = applicationMapper;
     }
 
-    public List<Application> getAllApplications() {
-        return applicationDao.getAllApplications();
+    public List<ApplicationResponseDto> getAllApplications() {
+        return applicationDao.getAllApplications().stream()
+                .map(applicationMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Application> getApplicationsByUser(int userId) {
-        return applicationDao.getApplicationsByUser(userId);
+    public List<ApplicationResponseDto> getApplicationsByUser(int userId) {
+        return applicationDao.getApplicationsByUser(userId).stream()
+                .map(applicationMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Application> getAllAccepted() {
-        return applicationDao.getAllAccepted();
+    public List<ApplicationResponseDto> getAllAccepted() {
+        return applicationDao.getAllAccepted().stream()
+                .map(applicationMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public boolean createApplication(int userId, int amount, int termMonths) {
-        User user = userDao.getUserById(userId);
-        if (user == null || termMonths > 12 || termMonths < 1)
+    public boolean createApplication(ApplicationRequestDto requestDto) {
+        User user = userDao.getUserById(requestDto.getUserId());
+        if (user == null || requestDto.getTermMonths() > 12 || requestDto.getTermMonths() < 1)
             return false;
 
-        Application new_application = new Application(user, amount, termMonths);
+        Application new_application = applicationMapper.toEntityFromRequest(requestDto);
+        new_application.setUser(user);
+
         Random rand = new Random();
         boolean decision = rand.nextBoolean();
         new_application.setStatus(
