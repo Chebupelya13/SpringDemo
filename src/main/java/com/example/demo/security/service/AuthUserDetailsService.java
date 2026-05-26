@@ -20,7 +20,6 @@ public class AuthUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        System.out.println("load");
         return new AuthUser(userDao.getUserByUsername(username));
     }
 }
