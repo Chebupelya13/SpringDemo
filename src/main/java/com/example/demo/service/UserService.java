@@ -47,6 +47,10 @@ public class UserService {
         return foundResponseDto;
     }
 
+    public UserResponseDto getUserByUsername(String username) {
+        return userMapper.toResponseDto(userDao.getUserByUsername(username));
+    }
+
     public List<UserResponseDto> getAllUsers() {
         List<User> users = userDao.getAllUsers();
         List<UserResponseDto> result = new ArrayList<>();

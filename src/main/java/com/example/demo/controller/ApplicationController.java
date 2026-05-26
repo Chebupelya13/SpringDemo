@@ -6,6 +6,7 @@ import com.example.demo.security.service.JwtTokenService;
 import com.example.demo.service.ApplicationService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,8 +59,12 @@ public class ApplicationController {
     @PostMapping
     @Operation(summary = "Создание новой заявки на кредит")
     public HttpStatus createApplication(
-            @RequestBody ApplicationRequestDto requestDto
+            @RequestBody ApplicationRequestDto requestDto,
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
+        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
+        requestDto.setUserId(userService.getUserByUsername(username).id);
+
         boolean isCreated = applicationService.createApplication(requestDto);
         return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
     }

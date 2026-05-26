@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema
 public class ApplicationRequestDto {
 
-    @Schema(description = "id клиента", example = "1")
+    @Schema(description = "id клиента", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private int userId;
 
     @Schema(description = "Сумма кредита", example = "100000")
