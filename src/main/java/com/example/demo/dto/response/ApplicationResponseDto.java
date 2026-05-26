@@ -60,4 +60,5 @@ public class ApplicationResponseDto {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
 }

@@ -14,6 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 public class JWTConfig {
+
     @Value("${jwt.key}")
     private String jwtKey;
 
@@ -30,4 +31,5 @@ public class JWTConfig {
                 .macAlgorithm(MacAlgorithm.HS256)
                 .build();
     }
+
 }

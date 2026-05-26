@@ -123,4 +123,5 @@ public class UserRequestDto {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
 }

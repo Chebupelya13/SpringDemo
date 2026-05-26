@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ApplicationService {
+
     private final ApplicationDao applicationDao;
     private final UserDao userDao;
     private final ApplicationMapper applicationMapper;

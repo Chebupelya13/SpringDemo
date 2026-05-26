@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/applications")
 @Tag(description = "Операции с заявками", name = "Заявки")
 public class ApplicationController {
+
     private final ApplicationService applicationService;
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
@@ -68,4 +69,5 @@ public class ApplicationController {
         boolean isCreated = applicationService.createApplication(requestDto);
         return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
     }
+
 }

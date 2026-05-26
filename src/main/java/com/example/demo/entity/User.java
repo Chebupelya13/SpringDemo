@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name = "users")
 public class User {
 
-
     @GeneratedValue
     @Id
     @Column(name = "id", nullable = false)
@@ -188,4 +187,3 @@ public class User {
     }
 
 }
-

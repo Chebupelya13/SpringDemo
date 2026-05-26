@@ -1,11 +1,9 @@
 package com.example.demo.security.service;
 
 import com.example.demo.dto.response.UserResponseDto;
-import com.example.demo.entity.User;
 import com.example.demo.security.dto.AuthRequestDto;
 import com.example.demo.security.dto.AuthResponseDto;
 import com.example.demo.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
+
     private final AuthenticationManager authenticationManager;
     private final JwtTokenService jwtTokenService;
     private final UserService userService;
@@ -40,4 +39,5 @@ public class AuthService {
 
         return new AuthResponseDto(jwtToken, authentication.getName(), expiresAt);
     }
+
 }

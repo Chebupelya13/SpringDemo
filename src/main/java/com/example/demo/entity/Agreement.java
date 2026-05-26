@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 @Table(name = "agreements")
 public class Agreement {
 
-
     @GeneratedValue
     @Id
     @Column(name = "id", nullable = false)
@@ -60,4 +59,5 @@ public class Agreement {
     public Application getApplication() {
         return application;
     }
+
 }

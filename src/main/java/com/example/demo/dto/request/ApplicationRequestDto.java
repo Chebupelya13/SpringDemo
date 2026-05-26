@@ -37,4 +37,5 @@ public class ApplicationRequestDto {
     public void setTermMonths(int termMonths) {
         this.termMonths = termMonths;
     }
+
 }
