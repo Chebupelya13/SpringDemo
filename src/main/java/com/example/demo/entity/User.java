@@ -27,39 +27,34 @@ public class User {
     @Column(name = "firstname", nullable = false)
     private String firstname;
 
-
     @Column(name = "surname", nullable = false)
     private String surname;
-
 
     @Column(name = "patronymic")
     private String patronymic;
 
-
     @Column(name = "birthday", nullable = false)
     private Date birthday;
-
 
     @Column(name = "passport_series", nullable = false)
     private int passportSeries;
 
-
     @Column(name = "passport_number", nullable = false)
     private int passportNumber;
 
-
     @Column(name = "address", nullable = false)
     private String address;
-
 
     @Column(name = "marital_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
 
-
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @JoinColumn(name = "role")
+    @ManyToOne
+    private Role role;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
@@ -89,6 +84,14 @@ public class User {
     }
 
     public User() {}
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public void setUsername(String username) {
         this.username = username;
