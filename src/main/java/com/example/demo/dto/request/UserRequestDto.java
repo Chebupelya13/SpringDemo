@@ -21,6 +21,11 @@ public class UserRequestDto {
     @Schema(description = "Номер паспорта", example = "123456")
     public int passportNumber;
 
+    @Schema
+    public String username;
+    @Schema
+    public String password;
+
     @Schema(description = "Адрес", example = "ул. Пушкина, д. Колотушкина")
     public String address;
     @Schema(description = "Семейное положение", example = "MARRIED")
@@ -30,6 +35,22 @@ public class UserRequestDto {
     public Date birthday;
     @Schema(description = "Номер телефона", example = "79998886655")
     public String phoneNumber;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;

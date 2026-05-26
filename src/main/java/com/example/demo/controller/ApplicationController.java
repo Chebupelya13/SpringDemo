@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.ApplicationRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
+import com.example.demo.security.service.JwtTokenService;
 import com.example.demo.service.ApplicationService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,16 +20,21 @@ import java.util.List;
 public class ApplicationController {
     private final ApplicationService applicationService;
     private final UserService userService;
+    private final JwtTokenService jwtTokenService;
 
     @Autowired
-    public ApplicationController(ApplicationService applicationService, UserService userService) {
+    public ApplicationController(ApplicationService applicationService, UserService userService, JwtTokenService jwtTokenService) {
         this.applicationService = applicationService;
         this.userService = userService;
+        this.jwtTokenService = jwtTokenService;
     }
 
     @GetMapping
     @Operation(summary = "Получение всех заявок")
-    public ResponseEntity<List<ApplicationResponseDto>> getApplications() {
+    public ResponseEntity<List<ApplicationResponseDto>> getApplications(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        String name = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
         List<ApplicationResponseDto> applications = applicationService.getAllApplications();
         return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
     }

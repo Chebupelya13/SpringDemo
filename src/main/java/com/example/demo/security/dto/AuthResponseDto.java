@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthResponseDto {
-    private final String jwtToken;
-    private final String name;
-    private final Long expiresAt;
+    public String jwtToken;
+    public String name;
+    public Long expiresAt;
 
     public AuthResponseDto(String jwtToken, String name, Long expiresAt) {
         this.jwtToken = jwtToken;

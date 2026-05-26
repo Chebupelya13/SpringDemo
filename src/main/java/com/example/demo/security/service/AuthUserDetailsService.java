@@ -1,11 +1,13 @@
 package com.example.demo.security.service;
 
 import com.example.demo.dao.UserDao;
+import com.example.demo.security.AuthUser;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthUserDetailsService implements UserDetailsService {
@@ -16,11 +18,9 @@ public class AuthUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        UserDetails userDetails = (UserDetails) userDao.getUserByUsername(username);
-        if (userDetails != null)
-            return userDetails;
-
-        throw new UsernameNotFoundException("User not found " + username);
+        System.out.println("load");
+        return new AuthUser(userDao.getUserByUsername(username));
     }
 }

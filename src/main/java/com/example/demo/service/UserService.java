@@ -7,6 +7,7 @@ import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
@@ -20,11 +21,13 @@ import java.util.List;
 public class UserService {
     private final UserDao userDao;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserDao userDao, UserMapper userMapper) {
+    public UserService(UserDao userDao, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Application> getUsersApplications(int userId) {
@@ -74,6 +77,8 @@ public class UserService {
 
     public void addUser(UserRequestDto requestDto) {
         User user = userMapper.toEntityFromRequest(requestDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        System.out.println(user.getUsername());
         userDao.addUser(user);
     }
 

@@ -49,6 +49,11 @@ public class JwtTokenService {
         return exp.toEpochMilli();
     }
 
+    public String extractUsername(String token) {
+        Jwt jwt = decoder.decode(token);
+        return jwt.getClaim("sub");
+    }
+
     public enum Role {
         USER,
         ADMIN
