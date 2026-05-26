@@ -19,6 +19,11 @@ public class User {
     @Column(name = "id", nullable = false)
     private int id;
 
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "firstname", nullable = false)
     private String firstname;
@@ -85,6 +90,22 @@ public class User {
     }
 
     public User() {}
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     public void setApplications(List<Application> applications) {
         this.applications = applications;

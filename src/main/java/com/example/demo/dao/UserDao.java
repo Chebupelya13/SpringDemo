@@ -1,5 +1,6 @@
 package com.example.demo.dao;
 
+import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -30,7 +31,14 @@ public class UserDao {
         session.persist(user);
     }
 
-    public List<User> getUserByFilters(Map<String, Object> user) {
+    public User getUserByUsername(String username) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from User where username=:username", User.class)
+                .setParameter("username", username)
+                .getSingleResultOrNull();
+    }
+
+    public List<User> getUserByFilters(UserRequestDto user) {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder critBuilder = sessionFactory.getCriteriaBuilder();
         CriteriaQuery<User> critQuery = critBuilder.createQuery(User.class);
@@ -38,16 +46,24 @@ public class UserDao {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        for (Map.Entry<String, Object> entry : user.entrySet()){
-            if (entry.getValue() != null) {
-                if (entry.getValue() instanceof Integer && (Integer) entry.getValue() == 0){
-                    continue;
-                }
-
-                predicates.add(critBuilder.equal(root.get(entry.getKey()), entry.getValue()));
-            }
-
-        }
+        if (user.firstname != null && !user.firstname.isEmpty())
+            predicates.add(critBuilder.equal(root.get("firstname"), user.firstname));
+        if (user.surname != null && !user.surname.isEmpty())
+            predicates.add(critBuilder.equal(root.get("surname"), user.surname));
+        if (user.patronymic != null && !user.patronymic.isEmpty())
+            predicates.add(critBuilder.equal(root.get("patronymic"), user.patronymic));
+        if (user.birthday != null)
+            predicates.add(critBuilder.equal(root.get("birthday"), user.birthday));
+        if (user.passportSeries != 0)
+            predicates.add(critBuilder.equal(root.get("passportSeries"), user.passportSeries));
+        if (user.passportNumber != 0)
+            predicates.add(critBuilder.equal(root.get("passportNumber"), user.passportNumber));
+        if (user.address != null && !user.address.isEmpty())
+            predicates.add(critBuilder.equal(root.get("address"), user.address));
+        if (user.phoneNumber != null && !user.phoneNumber.isEmpty())
+            predicates.add(critBuilder.equal(root.get("phoneNumber"), user.phoneNumber));
+        if (user.maritalStatus != null)
+            predicates.add(critBuilder.equal(root.get("maritalStatus"), user.maritalStatus));
 
         critQuery.where(critBuilder.and(predicates));
         return session.createQuery(critQuery).getResultList();

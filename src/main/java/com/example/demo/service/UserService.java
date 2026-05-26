@@ -34,7 +34,7 @@ public class UserService {
     public List<UserResponseDto> getUserByFilters(UserRequestDto user) {
         ObjectMapper mapper = new ObjectMapper();
 
-        List<User> foundUsers = userDao.getUserByFilters(mapper.convertValue(user, HashMap.class));
+        List<User> foundUsers = userDao.getUserByFilters(user);
         List<UserResponseDto> foundResponseDto = new ArrayList<>();
 
         for (User foundUser : foundUsers) {

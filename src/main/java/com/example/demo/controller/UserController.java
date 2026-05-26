@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +29,13 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Получение списка всех пользователей")
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+    public ResponseEntity<ListResponseDto<UserResponseDto>> getAllUsers() {
         List<UserResponseDto> users = userService.getAllUsers();
-        return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
+        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>();
+        usersList.items = users;
+        usersList.total = users.toArray().length;
+
+        return ResponseEntity.ok(usersList);
     }
 
     @PostMapping("/applications")
@@ -47,23 +52,31 @@ public class UserController {
 
     @PostMapping("/findByFilters")
     @Operation(summary = "Получение пользователя по фильтрам")
-    public ResponseEntity<List<UserResponseDto>> getUserByFilters(
+    public ResponseEntity<ListResponseDto<UserResponseDto>> getUserByFilters(
             @RequestBody UserRequestDto user
     ) {
-        List<UserResponseDto> findUser = userService.getUserByFilters(user);
+        List<UserResponseDto> users = userService.getUserByFilters(user);
 
-        return findUser == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(findUser);
+        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>();
+        usersList.items = users;
+        usersList.total = users.toArray().length;
+
+        return ResponseEntity.ok(usersList);
     }
 
     @GetMapping("/findByFullName")
     @Operation(summary = "Поиск пользователя по имени")
-    public ResponseEntity<List<UserResponseDto>> getUserByName(
+    public ResponseEntity<ListResponseDto<UserResponseDto>> getUserByName(
             @RequestParam String firstName,
             @RequestParam String surName
     ) {
         List<UserResponseDto> users = userService.getUsersByName(firstName, surName);
 
-        return users.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(users);
+        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>();
+        usersList.items = users;
+        usersList.total = users.toArray().length;
+
+        return ResponseEntity.ok(usersList);
     }
 
     @GetMapping("/findByPhone")
