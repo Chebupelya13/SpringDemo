@@ -33,7 +33,7 @@ public class ApplicationController {
     @GetMapping
     @Operation(summary = "Получение всех заявок")
     public ResponseEntity<List<ApplicationResponseDto>> getApplications(
-            @RequestHeader("Authorization") String authHeader
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
         String name = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
         List<ApplicationResponseDto> applications = applicationService.getAllApplications();
