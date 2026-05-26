@@ -31,9 +31,6 @@ public class AuthController {
 
     @PostMapping("/token")
     public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto authRequest) {
-        UserResponseDto user = userService.getUserByUsername(authRequest.getUsername());
-
-
         return ResponseEntity.ok(authService.authenticate(authRequest));
     }
 }
