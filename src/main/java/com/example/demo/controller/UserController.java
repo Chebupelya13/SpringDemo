@@ -61,11 +61,7 @@ public class UserController {
     public ResponseEntity<ListResponseDto<UserResponseDto>> getUserByFilters(
             @RequestBody UserRequestDto user
     ) {
-        List<UserResponseDto> users = userService.getUserByFilters(user);
-
-        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>();
-        usersList.items = users;
-        usersList.total = users.toArray().length;
+        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>(userService.getUserByFilters(user));
 
         return ResponseEntity.ok(usersList);
     }

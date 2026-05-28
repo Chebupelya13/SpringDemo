@@ -13,6 +13,11 @@ public class ListResponseDto<T> {
         this.total = items.size();
     }
 
+    public ListResponseDto(List<T> items, int limit) {
+        this.items = items.subList(0, limit - 1);
+        this.total = items.size();
+    }
+
     public ListResponseDto() {}
 
 }
