@@ -25,6 +25,18 @@ public class Role {
         return this.role.name();
     }
 
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Roles getRole() {
+        return role;
+    }
+
     public enum Roles {
         ADMIN, USER
     }
