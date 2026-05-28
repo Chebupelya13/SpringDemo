@@ -8,4 +8,11 @@ public class ListResponseDto<T> {
 
     public int total;
 
+    public ListResponseDto(List<T> items) {
+        this.items = items;
+        this.total = items.size();
+    }
+
+    public ListResponseDto() {}
+
 }

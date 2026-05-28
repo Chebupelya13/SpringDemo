@@ -4,6 +4,7 @@ import com.example.demo.dao.ApplicationDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.request.ApplicationRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.ApplicationMapper;
@@ -31,21 +32,23 @@ public class ApplicationService {
         this.applicationMapper = applicationMapper;
     }
 
-    public List<ApplicationResponseDto> getAllApplications() {
-        return applicationDao.getAllApplications().stream()
+    public ListResponseDto<ApplicationResponseDto> getAllApplications() {
+        List<ApplicationResponseDto> applications = applicationDao.getAllApplications().stream()
                 .map(applicationMapper::toResponseDto)
                 .collect(Collectors.toList());
+
+        return new ListResponseDto<>(applications);
     }
 
-    public List<ApplicationResponseDto> getApplicationsByUser(int userId) {
-
-        System.out.println("ROLE_" + userDao.getUserById(userId).getRole().toString());
-        return applicationDao.getApplicationsByUser(userId).stream()
+    public ListResponseDto<ApplicationResponseDto> getApplicationsByUser(int userId) {
+        List<ApplicationResponseDto> applications = applicationDao.getApplicationsByUser(userId).stream()
                 .map(applicationMapper::toResponseDto)
                 .collect(Collectors.toList());
+
+        return new ListResponseDto<>(applications);
     }
 
-    public List<ApplicationResponseDto> getAcceptedApplicationsByUser(int userId) {
+    public ListResponseDto<ApplicationResponseDto> getAcceptedApplicationsByUser(int userId) {
         List<Application> applications = applicationDao.getApplicationsByUser(userId);
         ArrayList<Application> acceptedApplications = new ArrayList<>();
 
@@ -54,15 +57,19 @@ public class ApplicationService {
                 acceptedApplications.add(application);
         }
 
-        return acceptedApplications.stream()
+        List<ApplicationResponseDto> acceptedApplicationDtos = acceptedApplications.stream()
                 .map(applicationMapper::toResponseDto)
                 .collect(Collectors.toList());
+
+        return new ListResponseDto<>(acceptedApplicationDtos);
     }
 
-    public List<ApplicationResponseDto> getAllAccepted() {
-        return applicationDao.getAllAccepted().stream()
+    public ListResponseDto<ApplicationResponseDto> getAllAccepted() {
+        List<ApplicationResponseDto> applications = applicationDao.getAllAccepted().stream()
                 .map(applicationMapper::toResponseDto)
                 .collect(Collectors.toList());
+
+        return new ListResponseDto<>(applications);
     }
 
     public boolean createApplication(ApplicationRequestDto requestDto) {

@@ -5,6 +5,7 @@ import com.example.demo.dao.ApplicationDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.request.AgreementRequestDto;
 import com.example.demo.dto.response.AgreementResponseDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.entity.Agreement;
 import com.example.demo.entity.Application;
 import com.example.demo.mapper.AgreementMapper;
@@ -32,16 +33,20 @@ public class AgreementService {
         this.agreementMapper = agreementMapper;
     }
 
-    public List<AgreementResponseDto> getAgreements() {
-        return agreementDao.getAgreements().stream()
+    public ListResponseDto<AgreementResponseDto> getAgreements() {
+        List<AgreementResponseDto> agreements = agreementDao.getAgreements().stream()
                 .map(agreementMapper::toResponseDto)
                 .collect(Collectors.toList());
+
+        return new ListResponseDto<>(agreements);
     }
 
-    public List<AgreementResponseDto> getUsersAgreements(int userId) {
-        return agreementDao.getUsersAgreements(userId).stream()
+    public ListResponseDto<AgreementResponseDto> getUsersAgreements(int userId) {
+        List<AgreementResponseDto> agreements =  agreementDao.getUsersAgreements(userId).stream()
                 .map(agreementMapper::toResponseDto)
                 .collect(Collectors.toList());
+
+        return new ListResponseDto<>(agreements);
     }
 
     public AgreementResponseDto getAgreementByApplicationId(int applicationId) {

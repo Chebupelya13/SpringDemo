@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.AgreementRequestDto;
 import com.example.demo.dto.response.AgreementResponseDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.service.AgreementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,10 +28,8 @@ public class AgreementController {
 
     @GetMapping
     @Operation(summary = "Получение списка всех договоров")
-    public ResponseEntity<List<AgreementResponseDto>> getAllAgreements() {
-        List<AgreementResponseDto> agreements = agreementService.getAgreements();
-
-        return agreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreements);
+    public ResponseEntity<ListResponseDto<AgreementResponseDto>> getAllAgreements() {
+        return ResponseEntity.ok(agreementService.getAgreements());
     }
 
     @PostMapping
@@ -50,10 +49,9 @@ public class AgreementController {
 
     @GetMapping("/findByUser")
     @Operation(summary = "Получение договоров пользователя")
-    public ResponseEntity<List<AgreementResponseDto>> getUsersAgreements( @RequestParam int userId ) {
+    public ResponseEntity<ListResponseDto<AgreementResponseDto>> getUsersAgreements(@RequestParam int userId ) {
         try {
-            List<AgreementResponseDto> usersAgreements = agreementService.getUsersAgreements(userId);
-            return usersAgreements.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersAgreements);
+            return ResponseEntity.ok(agreementService.getUsersAgreements(userId));
 
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

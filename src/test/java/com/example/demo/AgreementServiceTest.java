@@ -50,7 +50,7 @@ public class AgreementServiceTest {
         when(agreementDao.getAgreements()).thenReturn(mockAgreements);
         when(agreementMapper.toResponseDto(agreement)).thenReturn(expectedDto);
 
-        List<AgreementResponseDto> result = agreementService.getAgreements();
+        List<AgreementResponseDto> result = agreementService.getAgreements().items;
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -71,7 +71,7 @@ public class AgreementServiceTest {
         when(agreementDao.getUsersAgreements(userId)).thenReturn(mockAgreements);
         when(agreementMapper.toResponseDto(agreement)).thenReturn(expectedDto);
 
-        List<AgreementResponseDto> result = agreementService.getUsersAgreements(userId);
+        List<AgreementResponseDto> result = agreementService.getUsersAgreements(userId).items;
 
         assertNotNull(result);
         assertEquals(1, result.size());

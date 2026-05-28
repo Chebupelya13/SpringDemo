@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.ApplicationRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.security.service.JwtTokenService;
 import com.example.demo.service.ApplicationService;
 import com.example.demo.service.UserService;
@@ -33,38 +34,38 @@ public class ApplicationController {
 
     @GetMapping
     @Operation(summary = "Получение всех заявок")
-    public ResponseEntity<List<ApplicationResponseDto>> getApplications(
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getApplications(
             @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
         String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
 
-        List<ApplicationResponseDto> applications = applicationService.getApplicationsByUser(
+        ListResponseDto<ApplicationResponseDto> applications = applicationService.getApplicationsByUser(
                 userService.getUserByUsername(username).id
         );
 
-        return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
+        return ResponseEntity.ok(applications);
     }
 
     @GetMapping("/findByUser")
     @Operation(summary = "Получение заявок пользователя")
-    public ResponseEntity<List<ApplicationResponseDto>> getUsersApplications (
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getUsersApplications (
             @RequestParam int userId
     ) {
-        List<ApplicationResponseDto> usersApplications = applicationService.getApplicationsByUser(userId);
-        return usersApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(usersApplications);
+        ListResponseDto<ApplicationResponseDto> usersApplications = applicationService.getApplicationsByUser(userId);
+        return ResponseEntity.ok(usersApplications);
     }
 
     @GetMapping("/accepted")
     @Operation(summary = "Получение списка одобренных заявок")
-    public ResponseEntity<List<ApplicationResponseDto>> getAllAcceptedApplications(
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getAllAcceptedApplications(
             @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
         String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
-        List<ApplicationResponseDto> acceptedApplications = applicationService.getAcceptedApplicationsByUser(
+        ListResponseDto<ApplicationResponseDto> acceptedApplications = applicationService.getAcceptedApplicationsByUser(
                 userService.getUserByUsername(username).id
         );
 
-        return acceptedApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(acceptedApplications);
+        return ResponseEntity.ok(acceptedApplications);
     }
 
     @PostMapping

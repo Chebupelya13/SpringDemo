@@ -40,14 +40,20 @@ public class UserController {
 
     @PostMapping("/applications")
     @Operation(summary = "Получение всех заявок пользователя")
-    public ResponseEntity<List<ApplicationResponseDto>> getUsersApplications(
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getUsersApplications(
             @RequestParam int userId
     ){
         UserResponseDto user = userService.getUserById(userId);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(user.getApplications());
+
+        ListResponseDto<ApplicationResponseDto> applicationsList = new ListResponseDto<ApplicationResponseDto>();
+        List<ApplicationResponseDto> usersApplications = user.getApplications();
+        applicationsList.items =usersApplications;
+        applicationsList.total = usersApplications.size();
+
+        return ResponseEntity.ok(applicationsList);
     }
 
     @PostMapping("/findByFilters")

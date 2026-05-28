@@ -45,7 +45,7 @@ public class ApplicationServiceTest {
         when(applicationDao.getAllApplications()).thenReturn(mockApplications);
         when(applicationMapper.toResponseDto(application)).thenReturn(expectedDto);
 
-        List<ApplicationResponseDto> result = applicationService.getAllApplications();
+        List<ApplicationResponseDto> result = applicationService.getAllApplications().items;
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -66,7 +66,7 @@ public class ApplicationServiceTest {
         when(applicationDao.getApplicationsByUser(userId)).thenReturn(mockApplications);
         when(applicationMapper.toResponseDto(application)).thenReturn(expectedDto);
 
-        List<ApplicationResponseDto> result = applicationService.getApplicationsByUser(userId);
+        List<ApplicationResponseDto> result = applicationService.getApplicationsByUser(userId).items;
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -86,7 +86,7 @@ public class ApplicationServiceTest {
         when(applicationDao.getAllAccepted()).thenReturn(mockApplications);
         when(applicationMapper.toResponseDto(application)).thenReturn(expectedDto);
 
-        List<ApplicationResponseDto> result = applicationService.getAllAccepted();
+        List<ApplicationResponseDto> result = applicationService.getAllAccepted().items;
 
         assertNotNull(result);
         assertEquals(1, result.size());
