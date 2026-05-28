@@ -3,6 +3,7 @@ package com.example.demo.dao;
 import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import com.example.demo.service.RoleService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -21,11 +22,21 @@ public class UserDao {
 
     private final PasswordEncoder passwordEncoder;
     private final SessionFactory sessionFactory;
+    private final RoleService roleService;
 
     @Autowired
-    public UserDao(PasswordEncoder passwordEncoder, SessionFactory sessionFactory) {
+    public UserDao(PasswordEncoder passwordEncoder, SessionFactory sessionFactory, RoleService roleService) {
         this.passwordEncoder = passwordEncoder;
         this.sessionFactory = sessionFactory;
+        this.roleService = roleService;
+    }
+
+    public void giveRoot(int userId) {
+        sessionFactory.getCurrentSession().createQuery(
+                "update User set role=:role where id=:userId")
+                .setParameter("role", roleService.getAdmin())
+                .setParameter("userId", userId)
+                .executeUpdate();
     }
 
     public void addUser(User user) {

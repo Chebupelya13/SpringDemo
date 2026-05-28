@@ -15,6 +15,14 @@ public class RoleService {
         this.roleDao = roleDao;
     }
 
+    public Role getAdmin() {
+        return roleDao.getAdmin();
+    }
+
+    public Role getUser() {
+        return roleDao.getUser();
+    }
+
     public Role findByName(Role.Roles role) {
         return roleDao.findByName(role);
     }

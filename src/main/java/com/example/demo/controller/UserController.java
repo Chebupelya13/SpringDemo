@@ -116,4 +116,14 @@ public class UserController {
         return HttpStatus.CREATED;
     }
 
+    @Operation(summary = "Выдача админа (для тестирования)")
+    @PutMapping("/admin")
+    public HttpStatus giveRoot(
+            @RequestParam int userId
+    ) {
+        userService.giveRoot(userId);
+
+        return HttpStatus.OK;
+    }
+
 }

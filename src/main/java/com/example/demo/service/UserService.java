@@ -33,6 +33,10 @@ public class UserService {
         this.roleDao = roledao;
     }
 
+    public void giveRoot(int userId) {
+        userDao.giveRoot(userId);
+    }
+
     public List<Application> getUsersApplications(int userId) {
         return userDao.getUsersApplications(userId);
     }
