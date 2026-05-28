@@ -45,7 +45,7 @@ public class AgreementDao {
     public List<Agreement> getUsersAgreements(int userId) {
 
         return sessionFactory.getCurrentSession().createQuery(
-                "from Agreement where user.id=:userId", Agreement.class
+                "from Agreement where application.user.id=:userId", Agreement.class
                 )
                 .setParameter("userId", userId)
                 .getResultList();

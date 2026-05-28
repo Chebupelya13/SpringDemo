@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,7 +30,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/agreement/**").hasRole("ADMIN");
                     auth.requestMatchers("/swagger-ui/**").permitAll();
                     auth.requestMatchers("/v3/api-docs/**").permitAll();
-                    auth.requestMatchers("/api/users/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
