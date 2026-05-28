@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -18,15 +19,18 @@ import java.util.List;
 @Repository
 public class UserDao {
 
-    @Autowired
+    private final PasswordEncoder passwordEncoder;
     private final SessionFactory sessionFactory;
 
-    public UserDao(SessionFactory sessionFactory) {
+    @Autowired
+    public UserDao(PasswordEncoder passwordEncoder, SessionFactory sessionFactory) {
+        this.passwordEncoder = passwordEncoder;
         this.sessionFactory = sessionFactory;
     }
 
     public void addUser(User user) {
         Session session = sessionFactory.getCurrentSession();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         session.persist(user);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -37,7 +38,23 @@ public class ApplicationService {
     }
 
     public List<ApplicationResponseDto> getApplicationsByUser(int userId) {
+
+        System.out.println("ROLE_" + userDao.getUserById(userId).getRole().toString());
         return applicationDao.getApplicationsByUser(userId).stream()
+                .map(applicationMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<ApplicationResponseDto> getAcceptedApplicationsByUser(int userId) {
+        List<Application> applications = applicationDao.getApplicationsByUser(userId);
+        ArrayList<Application> acceptedApplications = new ArrayList<>();
+
+        for (Application application : applications) {
+            if (application.getStatus() == Application.ApplicationStatus.ACCEPTED)
+                acceptedApplications.add(application);
+        }
+
+        return acceptedApplications.stream()
                 .map(applicationMapper::toResponseDto)
                 .collect(Collectors.toList());
     }

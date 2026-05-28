@@ -4,6 +4,7 @@ import com.example.demo.dto.request.AgreementRequestDto;
 import com.example.demo.dto.response.AgreementResponseDto;
 import com.example.demo.service.AgreementService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,7 +62,10 @@ public class AgreementController {
 
     @PutMapping("/sign")
     @Operation(summary = "Изменение статуса договора на 'подписано'")
-    public HttpStatus signAgreement( @RequestParam int agreementId ) {
+    public HttpStatus signAgreement(
+            @RequestParam int agreementId,
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
+    ) {
         try {
             boolean signStatus = agreementService.signAgreement(agreementId);
             if (signStatus)

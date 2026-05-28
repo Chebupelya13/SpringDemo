@@ -36,8 +36,12 @@ public class ApplicationController {
     public ResponseEntity<List<ApplicationResponseDto>> getApplications(
             @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
-        String name = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
-        List<ApplicationResponseDto> applications = applicationService.getAllApplications();
+        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
+
+        List<ApplicationResponseDto> applications = applicationService.getApplicationsByUser(
+                userService.getUserByUsername(username).id
+        );
+
         return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
     }
 
@@ -51,9 +55,15 @@ public class ApplicationController {
     }
 
     @GetMapping("/accepted")
-    @Operation(summary = "Получение списка всех одобренных заявок")
-    public ResponseEntity<List<ApplicationResponseDto>> getAllAcceptedApplications() {
-        List<ApplicationResponseDto> acceptedApplications = applicationService.getAllAccepted();
+    @Operation(summary = "Получение списка одобренных заявок")
+    public ResponseEntity<List<ApplicationResponseDto>> getAllAcceptedApplications(
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
+    ) {
+        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
+        List<ApplicationResponseDto> acceptedApplications = applicationService.getAcceptedApplicationsByUser(
+                userService.getUserByUsername(username).id
+        );
+
         return acceptedApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(acceptedApplications);
     }
 

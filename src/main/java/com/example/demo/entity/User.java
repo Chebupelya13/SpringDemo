@@ -74,7 +74,7 @@ public class User {
                 String address, MaritalStatus maritalStatus, String phoneNumber) {
         this.firstname = firstname;
         this.surname = surname;
-        this.patronymic = patronymic;
+        this.patronymic = patronymic;   
         this.birthday = birthday;
         this.passportSeries = passportSeries;
         this.passportNumber = passportNumber;
