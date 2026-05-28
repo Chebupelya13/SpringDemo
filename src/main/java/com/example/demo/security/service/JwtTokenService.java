@@ -1,5 +1,6 @@
 package com.example.demo.security.service;
 
+import com.example.demo.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -21,7 +22,7 @@ public class JwtTokenService {
         this.decoder = decoder;
     }
 
-    private String generateToken(Authentication authentication, String role) {
+    String generateToken(Authentication authentication, String role) {
         Instant now = Instant.now();
         String scope = "ROLE_" + role.toUpperCase();
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -35,14 +36,6 @@ public class JwtTokenService {
         return this.encoder.encode(encoderParameters).getTokenValue();
     }
 
-    public String generateUserToken(Authentication authentication) {
-        return generateToken(authentication, Role.USER.name());
-    }
-
-    public String generateAdminToken(Authentication authentication) {
-        return generateToken(authentication, Role.ADMIN.name());
-    }
-
     public Long extractExpirationTime(String token) {
         Jwt jwt = decoder.decode(token);
         var exp = (Instant) jwt.getClaim("exp");
@@ -54,8 +47,4 @@ public class JwtTokenService {
         return jwt.getClaim("sub");
     }
 
-    public enum Role {
-        USER,
-        ADMIN
-    }
 }

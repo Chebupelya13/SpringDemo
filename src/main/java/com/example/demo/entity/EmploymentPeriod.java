@@ -61,4 +61,5 @@ public class EmploymentPeriod {
     public void setCompanyTitle(String companyTitle) {
         this.companyTitle = companyTitle;
     }
+
 }

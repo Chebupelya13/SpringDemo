@@ -3,9 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.security.dto.AuthRequestDto;
 import com.example.demo.security.dto.AuthResponseDto;
 import com.example.demo.security.service.AuthService;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,8 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public AuthResponseDto login(@RequestBody AuthRequestDto authRequest) {
-        return authService.authenticate(authRequest);
+    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto authRequest) {
+        return ResponseEntity.ok(authService.authenticate(authRequest));
     }
+
 }

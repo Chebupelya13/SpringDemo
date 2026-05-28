@@ -6,6 +6,7 @@ import com.example.demo.security.service.JwtTokenService;
 import com.example.demo.service.ApplicationService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/applications")
 @Tag(description = "Операции с заявками", name = "Заявки")
 public class ApplicationController {
+
     private final ApplicationService applicationService;
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
@@ -32,10 +34,14 @@ public class ApplicationController {
     @GetMapping
     @Operation(summary = "Получение всех заявок")
     public ResponseEntity<List<ApplicationResponseDto>> getApplications(
-            @RequestHeader("Authorization") String authHeader
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
-        String name = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
-        List<ApplicationResponseDto> applications = applicationService.getAllApplications();
+        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
+
+        List<ApplicationResponseDto> applications = applicationService.getApplicationsByUser(
+                userService.getUserByUsername(username).id
+        );
+
         return applications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(applications);
     }
 
@@ -49,18 +55,29 @@ public class ApplicationController {
     }
 
     @GetMapping("/accepted")
-    @Operation(summary = "Получение списка всех одобренных заявок")
-    public ResponseEntity<List<ApplicationResponseDto>> getAllAcceptedApplications() {
-        List<ApplicationResponseDto> acceptedApplications = applicationService.getAllAccepted();
+    @Operation(summary = "Получение списка одобренных заявок")
+    public ResponseEntity<List<ApplicationResponseDto>> getAllAcceptedApplications(
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
+    ) {
+        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
+        List<ApplicationResponseDto> acceptedApplications = applicationService.getAcceptedApplicationsByUser(
+                userService.getUserByUsername(username).id
+        );
+
         return acceptedApplications.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(acceptedApplications);
     }
 
     @PostMapping
     @Operation(summary = "Создание новой заявки на кредит")
     public HttpStatus createApplication(
-            @RequestBody ApplicationRequestDto requestDto
+            @RequestBody ApplicationRequestDto requestDto,
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
+        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
+        requestDto.setUserId(userService.getUserByUsername(username).id);
+
         boolean isCreated = applicationService.createApplication(requestDto);
         return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
     }
+
 }

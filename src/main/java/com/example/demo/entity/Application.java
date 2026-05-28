@@ -10,7 +10,6 @@ import jakarta.validation.constraints.Min;
 @Table(name = "applications")
 public class Application {
 
-
     @GeneratedValue
     @Id
     @Column(name = "id", nullable = false)
@@ -20,11 +19,9 @@ public class Application {
     @ManyToOne @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status = ApplicationStatus.IN_PROGRESS;
-
 
     @Column(name = "amount", nullable = false)
     private int amount;
@@ -61,8 +58,6 @@ public class Application {
         return user;
     }
 
-
-
     public enum ApplicationStatus{
         ACCEPTED, DECLINED, IN_PROGRESS
     }
@@ -95,4 +90,5 @@ public class Application {
     public void setStatus(ApplicationStatus status) {
         this.status = status;
     }
+
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthResponseDto {
+
     public String jwtToken;
     public String name;
     public Long expiresAt;
@@ -16,4 +17,5 @@ public class AuthResponseDto {
         this.name = name;
         this.expiresAt = expiresAt;
     }
+
 }

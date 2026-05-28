@@ -1,13 +1,5 @@
 package com.example.demo;
 
-import com.example.demo.entity.Agreement;
-import com.example.demo.entity.Application;
-import com.example.demo.entity.EmploymentPeriod;
-import com.example.demo.entity.User;
-import jakarta.persistence.PersistenceConfiguration;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.schema.Action;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -77,9 +69,4 @@ public class HibernateConfig {
         return transactionManager;
     }
 
-
 }
-
-
-
-

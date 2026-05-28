@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthUserDetailsService implements UserDetailsService {
+
     private final UserDao userDao;
 
     public AuthUserDetailsService(UserDao userDao) {
@@ -20,7 +21,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        System.out.println("load");
         return new AuthUser(userDao.getUserByUsername(username));
     }
+
 }

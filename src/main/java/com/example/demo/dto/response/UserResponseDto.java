@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -32,6 +33,9 @@ public class UserResponseDto {
     public Date birthday;
     @Schema(description = "Номер телефона", example = "79998886655")
     public String phoneNumber;
+
+    @Schema
+    public Role role;
 
     @Schema
     public List<ApplicationResponseDto> applications = new ArrayList<>();
