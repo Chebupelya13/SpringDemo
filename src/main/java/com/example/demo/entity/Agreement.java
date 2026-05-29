@@ -16,12 +16,16 @@ public class Agreement {
     @OneToOne @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 
+    @ManyToOne @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private AgreementStatus status = AgreementStatus.WAITING_TO_SIGN;
 
     public Agreement(Application application, User user) {
         this.application = application;
+        this.user = user;
     }
 
     public Agreement() {
@@ -32,8 +36,17 @@ public class Agreement {
         return "Agreement{" +
                 "id=" + id +
                 ", applicationId=" + application.getId() +
+                ", user=" + user.getId() +
                 ", status=" + status +
                 '}';
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public enum AgreementStatus {
