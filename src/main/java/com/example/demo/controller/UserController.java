@@ -30,12 +30,7 @@ public class UserController {
     @GetMapping
     @Operation(summary = "Получение списка всех пользователей")
     public ResponseEntity<ListResponseDto<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto> users = userService.getAllUsers();
-        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>();
-        usersList.items = users;
-        usersList.total = users.toArray().length;
-
-        return ResponseEntity.ok(usersList);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping("/applications")
@@ -47,13 +42,7 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-
-        ListResponseDto<ApplicationResponseDto> applicationsList = new ListResponseDto<ApplicationResponseDto>();
-        List<ApplicationResponseDto> usersApplications = user.getApplications();
-        applicationsList.items =usersApplications;
-        applicationsList.total = usersApplications.size();
-
-        return ResponseEntity.ok(applicationsList);
+        return ResponseEntity.ok(new ListResponseDto<>(user.getApplications()));
     }
 
     @PostMapping("/findByFilters")
@@ -61,9 +50,7 @@ public class UserController {
     public ResponseEntity<ListResponseDto<UserResponseDto>> getUserByFilters(
             @RequestBody UserRequestDto user
     ) {
-        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>(userService.getUserByFilters(user));
-
-        return ResponseEntity.ok(usersList);
+        return ResponseEntity.ok(userService.getUserByFilters(user));
     }
 
     @GetMapping("/findByFullName")
@@ -72,13 +59,7 @@ public class UserController {
             @RequestParam String firstName,
             @RequestParam String surName
     ) {
-        List<UserResponseDto> users = userService.getUsersByName(firstName, surName);
-
-        ListResponseDto<UserResponseDto> usersList = new ListResponseDto<UserResponseDto>();
-        usersList.items = users;
-        usersList.total = users.toArray().length;
-
-        return ResponseEntity.ok(usersList);
+        return ResponseEntity.ok(userService.getUsersByName(firstName, surName));
     }
 
     @GetMapping("/findByPhone")

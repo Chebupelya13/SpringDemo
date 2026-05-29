@@ -16,7 +16,6 @@ public class RoleInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Проверяем, есть ли уже роли, чтобы не создавать дубликаты
         if (roleService.findByName(Role.Roles.USER) == null ) {
             roleService.addRole(new Role(Role.Roles.USER));
         }

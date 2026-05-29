@@ -52,6 +52,7 @@ public class ApplicationController {
             @RequestParam int userId
     ) {
         ListResponseDto<ApplicationResponseDto> usersApplications = applicationService.getApplicationsByUser(userId);
+
         return ResponseEntity.ok(usersApplications);
     }
 

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dao.RoleDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.request.UserRequestDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
@@ -15,6 +16,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,43 +39,42 @@ public class UserService {
         userDao.giveRoot(userId);
     }
 
-    public List<Application> getUsersApplications(int userId) {
-        return userDao.getUsersApplications(userId);
+    public ListResponseDto<Application> getUsersApplications(int userId) {
+        return new ListResponseDto<>(userDao.getUsersApplications(userId));
     }
 
-    public List<UserResponseDto> getUserByFilters(UserRequestDto user) {
-        ObjectMapper mapper = new ObjectMapper();
-
+    public ListResponseDto<UserResponseDto> getUserByFilters(UserRequestDto user) {
         List<User> foundUsers = userDao.getUserByFilters(user);
-        List<UserResponseDto> foundResponseDto = new ArrayList<>();
 
-        for (User foundUser : foundUsers) {
-            foundResponseDto.add(userMapper.toResponseDto(foundUser));
-        }
-
-        return foundResponseDto;
+        return new ListResponseDto<>(
+                foundUsers.stream()
+                .map(userMapper::toResponseDto)
+                .collect(Collectors.toList())
+        );
     }
 
     public UserResponseDto getUserByUsername(String username) {
         return userMapper.toResponseDto(userDao.getUserByUsername(username));
     }
 
-    public List<UserResponseDto> getAllUsers() {
+    public ListResponseDto<UserResponseDto> getAllUsers() {
         List<User> users = userDao.getAllUsers();
-        List<UserResponseDto> result = new ArrayList<>();
-        for (User user : users) {
-            result.add(userMapper.toResponseDto(user));
-        }
-        return result;
+
+        return new ListResponseDto<UserResponseDto>(
+                users.stream()
+                .map(userMapper::toResponseDto)
+                .collect(Collectors.toList())
+        );
     }
 
-    public List<UserResponseDto> getUsersByName(String firstName, String surName) {
+    public ListResponseDto<UserResponseDto> getUsersByName(String firstName, String surName) {
         List<User> users = userDao.getUsersByName(firstName, surName);
-        List<UserResponseDto> result = new ArrayList<>();
-        for (User user : users) {
-            result.add(userMapper.toResponseDto(user));
-        }
-        return result;
+
+        return new ListResponseDto<>(
+                users.stream()
+                        .map(userMapper::toResponseDto)
+                        .collect(Collectors.toList())
+        );
     }
 
     public UserResponseDto getUserByFullPassport(int passportSeries, int passportNumber) {
