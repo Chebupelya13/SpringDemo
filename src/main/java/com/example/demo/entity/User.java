@@ -53,7 +53,7 @@ public class User {
     private String phoneNumber;
 
     @JoinColumn(name = "role")
-    @ManyToOne
+    @ManyToMany
     private Role role;
 
     @JsonIgnore

@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.request.ApplicationRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.dto.response.ListResponseDto;
-import com.example.demo.security.service.JwtTokenService;
+import com.example.demo.service.JwtTokenService;
 import com.example.demo.service.ApplicationService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/applications")

@@ -32,14 +32,23 @@
         <postgresql.version>42.6.0</postgresql.version>
         <hibernate.version>7.3.5.Final</hibernate.version>
         <javax.version>2.2</javax.version>
+        <minio.version>8.5.7</minio.version>
+        <liquibase.version>5.0.3</liquibase.version>
     </properties>
 
-<!--    DB-->
     <dependencies>
+        <!-- DB -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+            <scope>compile</scope>
         </dependency>
         <!-- Source: https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
@@ -62,8 +71,14 @@
             <version>${javax.version}</version>
             <scope>compile</scope>
         </dependency>
+        <!-- MinIO -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
 
-<!--        Spring-->
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -154,6 +169,11 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
