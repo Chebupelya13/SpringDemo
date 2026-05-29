@@ -40,7 +40,7 @@ public class UserController {
     ){
         UserResponseDto user = userService.getUserById(userId);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            throw new com.example.demo.exception.NotFoundException("Пользователь с id " + userId + " не найден");
         }
         return ResponseEntity.ok(new ListResponseDto<>(user.getApplications()));
     }
@@ -68,8 +68,10 @@ public class UserController {
             @RequestParam String phone
     ) {
         UserResponseDto user = userService.getUserByPhone(phone);
-
-        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+        if (user == null) {
+            throw new com.example.demo.exception.NotFoundException("Пользователь с телефоном " + phone + " не найден");
+        }
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/findByPassport")
@@ -79,8 +81,10 @@ public class UserController {
             @RequestParam int passportNumber
     ) {
         UserResponseDto user = userService.getUserByFullPassport(passportSeries, passportNumber);
-
-        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+        if (user == null) {
+            throw new com.example.demo.exception.NotFoundException("Пользователь с паспортом " + passportSeries + " " + passportNumber + " не найден");
+        }
+        return ResponseEntity.ok(user);
     }
 
     @Operation(summary = "Создание записи о новом пользователе")

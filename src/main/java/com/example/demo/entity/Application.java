@@ -62,7 +62,7 @@ public class Application {
         ACCEPTED, DECLINED, IN_PROGRESS
     }
 
-    public void setTermMonths(byte termMonths) {
+    public void setTermMonths(int termMonths) {
         if ( 1 <= termMonths && termMonths <= 12)
             this.termMonths = termMonths;
     }

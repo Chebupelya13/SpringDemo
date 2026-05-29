@@ -37,25 +37,14 @@ public class AgreementController {
     public HttpStatus createAgreement(
             @RequestBody AgreementRequestDto requestDto
     ) {
-        try {
-            agreementService.addAgreement(requestDto);
-
-            return HttpStatus.CREATED;
-
-        } catch (Exception e) {
-            return HttpStatus.NOT_FOUND;
-        }
+        agreementService.addAgreement(requestDto);
+        return HttpStatus.CREATED;
     }
 
     @GetMapping("/findByUser")
     @Operation(summary = "Получение договоров пользователя")
     public ResponseEntity<ListResponseDto<AgreementResponseDto>> getUsersAgreements(@RequestParam int userId ) {
-        try {
-            return ResponseEntity.ok(agreementService.getUsersAgreements(userId));
-
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(agreementService.getUsersAgreements(userId));
     }
 
     @PutMapping("/sign")
@@ -64,29 +53,21 @@ public class AgreementController {
             @RequestParam int agreementId,
             @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
-        try {
-            boolean signStatus = agreementService.signAgreement(agreementId);
-            if (signStatus)
-                return HttpStatus.ACCEPTED;
+        boolean signStatus = agreementService.signAgreement(agreementId);
+        if (signStatus)
+            return HttpStatus.ACCEPTED;
 
-            return HttpStatus.NOT_FOUND;
-
-        } catch (IllegalArgumentException e) {
-            return HttpStatus.NOT_FOUND;
-        }
+        throw new com.example.demo.exception.NotFoundException("Договор не найден или не может быть подписан");
     }
 
     @GetMapping("/findByApplication")
     @Operation(summary = "Получение договора по идентификатору заявки")
     public ResponseEntity<AgreementResponseDto> getAgreementByApplication(@RequestParam int applicationId ) {
-        try {
-            AgreementResponseDto agreement = agreementService.getAgreementByApplicationId(applicationId);
-
-            return agreement == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(agreement);
-
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+        AgreementResponseDto agreement = agreementService.getAgreementByApplicationId(applicationId);
+        if (agreement == null) {
+            throw new com.example.demo.exception.NotFoundException("Договор по указанной заявке не найден");
         }
+        return ResponseEntity.ok(agreement);
     }
 
 }
