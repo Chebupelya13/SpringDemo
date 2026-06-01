@@ -89,6 +89,7 @@ public class UserService {
 
     public void addUser(UserRequestDto requestDto) {
         User user = userMapper.toEntityFromRequest(requestDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleDao.getUser());
         userDao.addUser(user);
     }

@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.RoleDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.dto.response.ListResponseDto;
@@ -35,6 +36,9 @@ public class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private RoleDao roleDao;
 
     @InjectMocks
     private UserService userService;
@@ -223,6 +227,7 @@ public class UserServiceTest {
 
         when(userMapper.toEntityFromRequest(requestDto)).thenReturn(user);
         when(passwordEncoder.encode("plain_password")).thenReturn("encoded_password");
+        when(roleDao.getUser()).thenReturn(new com.example.demo.entity.Role());
 
         userService.addUser(requestDto);
 
