@@ -52,9 +52,13 @@ public class User {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @JoinColumn(name = "role")
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user"),
+            inverseJoinColumns = @JoinColumn(name = "role")
+    )
     @ManyToMany
-    private Role role;
+    private List<Role> roles;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
@@ -85,12 +89,12 @@ public class User {
 
     public User() {}
 
-    public Role getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.roles.add(role);
     }
 
     public void setUsername(String username) {
