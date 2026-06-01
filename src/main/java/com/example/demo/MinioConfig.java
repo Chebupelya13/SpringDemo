@@ -4,6 +4,7 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.errors.*;
+import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,20 +29,32 @@ public class MinioConfig {
     private String minioBucket;
 
     @Bean
-    public MinioClient minioClient() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        MinioClient minioClient = MinioClient.builder()
-                .endpoint(minioUrl)
-                .credentials(minioUser, minioPassword)
-                .build();
+    public MinioClient minioClient() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException, InterruptedException {
+        boolean started = false;
 
-        boolean isExists = minioClient.bucketExists(
-                BucketExistsArgs.builder().bucket(minioBucket).build()
-        );
+        do {
+            try {
+                MinioClient minioClient = MinioClient.builder()
+                        .endpoint(minioUrl)
+                        .credentials(minioUser, minioPassword)
+                        .build();
 
-        if (!isExists)
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket(minioBucket).build());
+                boolean isExists = minioClient.bucketExists(
+                        BucketExistsArgs.builder().bucket(minioBucket).build()
+                );
 
-        return minioClient;
+                if (!isExists)
+                    minioClient.makeBucket(MakeBucketArgs.builder().bucket(minioBucket).build());
+
+                return minioClient;
+            } catch (Exception ignored) {
+            } finally {
+                Thread.sleep(1000);
+            }
+
+        } while (!started);
+
+        return null;
     }
 
 }
