@@ -58,7 +58,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role")
     )
     @ManyToMany
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
