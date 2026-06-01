@@ -1,0 +1,133 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="User1 (generated)" id="1780314823653-1">
+        <createSequence incrementBy="50" sequenceName="agreements_SEQ" startValue="1"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-2">
+        <createSequence incrementBy="50" sequenceName="applications_SEQ" startValue="1"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-3">
+        <createSequence incrementBy="50" sequenceName="roles_SEQ" startValue="1"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-4">
+        <createSequence incrementBy="50" sequenceName="users_SEQ" startValue="1"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-5">
+        <createTable tableName="agreements">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="agreementsPK"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="application_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-6">
+        <createTable tableName="applications">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="applicationsPK"/>
+            </column>
+            <column name="amount" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="term_months" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-7">
+        <createTable tableName="employment_periods">
+            <column name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="employment_periodsPK"/>
+            </column>
+            <column name="company_title" type="VARCHAR(255)"/>
+            <column name="since" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="up_to" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="user_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-8">
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="rolesPK"/>
+            </column>
+            <column name="role" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-9">
+        <createTable tableName="user_roles">
+            <column name="user" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-10">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="usersPK"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birthday" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marital_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="passport_number" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="passport_series" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="patronymic" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-11">
+        <addUniqueConstraint columnNames="application_id" constraintName="UC_AGREEMENTSAPPLICATION_ID_COL" tableName="agreements"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-12">
+        <addUniqueConstraint columnNames="username" constraintName="UC_USERSUSERNAME_COL" tableName="users"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-13">
+        <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_roles" constraintName="FK5klgup8egcm3o93sfutticc09" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-14">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="employment_periods" constraintName="FK80yimupy4rd72plmnkgi6fs1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-15">
+        <addForeignKeyConstraint baseColumnNames="role" baseTableName="user_roles" constraintName="FKaq6gmj85gm0d11gvpe4rj8l2n" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="roles" validate="true"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-16">
+        <addForeignKeyConstraint baseColumnNames="application_id" baseTableName="agreements" constraintName="FKbia4qv7rikhu2ymx9died7irk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="applications" validate="true"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780314823653-17">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="applications" constraintName="FKfsfqljedcla632u568jl5qf3w" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
