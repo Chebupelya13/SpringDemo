@@ -9,6 +9,7 @@ import org.springframework.orm.jpa.hibernate.HibernateTransactionManager;
 import org.springframework.orm.jpa.hibernate.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import liquibase.integration.spring.SpringLiquibase;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -49,6 +50,15 @@ public class HibernateConfig {
     }
 
     @Bean
+    public SpringLiquibase liquibase(DataSource dataSource) {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setChangeLog("classpath:db/changelog/master-changelog.xml");
+        liquibase.setDataSource(dataSource);
+        return liquibase;
+    }
+
+    @Bean
+    @DependsOn("liquibase")
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
