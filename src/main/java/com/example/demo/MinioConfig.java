@@ -24,7 +24,7 @@ public class MinioConfig {
     @Value("${minio.password}")
     private String minioPassword;
 
-    @Value("${minio.bucket")
+    @Value("${minio.bucket}")
     private String minioBucket;
 
     @Bean
