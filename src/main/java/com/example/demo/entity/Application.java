@@ -32,6 +32,15 @@ public class Application {
     @Column(name = "term_months", nullable = false, columnDefinition = "integer check (term_months >= 1 and term_months <= 12)")
     private int termMonths;
 
+    @Column(name = "passport_photo_path")
+    private String passportPhotoPath;
+
+    @Column(name = "registration_photo_path")
+    private String registrationPhotoPath;
+
+    @Column(name = "user_photo_path")
+    private String userPhotoPath;
+
     public Application(User user, int amount, int termMonths) {
         this.user = user;
         this.amount = amount;

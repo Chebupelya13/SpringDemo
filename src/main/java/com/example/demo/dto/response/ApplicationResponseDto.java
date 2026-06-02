@@ -17,7 +17,13 @@ public class ApplicationResponseDto {
     @Schema(description = "Срок погашения кредита (1 - 12)", example = "4")
     private int termMonths;
 
-    // Optional: Return minimal user information or user DTO instead of complete entity
+    @Schema
+    private String passportPhotoUrl;
+    @Schema
+    private String registrationPhotoUrl;
+    @Schema
+    private String userPhotoUrl;
+
     @Schema(description = "ID пользователя", example = "1")
     private int userId;
 
