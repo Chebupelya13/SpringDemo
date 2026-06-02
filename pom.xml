@@ -38,12 +38,6 @@
     </properties>
 
     <dependencies>
-        <!-- logging -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
         <!-- DB -->
         <dependency>
             <groupId>org.postgresql</groupId>
