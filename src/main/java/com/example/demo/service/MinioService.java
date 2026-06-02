@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.enums.PhotoType;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -26,10 +27,10 @@ public class MinioService {
         this.minioClient = minioClient;
     }
 
-    public String uploadFile(MultipartFile file, String folder) {
+    public String uploadFile(MultipartFile file, PhotoType folder) {
         try {
             String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-            String objectKey = folder + "/" + UUID.randomUUID().toString() + (extension != null ? "." + extension : "");
+            String objectKey = folder.getFolderName() + "/" + UUID.randomUUID().toString() + (extension != null ? "." + extension : "");
 
             InputStream inputStream = file.getInputStream();
             minioClient.putObject(
@@ -46,13 +47,6 @@ public class MinioService {
         }
     }
 
-    /**
-     * Gets file from MinIO bucket.
-     * The caller is responsible for closing the returned InputStream.
-     *
-     * @param objectKey The path to the file in the bucket.
-     * @return InputStream of the file.
-     */
     public InputStream getFile(String objectKey) {
         try {
             return minioClient.getObject(

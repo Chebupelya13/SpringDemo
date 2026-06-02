@@ -10,10 +10,12 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "passportPhotoPath", expression = "java(\"/api/users/\" + user.getId() + \"/documents/passport\")")
+    @Mapping(target = "registrationPhotoPath", expression = "java(\"/api/users/\" + user.getId() + \"/documents/registration\")")
+    @Mapping(target = "userPhotoPath", expression = "java(\"/api/users/\" + user.getId() + \"/documents/avatar\")")
     UserResponseDto toResponseDto(User user);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "applications", ignore = true)
     User toEntityFromRequest(UserRequestDto user);
-
 }

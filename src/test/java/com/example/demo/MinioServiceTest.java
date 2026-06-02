@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.enums.PhotoType;
 import com.example.demo.service.MinioService;
 import io.minio.GetObjectArgs;
 import io.minio.GetObjectResponse;
@@ -42,7 +43,7 @@ public class MinioServiceTest {
     @Test
     void uploadFile_ShouldReturnObjectKey_WhenSuccess() throws Exception {
         // Arrange
-        String folder = "passports";
+        PhotoType folder = PhotoType.PASSPORT;
         String originalFilename = "test-image.png";
         byte[] content = "test data".getBytes();
         MockMultipartFile mockFile = new MockMultipartFile("file", originalFilename, "image/png", content);
@@ -72,7 +73,7 @@ public class MinioServiceTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            minioService.uploadFile(mockFile, "docs");
+            minioService.uploadFile(mockFile, PhotoType.AVATAR);
         });
         assertEquals("Error uploading file to MinIO", exception.getMessage());
     }

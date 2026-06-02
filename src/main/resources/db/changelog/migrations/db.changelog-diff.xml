@@ -130,4 +130,19 @@
     <changeSet author="User1 (generated)" id="1780314823653-17">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="applications" constraintName="FKfsfqljedcla632u568jl5qf3w" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
     </changeSet>
+    <changeSet author="User1 (generated)" id="1780387682756-1">
+        <addColumn tableName="users">
+            <column name="passport_photo_path" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780387682756-2">
+        <addColumn tableName="users">
+            <column name="registration_photo_path" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780387682756-3">
+        <addColumn tableName="users">
+            <column name="user_photo_path" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

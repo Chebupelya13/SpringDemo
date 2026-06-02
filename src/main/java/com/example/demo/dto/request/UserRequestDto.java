@@ -4,6 +4,8 @@ package com.example.demo.dto.request;
 import com.example.demo.entity.User;
 import com.example.demo.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -23,6 +25,10 @@ public class UserRequestDto {
     public int passportNumber;
 
     @Schema
+    public MultipartFile passportPhoto;
+
+
+    @Schema(contentMediaType = MediaType.APPLICATION_JSON_VALUE)
     public String username;
     @Schema
     public String password;
@@ -36,6 +42,14 @@ public class UserRequestDto {
     public Date birthday;
     @Schema(description = "Номер телефона", example = "79998886655")
     public String phoneNumber;
+
+    public void setPassportPhoto(MultipartFile passportPhoto) {
+        this.passportPhoto = passportPhoto;
+    }
+
+    public MultipartFile getPassportPhoto() {
+        return passportPhoto;
+    }
 
     public void setUsername(String username) {
         this.username = username;

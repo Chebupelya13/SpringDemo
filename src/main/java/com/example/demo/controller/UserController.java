@@ -5,14 +5,24 @@ import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
+import com.example.demo.enums.PhotoType;
+import com.example.demo.service.MinioService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -21,10 +31,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final MinioService minioService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MinioService minioService) {
         this.userService = userService;
+        this.minioService = minioService;
     }
 
     @GetMapping
@@ -85,10 +97,18 @@ public class UserController {
     }
 
     @Operation(summary = "Создание записи о новом пользователе")
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public HttpStatus createUser(
             @RequestBody UserRequestDto user
+//            @RequestParam("passportPhoto") MultipartFile passportPhoto,
+//            @RequestParam("registrationPhoto") MultipartFile registrationPhoto,
+//            @RequestParam("userPhoto") MultipartFile userPhoto
     ) {
+        System.out.println(user.address);
+
+        minioService.uploadFile(user.passportPhoto, PhotoType.PASSPORT);
+//        minioService.uploadFile(registrationPhoto, PhotoType.REGISTRATION);
+//        minioService.uploadFile(userPhoto, PhotoType.AVATAR);
         userService.addUser(user);
 
         return HttpStatus.CREATED;
