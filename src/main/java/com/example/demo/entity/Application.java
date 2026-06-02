@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Min;
 @Table(name = "applications")
 public class Application {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private int id;

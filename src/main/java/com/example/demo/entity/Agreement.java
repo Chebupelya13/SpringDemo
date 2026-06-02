@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Table(name = "agreements")
 public class Agreement {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private int id;
