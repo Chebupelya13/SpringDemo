@@ -1,7 +1,6 @@
 package com.example.demo.dto.request;
 
 
-import com.example.demo.entity.User;
 import com.example.demo.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.format.annotation.DateTimeFormat;

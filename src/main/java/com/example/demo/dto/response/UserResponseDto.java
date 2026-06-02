@@ -1,10 +1,8 @@
 package com.example.demo.dto.response;
 
 import com.example.demo.entity.Role;
-import com.example.demo.entity.User;
 import com.example.demo.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.Date;

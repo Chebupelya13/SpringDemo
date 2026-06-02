@@ -1,6 +1,5 @@
 package com.example.demo.dto.response;
 
-import com.example.demo.entity.Application;
 import com.example.demo.enums.ApplicationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
