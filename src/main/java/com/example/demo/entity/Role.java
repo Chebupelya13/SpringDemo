@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
+import com.example.demo.enums.Roles;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -13,6 +16,9 @@ public class Role {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Roles role;
+
+    @ManyToMany(mappedBy = "roles") // Имя поля в классе User
+    private List<User> users;
 
     public Role(Roles role) {
         this.role = role;
@@ -35,10 +41,6 @@ public class Role {
 
     public Roles getRole() {
         return role;
-    }
-
-    public enum Roles {
-        ADMIN, USER
     }
 
 }

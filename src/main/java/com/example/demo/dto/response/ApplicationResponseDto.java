@@ -1,6 +1,7 @@
 package com.example.demo.dto.response;
 
 import com.example.demo.entity.Application;
+import com.example.demo.enums.ApplicationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ApplicationResponseDto {
@@ -9,7 +10,7 @@ public class ApplicationResponseDto {
     private int id;
 
     @Schema(description = "статус заявки", example = "IN_PROGRESS")
-    private Application.ApplicationStatus status;
+    private ApplicationStatus status;
 
     @Schema(description = "Сумма кредита", example = "100000")
     private int amount;
@@ -29,11 +30,11 @@ public class ApplicationResponseDto {
         this.id = id;
     }
 
-    public Application.ApplicationStatus getStatus() {
+    public ApplicationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Application.ApplicationStatus status) {
+    public void setStatus(ApplicationStatus status) {
         this.status = status;
     }
 

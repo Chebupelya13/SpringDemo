@@ -2,6 +2,7 @@ package com.example.demo.dto.response;
 
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class UserResponseDto {
     @Schema(description = "Адрес", example = "ул. Пушкина, д. Колотушкина")
     public String address;
     @Schema(description = "Семейное положение", example = "MARRIED")
-    public User.MaritalStatus maritalStatus;
+    public MaritalStatus maritalStatus;
 
     @Schema(description = "Дата рождения")
     public Date birthday;
@@ -68,7 +69,7 @@ public class UserResponseDto {
         this.address = address;
     }
 
-    public void setMaritalStatus(User.MaritalStatus maritalStatus) {
+    public void setMaritalStatus(MaritalStatus maritalStatus) {
         this.maritalStatus = maritalStatus;
     }
 
@@ -112,7 +113,7 @@ public class UserResponseDto {
         return address;
     }
 
-    public User.MaritalStatus getMaritalStatus() {
+    public MaritalStatus getMaritalStatus() {
         return maritalStatus;
     }
 

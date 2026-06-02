@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.enums.MaritalStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -52,18 +53,18 @@ public class User {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @JoinColumn(name = "role")
-    @ManyToOne
-    private Role role;
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user"),
+            inverseJoinColumns = @JoinColumn(name = "role")
+    )
+    @ManyToMany
+    private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     @Column(name = "applications")
     private List<Application> applications = new ArrayList<>();
-
-    public enum MaritalStatus {
-        MARRIED, NOT_MARRIED
-    }
 
     public int getId() {
         return id;
@@ -85,12 +86,12 @@ public class User {
 
     public User() {}
 
-    public Role getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.roles.add(role);
     }
 
     public void setUsername(String username) {

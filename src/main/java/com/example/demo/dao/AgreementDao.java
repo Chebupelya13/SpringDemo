@@ -3,6 +3,7 @@ package com.example.demo.dao;
 import com.example.demo.entity.Agreement;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import com.example.demo.enums.AgreementStatus;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class AgreementDao {
         try {
             session.createQuery(
                             "update Agreement set status=:status where Id=:agreementId"
-                    ).setParameter("status", Agreement.AgreementStatus.SIGNED)
+                    ).setParameter("status", AgreementStatus.SIGNED)
                     .setParameter("agreementId", agreementId).executeUpdate();
             return true;
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import com.example.demo.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -56,10 +57,6 @@ public class Application {
 
     public User getUser() {
         return user;
-    }
-
-    public enum ApplicationStatus{
-        ACCEPTED, DECLINED, IN_PROGRESS
     }
 
     public void setTermMonths(byte termMonths) {

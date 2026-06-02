@@ -1,7 +1,6 @@
-package com.example.demo.security.dto;
+package com.example.demo.dto.response;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter

@@ -1,7 +1,9 @@
 package com.example.demo;
 
+import com.example.demo.dao.RoleDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.request.UserRequestDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
@@ -35,6 +37,9 @@ public class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private RoleDao roleDao;
+
     @InjectMocks
     private UserService userService;
 
@@ -51,12 +56,12 @@ public class UserServiceTest {
         when(userMapper.toResponseDto(user1)).thenReturn(dto1);
         when(userMapper.toResponseDto(user2)).thenReturn(dto2);
 
-        List<UserResponseDto> result = userService.getAllUsers();
+        ListResponseDto<UserResponseDto> result = userService.getAllUsers();
 
         assertNotNull(result, "Результат не должен быть null");
-        assertEquals(2, result.size(), "Размер списка должен быть 2");
-        assertEquals(dto1, result.get(0), "Первый элемент должен совпадать с dto1");
-        assertEquals(dto2, result.get(1), "Второй элемент должен совпадать с dto2");
+        assertEquals(2, result.items.size(), "Размер списка должен быть 2");
+        assertEquals(dto1, result.items.get(0), "Первый элемент должен совпадать с dto1");
+        assertEquals(dto2, result.items.get(1), "Второй элемент должен совпадать с dto2");
 
         verify(userDao, times(1)).getAllUsers();
         verify(userMapper, times(1)).toResponseDto(user1);
@@ -69,10 +74,10 @@ public class UserServiceTest {
 
         when(userDao.getAllUsers()).thenReturn(mockUsers);
 
-        List<UserResponseDto> result = userService.getAllUsers();
+        ListResponseDto<UserResponseDto> result = userService.getAllUsers();
 
         assertNotNull(result, "Результат не может быть пустым");
-        assertEquals(0, result.size(), "Список должен быть пустым");
+        assertEquals(0, result.items.size(), "Список должен быть пустым");
 
         verify(userDao, times(1)).getAllUsers();
     }
@@ -95,12 +100,12 @@ public class UserServiceTest {
 
         when(userMapper.toResponseDto(user)).thenReturn(expectedDto);
 
-        List<UserResponseDto> result = userService.getUsersByName(expectedFirstName, expectedSurname);
+        ListResponseDto<UserResponseDto> result = userService.getUsersByName(expectedFirstName, expectedSurname);
 
         assertNotNull(result, "Результат не может быть пустым");
-        assertEquals(1, result.size(), "Размер списка должен быть 1");
+        assertEquals(1, result.items.size(), "Размер списка должен быть 1");
 
-        UserResponseDto actualDto = result.get(0);
+        UserResponseDto actualDto = result.items.get(0);
         assertEquals(expectedFirstName, actualDto.getFirstname(), "Имя должно совпадать");
         assertEquals(expectedSurname, actualDto.getSurname(), "Фамилия должна совпадать");
     }
@@ -113,11 +118,11 @@ public class UserServiceTest {
 
         when(userDao.getUsersApplications(userId)).thenReturn(expectedApplications);
 
-        List<Application> result = userService.getUsersApplications(userId);
+        ListResponseDto<Application> result = userService.getUsersApplications(userId);
 
         assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(app, result.get(0));
+        assertEquals(1, result.items.size());
+        assertEquals(app, result.items.get(0));
 
         verify(userDao, times(1)).getUsersApplications(userId);
     }
@@ -133,11 +138,11 @@ public class UserServiceTest {
         when(userDao.getUserByFilters(requestDto)).thenReturn(mockUsers);
         when(userMapper.toResponseDto(user)).thenReturn(expectedDto);
 
-        List<UserResponseDto> result = userService.getUserByFilters(requestDto);
+        ListResponseDto<UserResponseDto> result = userService.getUserByFilters(requestDto);
 
         assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(expectedDto, result.get(0));
+        assertEquals(1, result.items.size());
+        assertEquals(expectedDto, result.items.get(0));
 
         verify(userDao, times(1)).getUserByFilters(requestDto);
         verify(userMapper, times(1)).toResponseDto(user);
@@ -222,6 +227,7 @@ public class UserServiceTest {
 
         when(userMapper.toEntityFromRequest(requestDto)).thenReturn(user);
         when(passwordEncoder.encode("plain_password")).thenReturn("encoded_password");
+        when(roleDao.getUser()).thenReturn(new com.example.demo.entity.Role());
 
         userService.addUser(requestDto);
 

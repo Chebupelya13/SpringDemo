@@ -42,6 +42,7 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(new ListResponseDto<>(user.getApplications()));
     }
 

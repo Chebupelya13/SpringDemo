@@ -1,6 +1,5 @@
-package com.example.demo.security.service;
+package com.example.demo.service;
 
-import com.example.demo.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;

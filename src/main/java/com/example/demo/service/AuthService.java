@@ -1,10 +1,10 @@
-package com.example.demo.security.service;
+package com.example.demo.service;
 
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Role;
-import com.example.demo.security.dto.AuthRequestDto;
-import com.example.demo.security.dto.AuthResponseDto;
-import com.example.demo.service.UserService;
+import com.example.demo.dto.request.AuthRequestDto;
+import com.example.demo.dto.response.AuthResponseDto;
+import com.example.demo.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,10 +39,10 @@ public class AuthService {
 
         String jwtToken;
 
-        if (Objects.equals(user.role.getRole(), Role.Roles.USER)) {
-            jwtToken = jwtTokenService.generateToken(authentication, Role.Roles.USER.name());
+        if (Objects.equals(user.role.getRole(), Roles.USER)) {
+            jwtToken = jwtTokenService.generateToken(authentication, Roles.USER.name());
         } else {
-            jwtToken = jwtTokenService.generateToken(authentication, Role.Roles.ADMIN.name());
+            jwtToken = jwtTokenService.generateToken(authentication, Roles.ADMIN.name());
         }
 
         Long expiresAt = jwtTokenService.extractExpirationTime(jwtToken);
