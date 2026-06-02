@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>demo</description>
+    <version>1.0.0</version>
+    <name>BANK</name>
+    <description>MEGABANK</description>
     <url/>
     <licenses>
         <license/>
@@ -34,7 +34,6 @@
         <jakarta.version>3.2.0</jakarta.version>
         <minio.version>8.5.7</minio.version>
         <liquibase.version>5.0.3</liquibase.version>
-        <logback.version>1.5.13</logback.version>
     </properties>
 
     <dependencies>
