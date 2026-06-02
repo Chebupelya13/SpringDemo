@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.Role;
+import com.example.demo.enums.Roles;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,14 +17,14 @@ public class RoleDao {
     }
 
     public Role getUser() {
-        return findByName(Role.Roles.USER);
+        return findByName(Roles.USER);
     }
 
     public Role getAdmin() {
-        return findByName(Role.Roles.ADMIN);
+        return findByName(Roles.ADMIN);
     }
 
-    public Role findByName(Role.Roles role) {
+    public Role findByName(Roles role) {
         return sessionFactory.getCurrentSession().createQuery("from Role where role=:role", Role.class)
                 .setParameter("role", role)
                 .getSingleResultOrNull();

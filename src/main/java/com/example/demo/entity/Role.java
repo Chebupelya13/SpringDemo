@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.enums.Roles;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -40,10 +41,6 @@ public class Role {
 
     public Roles getRole() {
         return role;
-    }
-
-    public enum Roles {
-        ADMIN, USER
     }
 
 }

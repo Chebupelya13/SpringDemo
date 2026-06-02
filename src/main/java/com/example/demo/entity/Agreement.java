@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import com.example.demo.enums.AgreementStatus;
 import jakarta.persistence.*;
 
 
@@ -34,10 +35,6 @@ public class Agreement {
                 ", applicationId=" + application.getId() +
                 ", status=" + status +
                 '}';
-    }
-
-    public enum AgreementStatus {
-        SIGNED, WAITING_TO_SIGN
     }
 
     public void setStatus(AgreementStatus status) {

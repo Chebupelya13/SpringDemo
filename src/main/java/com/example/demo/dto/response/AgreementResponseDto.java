@@ -1,6 +1,7 @@
 package com.example.demo.dto.response;
 
 import com.example.demo.entity.Agreement;
+import com.example.demo.enums.AgreementStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class AgreementResponseDto {
@@ -12,7 +13,7 @@ public class AgreementResponseDto {
     private int applicationId;
 
     @Schema(description = "Статус договора", example = "WAITING_TO_SIGN")
-    private Agreement.AgreementStatus status;
+    private AgreementStatus status;
 
     public int getId() {
         return id;
@@ -30,11 +31,11 @@ public class AgreementResponseDto {
         this.applicationId = applicationId;
     }
 
-    public Agreement.AgreementStatus getStatus() {
+    public AgreementStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Agreement.AgreementStatus status) {
+    public void setStatus(AgreementStatus status) {
         this.status = status;
     }
 }

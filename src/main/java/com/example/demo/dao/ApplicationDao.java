@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.Application;
+import com.example.demo.enums.ApplicationStatus;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ApplicationDao {
         return sessionFactory.getCurrentSession().createQuery(
                         "from Application where status=:status", Application.class
                 )
-                .setParameter("status", Application.ApplicationStatus.ACCEPTED)
+                .setParameter("status", ApplicationStatus.ACCEPTED)
                 .getResultList();
     }
 

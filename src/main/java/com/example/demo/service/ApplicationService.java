@@ -7,6 +7,7 @@ import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.mapper.ApplicationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class ApplicationService {
         ArrayList<Application> acceptedApplications = new ArrayList<>();
 
         for (Application application : applications) {
-            if (application.getStatus() == Application.ApplicationStatus.ACCEPTED)
+            if (application.getStatus() == ApplicationStatus.ACCEPTED)
                 acceptedApplications.add(application);
         }
 
@@ -83,7 +84,7 @@ public class ApplicationService {
         Random rand = new Random();
         boolean decision = rand.nextBoolean();
         new_application.setStatus(
-                decision ? Application.ApplicationStatus.ACCEPTED : Application.ApplicationStatus.DECLINED
+                decision ? ApplicationStatus.ACCEPTED : ApplicationStatus.DECLINED
         );
         applicationDao.addApplication(new_application);
 

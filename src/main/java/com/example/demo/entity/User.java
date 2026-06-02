@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.enums.MaritalStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -64,10 +65,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     @Column(name = "applications")
     private List<Application> applications = new ArrayList<>();
-
-    public enum MaritalStatus {
-        MARRIED, NOT_MARRIED
-    }
 
     public int getId() {
         return id;

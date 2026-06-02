@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dao.RoleDao;
 import com.example.demo.entity.Role;
+import com.example.demo.enums.Roles;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class RoleService {
         return roleDao.getUser();
     }
 
-    public Role findByName(Role.Roles role) {
+    public Role findByName(Roles role) {
         return roleDao.findByName(role);
     }
 
