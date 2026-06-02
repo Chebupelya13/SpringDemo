@@ -46,7 +46,7 @@ public class UserResponseDto {
     public String userPhotoPath;
 
     @Schema
-    public Role role;
+    public List<Role> roles = new ArrayList<>();
 
     @Schema
     public List<ApplicationResponseDto> applications = new ArrayList<>();
@@ -64,7 +64,7 @@ public class UserResponseDto {
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.roles.add(role);
     }
 
     public String getPassportPhotoPath() {
@@ -79,8 +79,8 @@ public class UserResponseDto {
         return userPhotoPath;
     }
 
-    public Role getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
     public void setId(int id) {

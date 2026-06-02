@@ -91,7 +91,7 @@ public class MinioServiceTest {
         doReturn(getObjectResponse).when(minioClient).getObject(any(GetObjectArgs.class));
 
         // Act
-        InputStream resultStream = minioService.getFile(objectKey);
+        String resultStream = minioService.getFile(objectKey);
 
         // Assert
         assertNotNull(resultStream);

@@ -8,6 +8,7 @@ import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.enums.PhotoType;
 import com.example.demo.service.MinioService;
 import com.example.demo.service.UserService;
+import io.minio.errors.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,11 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -118,6 +123,43 @@ public class UserController {
         userService.giveRoot(userId);
 
         return HttpStatus.OK;
+    }
+
+    @Operation(summary = "Получение аватарки пользователя")
+    @GetMapping("/{userId}/documents/avatar")
+    public ResponseEntity<byte[]> getAvatar( @PathVariable int userId ){
+        try (InputStream stream = userService.getAvatarFile(userId)) {
+            byte[] response = stream.readAllBytes();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @Operation(summary = "Получение фото прописки пользователя")
+    @GetMapping("/{userId}/documents/registrtion")
+    public ResponseEntity<byte[]> getRegistration( @PathVariable int userId ){
+        try (InputStream stream = userService.getRegistrationFile(userId)) {
+            byte[] response = stream.readAllBytes();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
+
+    @Operation(summary = "Получение фото паспорта пользователя")
+    @GetMapping("/{userId}/documents/passport")
+    public ResponseEntity<byte[]> getPassport( @PathVariable int userId ){
+        try (InputStream stream = userService.getPassportFile(userId)) {
+            byte[] response = stream.readAllBytes();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }
