@@ -41,7 +41,7 @@ public class UserDao {
 
     public void addUser(User user) {
         Session session = sessionFactory.getCurrentSession();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         session.persist(user);
     }
 

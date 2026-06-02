@@ -7,13 +7,16 @@ import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +29,41 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleDao roleDao;
+    private final MinioService minioService;
 
     @Autowired
-    public UserService(UserDao userDao, UserMapper userMapper, PasswordEncoder passwordEncoder, RoleDao roledao) {
+    public UserService(UserDao userDao, UserMapper userMapper, PasswordEncoder passwordEncoder, RoleDao roledao, MinioService minioService) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleDao = roledao;
+        this.minioService = minioService;
+    }
+
+    private InputStream getUserFile(int userId, PhotoType fileType) {
+        User user = userDao.getUserById(userId);
+
+        switch (fileType) {
+            case REGISTRATION -> {
+                return minioService.getFile(user.getUserPhotoPath());
+            } case PASSPORT -> {
+                return minioService.getFile(user.getPassportPhotoPath());
+            } default -> {
+                return minioService.getFile(user.getRegistrationPhotoPath());
+            }
+        }
+    }
+
+    public InputStream getPassportFile(int userId) {
+        return this.getUserFile(userId, PhotoType.PASSPORT);
+    }
+
+    public InputStream getRegistrationFile(int userId) {
+        return this.getUserFile(userId, PhotoType.REGISTRATION);
+    }
+
+    public InputStream getAvatarFile(int userId) {
+        return this.getUserFile(userId, PhotoType.AVATAR);
     }
 
     public void giveRoot(int userId) {
@@ -89,6 +120,14 @@ public class UserService {
 
     public void addUser(UserRequestDto requestDto) {
         User user = userMapper.toEntityFromRequest(requestDto);
+
+        System.out.println(requestDto.address);
+        System.out.println(requestDto.passportPhoto.isEmpty());
+
+        user.setPassportPhotoPath(minioService.uploadFile(requestDto.passportPhoto, PhotoType.PASSPORT));
+        user.setRegistrationPhotoPath(minioService.uploadFile(requestDto.registrationPhoto, PhotoType.REGISTRATION));
+        user.setUserPhotoPath(minioService.uploadFile(requestDto.userPhoto, PhotoType.AVATAR));
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleDao.getUser());
         userDao.addUser(user);

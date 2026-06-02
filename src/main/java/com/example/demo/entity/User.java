@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "users")
 public class User {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private int id;
@@ -55,16 +55,25 @@ public class User {
 
     @JoinTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "user"),
-            inverseJoinColumns = @JoinColumn(name = "role")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     @Column(name = "applications")
     private List<Application> applications = new ArrayList<>();
+
+    @Column(name = "passport_photo_path")
+    private String passportPhotoPath;
+
+    @Column(name = "registration_photo_path")
+    private String registrationPhotoPath;
+
+    @Column(name = "user_photo_path")
+    private String userPhotoPath;
 
     public int getId() {
         return id;
@@ -188,6 +197,30 @@ public class User {
 
     public String getSurname() {
         return surname;
+    }
+
+    public String getPassportPhotoPath() {
+        return passportPhotoPath;
+    }
+
+    public void setPassportPhotoPath(String passportPhotoPath) {
+        this.passportPhotoPath = passportPhotoPath;
+    }
+
+    public String getRegistrationPhotoPath() {
+        return registrationPhotoPath;
+    }
+
+    public void setRegistrationPhotoPath(String registrationPhotoPath) {
+        this.registrationPhotoPath = registrationPhotoPath;
+    }
+
+    public String getUserPhotoPath() {
+        return userPhotoPath;
+    }
+
+    public void setUserPhotoPath(String userPhotoPath) {
+        this.userPhotoPath = userPhotoPath;
     }
 
 }

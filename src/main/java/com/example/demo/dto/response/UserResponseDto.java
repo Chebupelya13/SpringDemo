@@ -4,6 +4,7 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,11 +36,52 @@ public class UserResponseDto {
     @Schema(description = "Номер телефона", example = "79998886655")
     public String phoneNumber;
 
+    @Schema()
+    public String passportPhotoPath;
+
+    @Schema()
+    public String registrationPhotoPath;
+
+    @Schema()
+    public String userPhotoPath;
+
     @Schema
-    public Role role;
+    public List<Role> roles = new ArrayList<>();
 
     @Schema
     public List<ApplicationResponseDto> applications = new ArrayList<>();
+
+    public void setPassportPhotoPath(String passportPhotoPath) {
+        this.passportPhotoPath = passportPhotoPath;
+    }
+
+    public void setRegistrationPhotoPath(String registrationPhotoPath) {
+        this.registrationPhotoPath = registrationPhotoPath;
+    }
+
+    public void setUserPhotoPath(String userPhotoPath) {
+        this.userPhotoPath = userPhotoPath;
+    }
+
+    public void setRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public String getPassportPhotoPath() {
+        return passportPhotoPath;
+    }
+
+    public String getRegistrationPhotoPath() {
+        return registrationPhotoPath;
+    }
+
+    public String getUserPhotoPath() {
+        return userPhotoPath;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
 
     public void setId(int id) {
         this.id = id;

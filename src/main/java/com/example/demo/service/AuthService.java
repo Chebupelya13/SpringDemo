@@ -39,10 +39,10 @@ public class AuthService {
 
         String jwtToken;
 
-        if (Objects.equals(user.role.getRole(), Roles.USER)) {
-            jwtToken = jwtTokenService.generateToken(authentication, Roles.USER.name());
-        } else {
+        if (user.getRoles().stream().allMatch(role -> role.getRole() == Roles.ADMIN)) {
             jwtToken = jwtTokenService.generateToken(authentication, Roles.ADMIN.name());
+        } else {
+            jwtToken = jwtTokenService.generateToken(authentication, Roles.USER.name());
         }
 
         Long expiresAt = jwtTokenService.extractExpirationTime(jwtToken);
