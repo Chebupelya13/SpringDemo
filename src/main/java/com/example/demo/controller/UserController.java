@@ -99,16 +99,12 @@ public class UserController {
     @Operation(summary = "Создание записи о новом пользователе")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public HttpStatus createUser(
-            @RequestBody UserRequestDto user
+            @ModelAttribute UserRequestDto user
 //            @RequestParam("passportPhoto") MultipartFile passportPhoto,
 //            @RequestParam("registrationPhoto") MultipartFile registrationPhoto,
 //            @RequestParam("userPhoto") MultipartFile userPhoto
     ) {
-        System.out.println(user.address);
 
-        minioService.uploadFile(user.passportPhoto, PhotoType.PASSPORT);
-//        minioService.uploadFile(registrationPhoto, PhotoType.REGISTRATION);
-//        minioService.uploadFile(userPhoto, PhotoType.AVATAR);
         userService.addUser(user);
 
         return HttpStatus.CREATED;

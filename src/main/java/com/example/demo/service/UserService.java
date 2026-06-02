@@ -7,6 +7,7 @@ import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
+import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,13 +27,15 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleDao roleDao;
+    private final MinioService minioService;
 
     @Autowired
-    public UserService(UserDao userDao, UserMapper userMapper, PasswordEncoder passwordEncoder, RoleDao roledao) {
+    public UserService(UserDao userDao, UserMapper userMapper, PasswordEncoder passwordEncoder, RoleDao roledao, MinioService minioService) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleDao = roledao;
+        this.minioService = minioService;
     }
 
     public void giveRoot(int userId) {

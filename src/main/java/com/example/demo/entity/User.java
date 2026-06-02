@@ -55,8 +55,8 @@ public class User {
 
     @JoinTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "user"),
-            inverseJoinColumns = @JoinColumn(name = "role")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     @ManyToMany
     private List<Role> roles = new ArrayList<>();

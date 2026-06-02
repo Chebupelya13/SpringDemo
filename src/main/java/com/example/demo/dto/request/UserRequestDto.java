@@ -4,6 +4,7 @@ package com.example.demo.dto.request;
 import com.example.demo.entity.User;
 import com.example.demo.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +40,7 @@ public class UserRequestDto {
     public MaritalStatus maritalStatus;
 
     @Schema(description = "Дата рождения")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     public Date birthday;
     @Schema(description = "Номер телефона", example = "79998886655")
     public String phoneNumber;

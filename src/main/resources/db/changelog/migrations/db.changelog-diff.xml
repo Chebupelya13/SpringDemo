@@ -145,4 +145,39 @@
             <column name="user_photo_path" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-5">
+        <dropForeignKeyConstraint baseTableName="user_roles" constraintName="FK5klgup8egcm3o93sfutticc09"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-6">
+        <dropForeignKeyConstraint baseTableName="user_roles" constraintName="FKaq6gmj85gm0d11gvpe4rj8l2n"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-1">
+        <addColumn tableName="user_roles">
+            <column name="role_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-2">
+        <addColumn tableName="user_roles">
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-3">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_roles" constraintName="FKh8ciramu9cc9q3qcqiv4ue8a6" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="roles" validate="true"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-4">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_roles" constraintName="FKhfh9dx7w3ubf1co1vdev94g3f" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-7">
+        <dropColumn columnName="role" tableName="user_roles"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-8">
+        <dropColumn columnName="user" tableName="user_roles"/>
+    </changeSet>
+    <changeSet author="User1 (generated)" id="1780392129162-9">
+        <dropSequence sequenceName="users_SEQ"/>
+    </changeSet>
 </databaseChangeLog>

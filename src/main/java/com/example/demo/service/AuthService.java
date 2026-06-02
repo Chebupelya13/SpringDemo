@@ -47,6 +47,7 @@ public class AuthService {
 
         Long expiresAt = jwtTokenService.extractExpirationTime(jwtToken);
 
+        System.out.println("Дошло");
         return new AuthResponseDto(jwtToken, authentication.getName(), expiresAt);
     }
 
