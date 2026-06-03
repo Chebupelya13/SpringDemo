@@ -8,11 +8,13 @@ import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.entity.Application;
 import com.example.demo.entity.User;
 import com.example.demo.enums.ApplicationStatus;
+import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.ApplicationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,12 +27,14 @@ public class ApplicationService {
     private final ApplicationDao applicationDao;
     private final UserDao userDao;
     private final ApplicationMapper applicationMapper;
+    private final MinioService minioService;
 
     @Autowired
-    public ApplicationService(ApplicationDao applicationDao, UserDao userDao, ApplicationMapper applicationMapper) {
+    public ApplicationService(ApplicationDao applicationDao, UserDao userDao, ApplicationMapper applicationMapper, MinioService minioService) {
         this.applicationDao = applicationDao;
         this.userDao = userDao;
         this.applicationMapper = applicationMapper;
+        this.minioService = minioService;
     }
 
     public ListResponseDto<ApplicationResponseDto> getAllApplications() {
@@ -39,6 +43,32 @@ public class ApplicationService {
                 .collect(Collectors.toList());
 
         return new ListResponseDto<>(applications);
+    }
+
+    private InputStream getApplicationFile(int applicationId, PhotoType fileType) {
+        Application application= applicationDao.getApplicationById(applicationId);
+
+        switch (fileType) {
+            case REGISTRATION -> {
+                return minioService.getFile(application.getUserPhotoPath());
+            } case PASSPORT -> {
+                return minioService.getFile(application.getPassportPhotoPath());
+            } default -> {
+                return minioService.getFile(application.getRegistrationPhotoPath());
+            }
+        }
+    }
+
+    public InputStream getPassportFile(int applicationId) {
+        return this.getApplicationFile(applicationId, PhotoType.PASSPORT);
+    }
+
+    public InputStream getRegistrationFile(int applicationId) {
+        return this.getApplicationFile(applicationId, PhotoType.REGISTRATION);
+    }
+
+    public InputStream getAvatarFile(int applicationId) {
+        return this.getApplicationFile(applicationId, PhotoType.AVATAR);
     }
 
     public ListResponseDto<ApplicationResponseDto> getApplicationsByUser(int userId) {
@@ -79,16 +109,23 @@ public class ApplicationService {
             return false;
 
         Application new_application = applicationMapper.toEntityFromRequest(requestDto);
+
+        new_application.setPassportPhotoPath(minioService.uploadFile(requestDto.getPassportPhoto(), PhotoType.PASSPORT));
+        new_application.setRegistrationPhotoPath(minioService.uploadFile(requestDto.getRegistrationPhoto(), PhotoType.REGISTRATION));
+        new_application.setUserPhotoPath(minioService.uploadFile(requestDto.getUserPhoto(), PhotoType.AVATAR));
+
         new_application.setUser(user);
 
-        Random rand = new Random();
-        boolean decision = rand.nextBoolean();
+        boolean decision = new Random().nextBoolean();
         new_application.setStatus(
                 decision ? ApplicationStatus.ACCEPTED : ApplicationStatus.DECLINED
         );
+
         applicationDao.addApplication(new_application);
 
         return true;
     }
+
+
 
 }

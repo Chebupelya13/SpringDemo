@@ -11,8 +11,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.InputStream;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -67,10 +70,10 @@ public class ApplicationController {
         return ResponseEntity.ok(acceptedApplications);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Создание новой заявки на кредит")
     public HttpStatus createApplication(
-            @RequestBody ApplicationRequestDto requestDto,
+            @ModelAttribute ApplicationRequestDto requestDto,
             @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
         String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
@@ -78,6 +81,46 @@ public class ApplicationController {
 
         boolean isCreated = applicationService.createApplication(requestDto);
         return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+    }
+
+    @Operation(summary = "Получение аватарки пользователя")
+    @GetMapping("/{applicationId}/documents/avatar")
+    public ResponseEntity<byte[]> getAvatar( @PathVariable int applicationId ){
+        try (InputStream stream = applicationService.getAvatarFile(applicationId)) {
+            byte[] response = stream.readAllBytes();
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
+                    .body(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @Operation(summary = "Получение фото прописки пользователя")
+    @GetMapping("/{applicationId}/documents/registrtion")
+    public ResponseEntity<byte[]> getRegistration( @PathVariable int applicationId ){
+        try (InputStream stream = applicationService.getRegistrationFile(applicationId)) {
+            byte[] response = stream.readAllBytes();
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
+                    .body(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
+
+    @Operation(summary = "Получение фото паспорта пользователя")
+    @GetMapping("/{applicationId}/documents/passport")
+    public ResponseEntity<byte[]> getPassport( @PathVariable int applicationId ){
+        try (InputStream stream = applicationService.getPassportFile(applicationId)) {
+            byte[] response = stream.readAllBytes();
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
+                    .body(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }

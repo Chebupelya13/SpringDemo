@@ -18,11 +18,11 @@ public class ApplicationResponseDto {
     private int termMonths;
 
     @Schema
-    private String passportPhotoUrl;
+    private String passportPhotoPath;
     @Schema
-    private String registrationPhotoUrl;
+    private String registrationPhotoPath;
     @Schema
-    private String userPhotoUrl;
+    private String userPhotoPath;
 
     @Schema(description = "ID пользователя", example = "1")
     private int userId;
@@ -33,6 +33,30 @@ public class ApplicationResponseDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setPassportPhotoPath(String passportPhotoPath) {
+        this.passportPhotoPath = passportPhotoPath;
+    }
+
+    public void setRegistrationPhotoPath(String registrationPhotoPath) {
+        this.registrationPhotoPath = registrationPhotoPath;
+    }
+
+    public void setUserPhotoPath(String userPhotoPath) {
+        this.userPhotoPath = userPhotoPath;
+    }
+
+    public String getPassportPhotoPath() {
+        return passportPhotoPath;
+    }
+
+    public String getRegistrationPhotoPath() {
+        return registrationPhotoPath;
+    }
+
+    public String getUserPhotoPath() {
+        return userPhotoPath;
     }
 
     public ApplicationStatus getStatus() {

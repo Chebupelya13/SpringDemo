@@ -92,11 +92,7 @@ public class UserController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public HttpStatus createUser(
             @ModelAttribute UserRequestDto user
-//            @RequestParam("passportPhoto") MultipartFile passportPhoto,
-//            @RequestParam("registrationPhoto") MultipartFile registrationPhoto,
-//            @RequestParam("userPhoto") MultipartFile userPhoto
     ) {
-
         userService.addUser(user);
 
         return HttpStatus.CREATED;

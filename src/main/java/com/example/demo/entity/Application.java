@@ -16,7 +16,6 @@ public class Application {
     @Column(name = "id", nullable = false)
     private int id;
 
-
     @ManyToOne @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -58,6 +57,34 @@ public class Application {
                 ", amount=" + amount +
                 ", termMonths=" + termMonths +
                 '}';
+    }
+
+    public void setTermMonths(int termMonths) {
+        this.termMonths = termMonths;
+    }
+
+    public void setPassportPhotoPath(String passportPhotoPath) {
+        this.passportPhotoPath = passportPhotoPath;
+    }
+
+    public void setRegistrationPhotoPath(String registrationPhotoPath) {
+        this.registrationPhotoPath = registrationPhotoPath;
+    }
+
+    public void setUserPhotoPath(String userPhotoPath) {
+        this.userPhotoPath = userPhotoPath;
+    }
+
+    public String getPassportPhotoPath() {
+        return passportPhotoPath;
+    }
+
+    public String getRegistrationPhotoPath() {
+        return registrationPhotoPath;
+    }
+
+    public String getUserPhotoPath() {
+        return userPhotoPath;
     }
 
     public void setUser(User user) {

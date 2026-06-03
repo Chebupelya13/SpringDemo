@@ -3,6 +3,7 @@ package com.example.demo;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -29,6 +30,7 @@ public class OpenApiConfig {
                                 )
                 )
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .path("/api/docs", new PathItem().$ref("/api/docs"))
                 .info(
                         new Info()
                                 .title("My API")

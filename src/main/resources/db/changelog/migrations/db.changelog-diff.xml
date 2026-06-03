@@ -180,4 +180,25 @@
     <changeSet author="User1 (generated)" id="1780392129162-9">
         <dropSequence sequenceName="users_SEQ"/>
     </changeSet>
+    <changeSet author="butt (generated)" id="1780473430286-1">
+        <addColumn tableName="applications">
+            <column name="passport_photo_path" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780473430286-2">
+        <addColumn tableName="applications">
+            <column name="registration_photo_path" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780473430286-3">
+        <addColumn tableName="applications">
+            <column name="user_photo_path" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780473430286-4">
+        <dropSequence sequenceName="agreements_SEQ"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780473430286-5">
+        <dropSequence sequenceName="applications_SEQ"/>
+    </changeSet>
 </databaseChangeLog>
