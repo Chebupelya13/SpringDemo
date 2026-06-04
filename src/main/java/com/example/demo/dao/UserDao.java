@@ -82,7 +82,7 @@ public class UserDao {
     }
 
     public List<User> getAllUsers() {
-        return sessionFactory.getCurrentSession().createQuery("distinct from User u join fetch u.roles", User.class).getResultList();
+        return sessionFactory.getCurrentSession().createQuery("from User u join fetch u.roles distinct ", User.class).getResultList();
     }
 
     public User getUserById(int userId) {

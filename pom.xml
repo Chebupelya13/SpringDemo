@@ -216,8 +216,7 @@
                     <propertyFile>liquibase.properties</propertyFile>
 
                     <referenceUrl>hibernate:spring:com.example.demo.entity?dialect=org.hibernate.dialect.PostgreSQLDialect</referenceUrl>
-
-                    <diffChangeLogFile>src/main/resources/db/changelog/migrations/db.changelog-diff.xml</diffChangeLogFile>
+                    <diffChangeLogFile>src/main/resources/db/changelog/migrations/db.changelog-diff.postgresql.sql</diffChangeLogFile>
                 </configuration>
             </plugin>
             <plugin>
