@@ -30,7 +30,7 @@ public class MinioConfig {
     @Bean
     public MinioClient minioClient() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException, InterruptedException {
         boolean started = false;
-
+        System.out.println("Wait for MinIO....");
         do {
             try {
                 MinioClient minioClient = MinioClient.builder()
@@ -52,6 +52,7 @@ public class MinioConfig {
             }
 
         } while (!started);
+        System.out.println("Connected to MinIO");
 
         return null;
     }
