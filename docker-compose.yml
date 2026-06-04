@@ -17,9 +17,10 @@ services:
     build: .
     ports:
       - "8080:8080"
+    network_mode: "host"
     environment:
-      - DB_URL=jdbc:postgresql://host.docker.internal:5432/bankdb
-      - MINIO_URL=http://host.docker.internal:9000
+      - DB_URL=jdbc:postgresql://localhost:5432/bankdb
+      - MINIO_URL=http://localhost:9000
     depends_on:
       - minio
 
