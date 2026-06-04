@@ -5,9 +5,11 @@ import com.example.demo.entity.Photo;
 import com.example.demo.enums.PhotoType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Transactional
 public class PhotoService {
 
     private final PhotoDao photoDao;

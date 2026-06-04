@@ -17,7 +17,7 @@ import java.io.InputStream;
 
 @RestController
 @RequestMapping("/api/photos")
-@Tag(description = "Операции с заявками", name = "Заявки")
+@Tag(description = "Операции с фотографиями", name = "Документы")
 public class PhotosController {
 
     private final PhotoService photoService;
@@ -29,7 +29,7 @@ public class PhotosController {
         this.minioService = minioService;
     }
 
-    @GetMapping("/findById/{photo_id}")
+    @GetMapping("/findById/{photoId}")
     @Operation(summary = "Поиск фотографии документа по ID")
     public ResponseEntity<byte[]> findPhotoById( @PathVariable int photoId ) {
         Photo photo = photoService.getPhotoById(photoId);
