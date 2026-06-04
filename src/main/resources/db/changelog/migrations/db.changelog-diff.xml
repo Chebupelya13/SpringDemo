@@ -201,4 +201,42 @@
     <changeSet author="butt (generated)" id="1780473430286-5">
         <dropSequence sequenceName="applications_SEQ"/>
     </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-2">
+        <createTable tableName="photos">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="photosPK"/>
+            </column>
+            <column name="path" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="application_id" type="INTEGER"/>
+            <column name="user_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-3">
+        <addForeignKeyConstraint baseColumnNames="application_id" baseTableName="photos" constraintName="FKegop968kbvsorupwht7b5bxut" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="applications" validate="true"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-4">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="photos" constraintName="FKnm381g1ktlpsorbtpco2ljhuv" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-5">
+        <dropColumn columnName="passport_photo_path" tableName="applications"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-6">
+        <dropColumn columnName="passport_photo_path" tableName="users"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-7">
+        <dropColumn columnName="registration_photo_path" tableName="applications"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-8">
+        <dropColumn columnName="registration_photo_path" tableName="users"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-9">
+        <dropColumn columnName="user_photo_path" tableName="applications"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-10">
+        <dropColumn columnName="user_photo_path" tableName="users"/>
+    </changeSet>
+    <changeSet author="butt (generated)" id="1780565069035-1">
+        <addNotNullConstraint columnDataType="varchar(255)" columnName="password" tableName="users" validate="true"/>
+    </changeSet>
 </databaseChangeLog>

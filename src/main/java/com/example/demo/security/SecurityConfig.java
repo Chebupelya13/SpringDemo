@@ -31,6 +31,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/auth/token").permitAll();
                     auth.requestMatchers("/swagger-ui/**").permitAll();
                     auth.requestMatchers("/v3/api-docs/**").permitAll();
+                    auth.requestMatchers("/api/docs/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll();
                     auth.anyRequest().authenticated();
                 })

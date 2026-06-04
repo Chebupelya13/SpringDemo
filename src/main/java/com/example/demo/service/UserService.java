@@ -6,6 +6,7 @@ import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Application;
+import com.example.demo.entity.Photo;
 import com.example.demo.entity.User;
 import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.UserMapper;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,30 +39,16 @@ public class UserService {
         this.minioService = minioService;
     }
 
-    private InputStream getUserFile(int userId, PhotoType fileType) {
+    public List<InputStream> getUserFiles(int userId, PhotoType fileType) {
         User user = userDao.getUserById(userId);
 
-        switch (fileType) {
-            case REGISTRATION -> {
-                return minioService.getFile(user.getUserPhotoPath());
-            } case PASSPORT -> {
-                return minioService.getFile(user.getPassportPhotoPath());
-            } default -> {
-                return minioService.getFile(user.getRegistrationPhotoPath());
-            }
+        List<InputStream> usersFiles = new ArrayList<>();
+
+        for (Photo photo : user.getPhotos()) {
+            minioService.getFile(photo.getPath());
         }
-    }
 
-    public InputStream getPassportFile(int userId) {
-        return this.getUserFile(userId, PhotoType.PASSPORT);
-    }
-
-    public InputStream getRegistrationFile(int userId) {
-        return this.getUserFile(userId, PhotoType.REGISTRATION);
-    }
-
-    public InputStream getAvatarFile(int userId) {
-        return this.getUserFile(userId, PhotoType.AVATAR);
+        return usersFiles;
     }
 
     public void giveRoot(int userId) {
@@ -117,14 +105,6 @@ public class UserService {
 
     public void addUser(UserRequestDto requestDto) {
         User user = userMapper.toEntityFromRequest(requestDto);
-
-        System.out.println(requestDto.address);
-        System.out.println(requestDto.passportPhoto.isEmpty());
-
-        user.setPassportPhotoPath(minioService.uploadFile(requestDto.passportPhoto, PhotoType.PASSPORT));
-        user.setRegistrationPhotoPath(minioService.uploadFile(requestDto.registrationPhoto, PhotoType.REGISTRATION));
-        user.setUserPhotoPath(minioService.uploadFile(requestDto.userPhoto, PhotoType.AVATAR));
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleDao.getUser());
         userDao.addUser(user);

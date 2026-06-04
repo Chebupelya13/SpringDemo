@@ -20,20 +20,18 @@ import java.util.List;
 @Repository
 public class UserDao {
 
-    private final PasswordEncoder passwordEncoder;
     private final SessionFactory sessionFactory;
     private final RoleService roleService;
 
     @Autowired
-    public UserDao(PasswordEncoder passwordEncoder, SessionFactory sessionFactory, RoleService roleService) {
-        this.passwordEncoder = passwordEncoder;
+    public UserDao(SessionFactory sessionFactory, RoleService roleService) {
         this.sessionFactory = sessionFactory;
         this.roleService = roleService;
     }
 
     public void giveRoot(int userId) {
-        sessionFactory.getCurrentSession().createQuery(
-                "update User set role=:role where id=:userId")
+        sessionFactory.getCurrentSession()
+                .createQuery("update User set role=:role where id=:userId")
                 .setParameter("role", roleService.getAdmin())
                 .setParameter("userId", userId)
                 .executeUpdate();
@@ -47,7 +45,7 @@ public class UserDao {
 
     public User getUserByUsername(String username) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from User where username=:username", User.class)
+                .createQuery("from User u join fetch u.roles where u.username=:username", User.class)
                 .setParameter("username", username)
                 .getSingleResultOrNull();
     }
@@ -84,7 +82,7 @@ public class UserDao {
     }
 
     public List<User> getAllUsers() {
-        return sessionFactory.getCurrentSession().createQuery("from User", User.class).getResultList();
+        return sessionFactory.getCurrentSession().createQuery("distinct from User u join fetch u.roles", User.class).getResultList();
     }
 
     public User getUserById(int userId) {

@@ -22,7 +22,7 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "firstname", nullable = false)
@@ -58,7 +58,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
@@ -67,13 +67,8 @@ public class User {
     private List<Application> applications = new ArrayList<>();
 
     @Column(name = "passport_photo_path")
-    private String passportPhotoPath;
-
-    @Column(name = "registration_photo_path")
-    private String registrationPhotoPath;
-
-    @Column(name = "user_photo_path")
-    private String userPhotoPath;
+    @OneToMany(mappedBy = "user")
+    private List<Photo> photos = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -94,6 +89,11 @@ public class User {
     }
 
     public User() {}
+
+    public void addPhoto(Photo photo) {
+        photos.add(photo);
+        photo.setUser(this);
+    }
 
     public List<Role> getRoles() {
         return roles;
@@ -199,28 +199,11 @@ public class User {
         return surname;
     }
 
-    public String getPassportPhotoPath() {
-        return passportPhotoPath;
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 
-    public void setPassportPhotoPath(String passportPhotoPath) {
-        this.passportPhotoPath = passportPhotoPath;
+    public List<Photo> getPhotos() {
+        return photos;
     }
-
-    public String getRegistrationPhotoPath() {
-        return registrationPhotoPath;
-    }
-
-    public void setRegistrationPhotoPath(String registrationPhotoPath) {
-        this.registrationPhotoPath = registrationPhotoPath;
-    }
-
-    public String getUserPhotoPath() {
-        return userPhotoPath;
-    }
-
-    public void setUserPhotoPath(String userPhotoPath) {
-        this.userPhotoPath = userPhotoPath;
-    }
-
 }

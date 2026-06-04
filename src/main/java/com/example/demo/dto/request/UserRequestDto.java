@@ -23,14 +23,6 @@ public class UserRequestDto {
     public int passportSeries;
     @Schema(description = "Номер паспорта", example = "123456")
     public int passportNumber;
-    @Schema
-    public MultipartFile registrationPhoto;
-
-    @Schema
-    public MultipartFile passportPhoto;
-
-    @Schema
-    public MultipartFile userPhoto;
 
     @Schema(contentMediaType = MediaType.APPLICATION_JSON_VALUE)
     public String username;
@@ -47,30 +39,6 @@ public class UserRequestDto {
     public Date birthday;
     @Schema(description = "Номер телефона", example = "79998886655")
     public String phoneNumber;
-
-    public void setPassportPhoto(MultipartFile passportPhoto) {
-        this.passportPhoto = passportPhoto;
-    }
-
-    public MultipartFile getPassportPhoto() {
-        return passportPhoto;
-    }
-
-    public void setRegistrationPhoto(MultipartFile registrationPhoto) {
-        this.registrationPhoto = registrationPhoto;
-    }
-
-    public void setUserPhoto(MultipartFile userPhoto) {
-        this.userPhoto = userPhoto;
-    }
-
-    public MultipartFile getRegistrationPhoto() {
-        return registrationPhoto;
-    }
-
-    public MultipartFile getUserPhoto() {
-        return userPhoto;
-    }
 
     public void setUsername(String username) {
         this.username = username;

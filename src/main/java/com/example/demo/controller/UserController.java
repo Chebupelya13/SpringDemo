@@ -108,44 +108,4 @@ public class UserController {
         return HttpStatus.OK;
     }
 
-    @Operation(summary = "Получение аватарки пользователя")
-    @GetMapping("/{userId}/documents/avatar")
-    public ResponseEntity<byte[]> getAvatar( @PathVariable int userId ){
-        try (InputStream stream = userService.getAvatarFile(userId)) {
-            byte[] response = stream.readAllBytes();
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
-                    .body(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @Operation(summary = "Получение фото прописки пользователя")
-    @GetMapping("/{userId}/documents/registrtion")
-    public ResponseEntity<byte[]> getRegistration( @PathVariable int userId ){
-        try (InputStream stream = userService.getRegistrationFile(userId)) {
-            byte[] response = stream.readAllBytes();
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
-                    .body(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-
-    }
-
-    @Operation(summary = "Получение фото паспорта пользователя")
-    @GetMapping("/{userId}/documents/passport")
-    public ResponseEntity<byte[]> getPassport( @PathVariable int userId ){
-        try (InputStream stream = userService.getPassportFile(userId)) {
-            byte[] response = stream.readAllBytes();
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
-                    .body(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
 }

@@ -65,7 +65,7 @@ public class AgreementController {
         try {
             boolean signStatus = agreementService.signAgreement(agreementId);
             if (signStatus)
-                return HttpStatus.ACCEPTED;
+                return HttpStatus.OK;
 
             return HttpStatus.NOT_FOUND;
 

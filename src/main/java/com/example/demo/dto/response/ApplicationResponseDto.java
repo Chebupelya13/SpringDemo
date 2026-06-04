@@ -3,6 +3,9 @@ package com.example.demo.dto.response;
 import com.example.demo.enums.ApplicationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ApplicationResponseDto {
 
     @Schema(description = "ID заявки", example = "1")
@@ -17,15 +20,19 @@ public class ApplicationResponseDto {
     @Schema(description = "Срок погашения кредита (1 - 12)", example = "4")
     private int termMonths;
 
-    @Schema
-    private String passportPhotoPath;
-    @Schema
-    private String registrationPhotoPath;
-    @Schema
-    private String userPhotoPath;
-
     @Schema(description = "ID пользователя", example = "1")
     private int userId;
+
+    @Schema(description = "Список фотографий документов")
+    private List<PhotoResponseDto> photos = new ArrayList<>();
+
+    public List<PhotoResponseDto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<PhotoResponseDto> photos) {
+        this.photos = photos;
+    }
 
     public int getId() {
         return id;
@@ -33,30 +40,6 @@ public class ApplicationResponseDto {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setPassportPhotoPath(String passportPhotoPath) {
-        this.passportPhotoPath = passportPhotoPath;
-    }
-
-    public void setRegistrationPhotoPath(String registrationPhotoPath) {
-        this.registrationPhotoPath = registrationPhotoPath;
-    }
-
-    public void setUserPhotoPath(String userPhotoPath) {
-        this.userPhotoPath = userPhotoPath;
-    }
-
-    public String getPassportPhotoPath() {
-        return passportPhotoPath;
-    }
-
-    public String getRegistrationPhotoPath() {
-        return registrationPhotoPath;
-    }
-
-    public String getUserPhotoPath() {
-        return userPhotoPath;
     }
 
     public ApplicationStatus getStatus() {

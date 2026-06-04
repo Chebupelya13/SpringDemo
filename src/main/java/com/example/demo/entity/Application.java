@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "applications")
@@ -31,14 +34,9 @@ public class Application {
     @Column(name = "term_months", nullable = false, columnDefinition = "integer check (term_months >= 1 and term_months <= 12)")
     private int termMonths;
 
-    @Column(name = "passport_photo_path")
-    private String passportPhotoPath;
-
-    @Column(name = "registration_photo_path")
-    private String registrationPhotoPath;
-
-    @Column(name = "user_photo_path")
-    private String userPhotoPath;
+    @Column(name = "photos")
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+    private List<Photo> photos = new ArrayList<>();
 
     public Application(User user, int amount, int termMonths) {
         this.user = user;
@@ -59,32 +57,21 @@ public class Application {
                 '}';
     }
 
+    public void addPhoto(Photo photo) {
+        photos.add(photo);
+        photo.setApplication(this);
+    }
+
     public void setTermMonths(int termMonths) {
         this.termMonths = termMonths;
     }
 
-    public void setPassportPhotoPath(String passportPhotoPath) {
-        this.passportPhotoPath = passportPhotoPath;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setRegistrationPhotoPath(String registrationPhotoPath) {
-        this.registrationPhotoPath = registrationPhotoPath;
-    }
-
-    public void setUserPhotoPath(String userPhotoPath) {
-        this.userPhotoPath = userPhotoPath;
-    }
-
-    public String getPassportPhotoPath() {
-        return passportPhotoPath;
-    }
-
-    public String getRegistrationPhotoPath() {
-        return registrationPhotoPath;
-    }
-
-    public String getUserPhotoPath() {
-        return userPhotoPath;
+    public List<Photo> getPhotos() {
+        return photos;
     }
 
     public void setUser(User user) {

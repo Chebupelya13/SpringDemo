@@ -30,7 +30,6 @@ public class OpenApiConfig {
                                 )
                 )
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-                .path("/api/docs", new PathItem().$ref("/api/docs"))
                 .info(
                         new Info()
                                 .title("My API")
