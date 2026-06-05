@@ -30,11 +30,8 @@ public class UserDao {
     }
 
     public void giveRoot(int userId) {
-        sessionFactory.getCurrentSession()
-                .createQuery("update User set role=:role where id=:userId")
-                .setParameter("role", roleService.getAdmin())
-                .setParameter("userId", userId)
-                .executeUpdate();
+        User user = this.getUserById(userId);
+        user.setRole(roleService.getAdmin());
     }
 
     public void addUser(User user) {

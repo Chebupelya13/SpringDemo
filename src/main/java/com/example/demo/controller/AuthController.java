@@ -5,11 +5,9 @@ import com.example.demo.dto.response.AuthResponseDto;
 import com.example.demo.service.AuthService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Schema
@@ -26,6 +24,12 @@ public class AuthController {
     @PostMapping("/token")
     public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto authRequest) {
         return ResponseEntity.ok(authService.authenticate(authRequest));
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<HttpStatus> logout() {
+        System.out.println(authService.getCredentials());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

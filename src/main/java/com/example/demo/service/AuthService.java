@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.dto.request.AuthRequestDto;
 import com.example.demo.dto.response.AuthResponseDto;
+import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AuthService {
@@ -34,6 +39,10 @@ public class AuthService {
         return userService.getUserByUsername(username);
     }
 
+    public Object getCredentials() {
+        return SecurityContextHolder.getContext().getAuthentication().getCredentials();
+    }
+
     public AuthResponseDto authenticate(AuthRequestDto authRequest) {
         UserResponseDto user = userService.getUserByUsername(authRequest.getUsername());
 
@@ -44,8 +53,10 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(token);
 
         String jwtToken;
+        System.out.println(user.getRoles());
 
-        if (user.getRoles().stream().allMatch(role -> role.getRole() == Roles.ADMIN)) {
+        if (user.getRoles().stream().anyMatch(role -> role.getRole() == Roles.ADMIN)) {
+            System.out.println("admin");
             jwtToken = jwtTokenService.generateToken(authentication, Roles.ADMIN.name());
         } else {
             jwtToken = jwtTokenService.generateToken(authentication, Roles.USER.name());

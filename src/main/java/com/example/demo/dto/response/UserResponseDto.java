@@ -24,6 +24,9 @@ public class UserResponseDto {
     @Schema(description = "Номер паспорта", example = "123456")
     public int passportNumber;
 
+    @Schema(description = "логин")
+    public String username;
+
     @Schema(description = "Адрес", example = "ул. Пушкина, д. Колотушкина")
     public String address;
     @Schema(description = "Семейное положение", example = "MARRIED")
@@ -55,6 +58,14 @@ public class UserResponseDto {
 
     public void setRegistrationPhotoPath(String registrationPhotoPath) {
         this.registrationPhotoPath = registrationPhotoPath;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setUserPhotoPath(String userPhotoPath) {

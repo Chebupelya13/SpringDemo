@@ -11,6 +11,9 @@ import com.example.demo.entity.User;
 import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserDao userDao;
@@ -45,14 +48,21 @@ public class UserService {
         List<InputStream> usersFiles = new ArrayList<>();
 
         for (Photo photo : user.getPhotos()) {
-            minioService.getFile(photo.getPath());
+            usersFiles.add(minioService.getFile(photo.getPath()));
         }
 
         return usersFiles;
     }
 
-    public void giveRoot(int userId) {
+    @Transactional
+    @Caching(put = {
+        @CachePut(value = "users:byId", key = "#result.getId()"),
+        @CachePut(value = "users:byUsername", key = "#result.getUsername()")
+    })
+    public UserResponseDto giveRoot(int userId) {
         userDao.giveRoot(userId);
+
+        return userMapper.toResponseDto(userDao.getUserById(userId));
     }
 
     public ListResponseDto<Application> getUsersApplications(int userId) {
@@ -69,6 +79,7 @@ public class UserService {
         );
     }
 
+    @Cacheable(value = "users:byUsername", key = "#username")
     public UserResponseDto getUserByUsername(String username) {
         return userMapper.toResponseDto(userDao.getUserByUsername(username));
     }
@@ -103,19 +114,25 @@ public class UserService {
         return user == null ? null : userMapper.toResponseDto(user);
     }
 
-    public void addUser(UserRequestDto requestDto) {
+    @Transactional
+    public UserResponseDto addUser(UserRequestDto requestDto) {
         User user = userMapper.toEntityFromRequest(requestDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleDao.getUser());
         userDao.addUser(user);
+        return userMapper.toResponseDto(user);
     }
 
-    public void addAdmin(UserRequestDto requestDto) {
+    @Transactional
+    public UserResponseDto addAdmin(UserRequestDto requestDto) {
         User user = userMapper.toEntityFromRequest(requestDto);
         user.setRole(roleDao.getAdmin());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.addUser(user);
+        return userMapper.toResponseDto(user);
     }
 
+    @Cacheable(value = "users:byId", key = "#userId")
     public UserResponseDto getUserById(int userId) {
         return userMapper.toResponseDto(userDao.getUserById(userId));
     }
