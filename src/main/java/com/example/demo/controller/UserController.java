@@ -53,9 +53,11 @@ public class UserController {
     @PostMapping("/findByFilters")
     @Operation(summary = "Получение пользователя по фильтрам")
     public ResponseEntity<ListResponseDto<UserResponseDto>> getUserByFilters(
-            @RequestBody UserRequestDto user
+            @RequestBody UserRequestDto user,
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "20") int limit
     ) {
-        return ResponseEntity.ok(userService.getUserByFilters(user));
+        return ResponseEntity.ok(userService.getUserByFilters(user, limit, offset));
     }
 
     @GetMapping("/findByFullName")

@@ -48,8 +48,11 @@ public class ApplicationDao {
                 .getResultList();
     }
 
-    public List<Application> getAllApplications() {
-        return sessionFactory.getCurrentSession().createQuery("from Application", Application.class).getResultList();
+    public List<Application> getAllApplications(int limit, int offset) {
+        return sessionFactory.getCurrentSession().createQuery("from Application", Application.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
 }

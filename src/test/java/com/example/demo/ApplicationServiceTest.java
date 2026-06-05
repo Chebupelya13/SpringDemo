@@ -42,16 +42,16 @@ public class ApplicationServiceTest {
 
         ApplicationResponseDto expectedDto = new ApplicationResponseDto();
 
-        when(applicationDao.getAllApplications()).thenReturn(mockApplications);
+        when(applicationDao.getAllApplications(1, 1)).thenReturn(mockApplications);
         when(applicationMapper.toResponseDto(application)).thenReturn(expectedDto);
 
-        List<ApplicationResponseDto> result = applicationService.getAllApplications().items;
+        List<ApplicationResponseDto> result = applicationService.getAllApplications(1, 1).items;
 
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(expectedDto, result.get(0));
 
-        verify(applicationDao, times(1)).getAllApplications();
+        verify(applicationDao, times(1)).getAllApplications(1, 1);
         verify(applicationMapper, times(1)).toResponseDto(application);
     }
 

@@ -50,7 +50,7 @@ public class UserDao {
                 .getSingleResultOrNull();
     }
 
-    public List<User> getUserByFilters(UserRequestDto user) {
+    public List<User> getUserByFilters(UserRequestDto user, int limit, int offset) {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder critBuilder = sessionFactory.getCriteriaBuilder();
         CriteriaQuery<User> critQuery = critBuilder.createQuery(User.class);
@@ -78,7 +78,10 @@ public class UserDao {
             predicates.add(critBuilder.equal(root.get("maritalStatus"), user.maritalStatus));
 
         critQuery.where(critBuilder.and(predicates));
-        return session.createQuery(critQuery).getResultList();
+        return session.createQuery(critQuery)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     public List<User> getAllUsers() {

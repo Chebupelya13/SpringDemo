@@ -59,8 +59,8 @@ public class UserService {
         return new ListResponseDto<>(userDao.getUsersApplications(userId));
     }
 
-    public ListResponseDto<UserResponseDto> getUserByFilters(UserRequestDto user) {
-        List<User> foundUsers = userDao.getUserByFilters(user);
+    public ListResponseDto<UserResponseDto> getUserByFilters(UserRequestDto user, int limit, int offset) {
+        List<User> foundUsers = userDao.getUserByFilters(user, limit, offset);
 
         return new ListResponseDto<>(
                 foundUsers.stream()

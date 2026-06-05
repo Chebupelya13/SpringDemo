@@ -135,16 +135,16 @@ public class UserServiceTest {
 
         UserResponseDto expectedDto = new UserResponseDto();
 
-        when(userDao.getUserByFilters(requestDto)).thenReturn(mockUsers);
+        when(userDao.getUserByFilters(requestDto, 0,1 )).thenReturn(mockUsers);
         when(userMapper.toResponseDto(user)).thenReturn(expectedDto);
 
-        ListResponseDto<UserResponseDto> result = userService.getUserByFilters(requestDto);
+        ListResponseDto<UserResponseDto> result = userService.getUserByFilters(requestDto, 0,  1);
 
         assertNotNull(result);
         assertEquals(1, result.items.size());
         assertEquals(expectedDto, result.items.get(0));
 
-        verify(userDao, times(1)).getUserByFilters(requestDto);
+        verify(userDao, times(1)).getUserByFilters(requestDto, 0, 1);
         verify(userMapper, times(1)).toResponseDto(user);
     }
 

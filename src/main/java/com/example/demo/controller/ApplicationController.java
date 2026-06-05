@@ -31,9 +31,9 @@ public class ApplicationController {
         this.jwtTokenService = jwtTokenService;
     }
 
-    @GetMapping
-    @Operation(summary = "Получение всех заявок")
-    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getApplications(
+    @GetMapping("/findByUser")
+    @Operation(summary = "Получение всех заявок пользователя")
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getUsersApplications(
             @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
     ) {
         String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
@@ -45,12 +45,13 @@ public class ApplicationController {
         return ResponseEntity.ok(applications);
     }
 
-    @GetMapping("/findByUser")
+    @GetMapping
     @Operation(summary = "Получение заявок пользователя")
-    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getUsersApplications (
-            @RequestParam int userId
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getApplications (
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "20") int limit
     ) {
-        ListResponseDto<ApplicationResponseDto> usersApplications = applicationService.getApplicationsByUser(userId);
+        ListResponseDto<ApplicationResponseDto> usersApplications = applicationService.getAllApplications(limit, offset);
 
         return ResponseEntity.ok(usersApplications);
     }

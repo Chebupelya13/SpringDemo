@@ -38,11 +38,12 @@ public class ApplicationService {
         this.minioService = minioService;
     }
 
-    public ListResponseDto<ApplicationResponseDto> getAllApplications() {
-        List<ApplicationResponseDto> applications = applicationDao.getAllApplications().stream()
+    public ListResponseDto<ApplicationResponseDto> getAllApplications(int limit, int offset) {
+        List<ApplicationResponseDto> applications = applicationDao.getAllApplications(limit, offset)
+                .stream()
                 .map(applicationMapper::toResponseDto)
                 .collect(Collectors.toList());
-
+        System.out.println(applications.size());
         return new ListResponseDto<>(applications);
     }
 
