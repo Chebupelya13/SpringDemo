@@ -3,5 +3,4 @@
 
     <include file="/db/changelog/migrations/db.changelog-diff.postgresql.sql"/>
 
-
 </databaseChangeLog>
