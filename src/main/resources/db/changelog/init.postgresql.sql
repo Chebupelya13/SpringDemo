@@ -27,8 +27,8 @@ CREATE TABLE user_roles (
     user_id INT NOT NULL,
     role_id INT NOT NULL,
     PRIMARY KEY (user_id, role_id),
-    CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
+    CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users (id) ,
+    CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
 -- changeset init:create-applications-table
@@ -38,7 +38,7 @@ CREATE TABLE applications (
     status VARCHAR(50) NOT NULL,
     amount INT NOT NULL,
     term_months integer check (term_months >= 1 and term_months <= 12) NOT NULL,
-    CONSTRAINT fk_applications_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    CONSTRAINT fk_applications_user FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 -- changeset init:create-agreements-table
@@ -46,7 +46,7 @@ CREATE TABLE agreements (
     id SERIAL PRIMARY KEY,
     application_id INT NOT NULL UNIQUE,
     status VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_agreements_application FOREIGN KEY (application_id) REFERENCES applications (id) ON DELETE CASCADE
+    CONSTRAINT fk_agreements_application FOREIGN KEY (application_id) REFERENCES applications (id)
 );
 
 -- changeset init:create-photos-table
@@ -57,7 +57,7 @@ CREATE TABLE photos (
     user_id INT,
     application_id INT,
     CONSTRAINT fk_photos_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    CONSTRAINT fk_photos_application FOREIGN KEY (application_id) REFERENCES applications (id) ON DELETE CASCADE
+    CONSTRAINT fk_photos_application FOREIGN KEY (application_id) REFERENCES applications (id)
 );
 
 -- changeset init:create-employment_periods-table
@@ -67,7 +67,7 @@ CREATE TABLE employment_periods (
     since TIMESTAMP,
     up_to TIMESTAMP,
     company_title VARCHAR(255),
-    CONSTRAINT fk_employment_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    CONSTRAINT fk_employment_user FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 -- changeset init:insert-default-roles
