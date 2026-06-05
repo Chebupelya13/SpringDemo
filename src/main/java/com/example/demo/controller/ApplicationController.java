@@ -4,6 +4,7 @@ import com.example.demo.dto.request.ApplicationRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.service.ApplicationService;
+import com.example.demo.service.AuthService;
 import com.example.demo.service.JwtTokenService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,23 +24,21 @@ public class ApplicationController {
     private final ApplicationService applicationService;
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
+    private final AuthService authService;
 
     @Autowired
-    public ApplicationController(ApplicationService applicationService, UserService userService, JwtTokenService jwtTokenService) {
+    public ApplicationController(ApplicationService applicationService, UserService userService, JwtTokenService jwtTokenService, AuthService authService) {
         this.applicationService = applicationService;
         this.userService = userService;
         this.jwtTokenService = jwtTokenService;
+        this.authService = authService;
     }
 
     @GetMapping("/findByUser")
     @Operation(summary = "Получение всех заявок пользователя")
-    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getUsersApplications(
-            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
-    ) {
-        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
-
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getUsersApplications() {
         ListResponseDto<ApplicationResponseDto> applications = applicationService.getApplicationsByUser(
-                userService.getUserByUsername(username).id
+                authService.getCurrentUser().getId()
         );
 
         return ResponseEntity.ok(applications);
@@ -58,12 +57,9 @@ public class ApplicationController {
 
     @GetMapping("/accepted")
     @Operation(summary = "Получение списка одобренных заявок")
-    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getAllAcceptedApplications(
-            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
-    ) {
-        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
+    public ResponseEntity<ListResponseDto<ApplicationResponseDto>> getAllAcceptedApplications() {
         ListResponseDto<ApplicationResponseDto> acceptedApplications = applicationService.getAcceptedApplicationsByUser(
-                userService.getUserByUsername(username).id
+                authService.getCurrentUser().getId()
         );
 
         return ResponseEntity.ok(acceptedApplications);
@@ -72,11 +68,9 @@ public class ApplicationController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Создание новой заявки на кредит")
     public HttpStatus createApplication(
-            @ModelAttribute ApplicationRequestDto requestDto,
-            @Parameter(hidden = true) @RequestHeader("Authorization") String authHeader
+            @ModelAttribute ApplicationRequestDto requestDto
     ) {
-        String username = jwtTokenService.extractUsername(authHeader.replace("Bearer ", ""));
-        requestDto.setUserId(userService.getUserByUsername(username).id);
+        requestDto.setUserId(authService.getCurrentUser().getId());
 
         boolean isCreated = applicationService.createApplication(requestDto);
         return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;

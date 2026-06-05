@@ -3,13 +3,16 @@ package com.example.demo.service;
 import com.example.demo.dto.request.AuthRequestDto;
 import com.example.demo.dto.response.AuthResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
+import com.example.demo.entity.User;
 import com.example.demo.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -23,6 +26,12 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
         this.jwtTokenService = jwtTokenService;
         this.userService = userService;
+    }
+
+    @Transactional
+    public UserResponseDto getCurrentUser() {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.getUserByUsername(username);
     }
 
     public AuthResponseDto authenticate(AuthRequestDto authRequest) {
