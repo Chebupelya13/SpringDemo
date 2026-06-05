@@ -53,10 +53,8 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(token);
 
         String jwtToken;
-        System.out.println(user.getRoles());
 
         if (user.getRoles().stream().anyMatch(role -> role.getRole() == Roles.ADMIN)) {
-            System.out.println("admin");
             jwtToken = jwtTokenService.generateToken(authentication, Roles.ADMIN.name());
         } else {
             jwtToken = jwtTokenService.generateToken(authentication, Roles.USER.name());
