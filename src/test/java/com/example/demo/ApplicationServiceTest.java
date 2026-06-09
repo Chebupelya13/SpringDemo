@@ -103,9 +103,9 @@ public class ApplicationServiceTest {
 
         when(userDao.getUserById(requestDto.getUserId())).thenReturn(null);
 
-        boolean result = applicationService.createApplication(requestDto);
+        Application result = applicationService.createApplication(requestDto);
 
-        assertFalse(result);
+        assertNull(result);
         verify(applicationDao, never()).addApplication(any());
     }
 
@@ -118,9 +118,9 @@ public class ApplicationServiceTest {
         User user = new User();
         when(userDao.getUserById(requestDto.getUserId())).thenReturn(user);
 
-        boolean result = applicationService.createApplication(requestDto);
+        Application result = applicationService.createApplication(requestDto);
 
-        assertFalse(result);
+        assertNull(result);
         verify(applicationDao, never()).addApplication(any());
     }
 
@@ -133,9 +133,9 @@ public class ApplicationServiceTest {
         User user = new User();
         when(userDao.getUserById(requestDto.getUserId())).thenReturn(user);
 
-        boolean result = applicationService.createApplication(requestDto);
+        Application result = applicationService.createApplication(requestDto);
 
-        assertFalse(result);
+        assertNull(result);
         verify(applicationDao, never()).addApplication(any());
     }
 
@@ -151,9 +151,9 @@ public class ApplicationServiceTest {
         when(userDao.getUserById(requestDto.getUserId())).thenReturn(user);
         when(applicationMapper.toEntityFromRequest(requestDto)).thenReturn(application);
 
-        boolean result = applicationService.createApplication(requestDto);
+        Application result = applicationService.createApplication(requestDto);
 
-        assertTrue(result);
+        assertEquals(application, result);
         assertEquals(user, application.getUser());
         verify(applicationDao, times(1)).addApplication(application);
         // We are strictly avoiding assertions on the 'status' field as per user instructions

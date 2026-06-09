@@ -12,6 +12,7 @@ import com.example.demo.entity.User;
 import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.ApplicationMapper;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -99,10 +100,10 @@ public class ApplicationService {
         return new ListResponseDto<>(applications);
     }
 
-    public boolean createApplication(ApplicationRequestDto requestDto) {
+    public Application createApplication(ApplicationRequestDto requestDto) {
         User user = userDao.getUserById(requestDto.getUserId());
         if (user == null || requestDto.getTermMonths() > 12 || requestDto.getTermMonths() < 1)
-            return false;
+            return null;
 
         Application new_application = applicationMapper.toEntityFromRequest(requestDto);
 
@@ -127,13 +128,19 @@ public class ApplicationService {
             }
         });
 
-        return true;
+        return new_application;
     }
 
     public void processApplicationDecision(int applicationID) {
         Application application = applicationDao.getApplicationById(applicationID);
         boolean decision = new Random().nextBoolean();
         application.setStatus(decision ? ApplicationStatus.ACCEPTED : ApplicationStatus.DECLINED);
+    }
+
+    public ApplicationResponseDto getApplicationById(int appId) {
+        Application application = applicationDao.getApplicationById(appId);
+
+        return applicationMapper.toResponseDto(application);
     }
 
 }

@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.dto.request.ApplicationRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.dto.response.ListResponseDto;
+import com.example.demo.entity.Application;
+import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.service.ApplicationService;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.JwtTokenService;
@@ -72,8 +74,26 @@ public class ApplicationController {
     ) {
         requestDto.setUserId(authService.getCurrentUser().getId());
 
-        boolean isCreated = applicationService.createApplication(requestDto);
-        return isCreated ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+        Application newApplication = applicationService.createApplication(requestDto);
+
+        if (newApplication == null )
+            return HttpStatus.BAD_REQUEST;
+
+        do {
+            try {
+                ApplicationResponseDto applicationNow = applicationService.getApplicationById(newApplication.getId());
+
+                if (applicationNow.getStatus() != ApplicationStatus.IN_PROGRESS) {
+                    return HttpStatus.CREATED;
+                }
+
+                Thread.currentThread().sleep(5000);
+            } catch (InterruptedException ignored) {
+                return HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+
+        } while (true);
+
     }
 
 }
