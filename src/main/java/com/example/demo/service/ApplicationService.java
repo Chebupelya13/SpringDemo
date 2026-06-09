@@ -118,11 +118,6 @@ public class ApplicationService {
         user.addPhoto(registrationPhoto);
         user.addPhoto(userPhoto);
 
-        boolean decision = new Random().nextBoolean();
-        new_application.setStatus(
-                decision ? ApplicationStatus.ACCEPTED : ApplicationStatus.DECLINED
-        );
-
         applicationDao.addApplication(new_application);
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
