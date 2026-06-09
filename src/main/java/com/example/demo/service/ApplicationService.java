@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.ApplicationStatusSubscriber;
 import com.example.demo.dao.ApplicationDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.request.ApplicationRequestDto;
@@ -12,8 +13,12 @@ import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.ApplicationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,13 +34,17 @@ public class ApplicationService {
     private final UserDao userDao;
     private final ApplicationMapper applicationMapper;
     private final MinioService minioService;
+    private final RedisTemplate redisTemplate;
+    private final ChannelTopic appStatusTopic;
 
     @Autowired
-    public ApplicationService(ApplicationDao applicationDao, UserDao userDao, ApplicationMapper applicationMapper, MinioService minioService) {
+    public ApplicationService(ApplicationDao applicationDao, UserDao userDao, ApplicationMapper applicationMapper, MinioService minioService, RedisTemplate redisTemplate, ChannelTopic appStatusTopic) {
         this.applicationDao = applicationDao;
         this.userDao = userDao;
         this.applicationMapper = applicationMapper;
         this.minioService = minioService;
+        this.redisTemplate = redisTemplate;
+        this.appStatusTopic = appStatusTopic;
     }
 
     public ListResponseDto<ApplicationResponseDto> getAllApplications(int limit, int offset) {
@@ -43,7 +52,6 @@ public class ApplicationService {
                 .stream()
                 .map(applicationMapper::toResponseDto)
                 .collect(Collectors.toList());
-        System.out.println(applications.size());
         return new ListResponseDto<>(applications);
     }
 
@@ -117,7 +125,20 @@ public class ApplicationService {
 
         applicationDao.addApplication(new_application);
 
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+            @Override
+            public void afterCommit() {
+                redisTemplate.convertAndSend(appStatusTopic.getTopic(), String.valueOf(new_application.getId()));
+            }
+        });
+
         return true;
+    }
+
+    public void processApplicationDecision(int applicationID) {
+        Application application = applicationDao.getApplicationById(applicationID);
+        boolean decision = new Random().nextBoolean();
+        application.setStatus(decision ? ApplicationStatus.ACCEPTED : ApplicationStatus.DECLINED);
     }
 
 }
