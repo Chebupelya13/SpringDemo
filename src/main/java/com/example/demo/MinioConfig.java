@@ -46,7 +46,8 @@ public class MinioConfig {
                     minioClient.makeBucket(MakeBucketArgs.builder().bucket(minioBucket).build());
 
                 return minioClient;
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                e.printStackTrace();
             } finally {
                 Thread.sleep(1000);
             }
