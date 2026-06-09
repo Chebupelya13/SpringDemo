@@ -14,8 +14,10 @@ import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.ApplicationMapper;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.FutureResult;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
@@ -24,7 +26,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +43,8 @@ public class ApplicationService {
     private final RedisTemplate redisTemplate;
     private final ChannelTopic appStatusTopic;
 
+    private final Map<Integer, CompletableFuture<HttpStatus>> pendingRequests = new ConcurrentHashMap<>();
+
     @Autowired
     public ApplicationService(ApplicationDao applicationDao, UserDao userDao, ApplicationMapper applicationMapper, MinioService minioService, RedisTemplate redisTemplate, ChannelTopic appStatusTopic) {
         this.applicationDao = applicationDao;
@@ -46,6 +53,14 @@ public class ApplicationService {
         this.minioService = minioService;
         this.redisTemplate = redisTemplate;
         this.appStatusTopic = appStatusTopic;
+    }
+
+    public void registerPendingRequest(Integer applicationId, CompletableFuture<HttpStatus> future) {
+        pendingRequests.put(applicationId, future);
+    }
+
+    public CompletableFuture<HttpStatus> getAndRemovePendingRequest(Integer applicationId) {
+        return pendingRequests.remove(applicationId);
     }
 
     public ListResponseDto<ApplicationResponseDto> getAllApplications(int limit, int offset) {

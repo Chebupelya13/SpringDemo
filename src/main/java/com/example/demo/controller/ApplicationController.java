@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping("/api/applications")
 @Tag(description = "Операции с заявками", name = "Заявки")
@@ -70,8 +72,7 @@ public class ApplicationController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Создание новой заявки на кредит")
-    @Async
-    public HttpStatus createApplication(
+    public CompletableFuture<ResponseEntity<HttpStatus>> createApplication(
             @ModelAttribute ApplicationRequestDto requestDto
     ) {
         requestDto.setUserId(authService.getCurrentUser().getId());
@@ -79,23 +80,14 @@ public class ApplicationController {
         Application newApplication = applicationService.createApplication(requestDto);
 
         if (newApplication == null )
-            return HttpStatus.BAD_REQUEST;
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
 
-        do {
-            try {
-                ApplicationResponseDto applicationNow = applicationService.getApplicationById(newApplication.getId());
+        CompletableFuture<HttpStatus> futureHttpsStatus = new CompletableFuture<>();
 
-                if (applicationNow.getStatus() != ApplicationStatus.IN_PROGRESS) {
-                    return HttpStatus.CREATED;
-                }
+        applicationService.registerPendingRequest(newApplication.getId(), futureHttpsStatus);
 
-                Thread.currentThread().sleep(5000);
-            } catch (InterruptedException ignored) {
-                return HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-
-        } while (true);
-
+        return futureHttpsStatus
+                .thenApply(status -> ResponseEntity.status(HttpStatus.CREATED).build());
     }
 
 }
