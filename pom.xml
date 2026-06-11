@@ -34,6 +34,8 @@
         <jakarta.version>3.2.0</jakarta.version>
         <minio.version>8.5.7</minio.version>
         <liquibase.version>5.0.3</liquibase.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMdd-HHmmssSSS</maven.build.timestamp.format>
     </properties>
 
     <dependencies>
@@ -228,7 +230,7 @@
                     <propertyFile>liquibase.properties</propertyFile>
 
                     <referenceUrl>hibernate:spring:com.example.demo.entity?dialect=org.hibernate.dialect.PostgreSQLDialect</referenceUrl>
-                    <diffChangeLogFile>src/main/resources/db/changelog/migrations/db.changelog-diff.postgresql.sql</diffChangeLogFile>
+                    <diffChangeLogFile>src/main/resources/db/changelog/migrations/db.changelog-diff.${maven.build.timestamp}.postgresql.sql</diffChangeLogFile>
                 </configuration>
             </plugin>
             <plugin>

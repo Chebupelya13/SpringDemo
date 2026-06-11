@@ -28,11 +28,22 @@ public class Photo {
     @JoinColumn(name = "application_id")
     private Application application;
 
+    @Column
+    private byte[] photo;
+
     public Photo() {}
 
     public Photo(String path, PhotoType type) {
         this.path = path;
         this.type = type;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
     }
 
     public void setApplication(Application application) {
