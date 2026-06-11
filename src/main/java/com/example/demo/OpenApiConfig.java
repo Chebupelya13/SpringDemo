@@ -33,7 +33,7 @@ public class OpenApiConfig {
                 .info(
                         new Info()
                                 .title("My API")
-                                .version("1.1.1")
+                                .version("2.0-final")
                                 .contact(new Contact().url("https://t.me/syntax3900"))
                 );
     }
