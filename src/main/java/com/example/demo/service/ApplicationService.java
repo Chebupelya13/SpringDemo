@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.ApplicationStatusSubscriber;
 import com.example.demo.dao.ApplicationDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.request.ApplicationRequestDto;
@@ -12,12 +11,13 @@ import com.example.demo.entity.User;
 import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.ApplicationMapper;
-import org.checkerframework.checker.units.qual.A;
+import com.example.demo.service.storage.MinioService;
+import com.example.demo.service.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.FutureResult;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
@@ -38,19 +38,23 @@ public class ApplicationService {
 
     private final ApplicationDao applicationDao;
     private final UserDao userDao;
+    private final PhotoService service;
     private final ApplicationMapper applicationMapper;
-    private final MinioService minioService;
+    private final StorageService storageService;
     private final RedisTemplate redisTemplate;
     private final ChannelTopic appStatusTopic;
 
     private final Map<Integer, CompletableFuture<HttpStatus>> pendingRequests = new ConcurrentHashMap<>();
 
-    @Autowired
-    public ApplicationService(ApplicationDao applicationDao, UserDao userDao, ApplicationMapper applicationMapper, MinioService minioService, RedisTemplate redisTemplate, ChannelTopic appStatusTopic) {
+    public ApplicationService(
+            ApplicationDao applicationDao, UserDao userDao, PhotoService service, ApplicationMapper applicationMapper,
+            StorageService storageService, RedisTemplate redisTemplate, ChannelTopic appStatusTopic
+    ) {
         this.applicationDao = applicationDao;
         this.userDao = userDao;
+        this.service = service;
         this.applicationMapper = applicationMapper;
-        this.minioService = minioService;
+        this.storageService = storageService;
         this.redisTemplate = redisTemplate;
         this.appStatusTopic = appStatusTopic;
     }
@@ -77,7 +81,7 @@ public class ApplicationService {
         List<InputStream> applicationsFiles = new ArrayList<>();
 
         for (Photo photo : application.getPhotos()) {
-            minioService.getFile(photo.getPath());
+            storageService.getFile(photo.getPath());
         }
 
         return applicationsFiles;
@@ -120,30 +124,42 @@ public class ApplicationService {
         if (user == null || requestDto.getTermMonths() > 12 || requestDto.getTermMonths() < 1)
             return null;
 
-        Application new_application = applicationMapper.toEntityFromRequest(requestDto);
+        Application newApplication = applicationMapper.toEntityFromRequest(requestDto);
 
-        Photo passportPhoto = new Photo(minioService.uploadFile(requestDto.getPassportPhoto(), PhotoType.PASSPORT), PhotoType.PASSPORT);
-        new_application.addPhoto(passportPhoto);
-        Photo registrationPhoto = new Photo(minioService.uploadFile(requestDto.getRegistrationPhoto(), PhotoType.REGISTRATION), PhotoType.REGISTRATION);
-        new_application.addPhoto(registrationPhoto);
-        Photo userPhoto = new Photo(minioService.uploadFile(requestDto.getUserPhoto(), PhotoType.AVATAR), PhotoType.AVATAR);
-        new_application.addPhoto(userPhoto);
-        new_application.setUser(user);
+        Photo passportPhoto = new Photo(
+                storageService.saveFile(requestDto.getPassportPhoto(), PhotoType.PASSPORT),
+                PhotoType.PASSPORT,
+                storageService.getStorageType()
+        );
+        newApplication.addPhoto(passportPhoto);
+        Photo registrationPhoto = new Photo(
+                storageService.saveFile(requestDto.getRegistrationPhoto(), PhotoType.REGISTRATION),
+                PhotoType.REGISTRATION,
+                storageService.getStorageType()
+        );
+        newApplication.addPhoto(registrationPhoto);
+        Photo userPhoto = new Photo(
+                storageService.saveFile(requestDto.getUserPhoto(), PhotoType.AVATAR),
+                PhotoType.AVATAR,
+                storageService.getStorageType()
+        );
+        newApplication.addPhoto(userPhoto);
+        newApplication.setUser(user);
 
         user.addPhoto(passportPhoto);
         user.addPhoto(registrationPhoto);
         user.addPhoto(userPhoto);
 
-        applicationDao.addApplication(new_application);
+        applicationDao.addApplication(newApplication);
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
             @Override
             public void afterCommit() {
-                redisTemplate.convertAndSend(appStatusTopic.getTopic(), String.valueOf(new_application.getId()));
+                redisTemplate.convertAndSend(appStatusTopic.getTopic(), String.valueOf(newApplication.getId()));
             }
         });
 
-        return new_application;
+        return newApplication;
     }
 
     public void processApplicationDecision(int applicationID) {

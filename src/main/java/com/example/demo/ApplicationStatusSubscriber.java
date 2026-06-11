@@ -2,6 +2,8 @@ package com.example.demo;
 
 import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.service.ApplicationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
@@ -19,6 +21,7 @@ public class ApplicationStatusSubscriber {
 
     private final ApplicationService applicationService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(20);
+    private static final Logger log = LoggerFactory.getLogger(ApplicationStatusSubscriber.class);
 
     @Autowired
     public ApplicationStatusSubscriber(ApplicationService applicationService) {
@@ -30,7 +33,7 @@ public class ApplicationStatusSubscriber {
         System.out.println("новая заявка ==> " + message);
         try {
             int applicationId = Integer.parseInt(message);
-            long delaySeconds = new Random().nextInt(61);
+            long delaySeconds = new Random().nextInt(3);
             System.out.println("обработка займет ==> " + delaySeconds);
 
             scheduler.schedule(() -> {

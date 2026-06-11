@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Photo;
-import com.example.demo.service.MinioService;
+import com.example.demo.service.storage.MinioService;
 import com.example.demo.service.PhotoService;
+import com.example.demo.service.storage.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +23,12 @@ import java.io.InputStream;
 public class PhotosController {
 
     private final PhotoService photoService;
-    private final MinioService minioService;
+    private final StorageService storageService;
 
     @Autowired
-    public PhotosController(PhotoService photoService, MinioService minioService) {
+    public PhotosController(PhotoService photoService, StorageService storageService) {
         this.photoService = photoService;
-        this.minioService = minioService;
+        this.storageService = storageService;
     }
 
     @GetMapping("/findById/{photoId}")
@@ -34,7 +36,10 @@ public class PhotosController {
     public ResponseEntity<byte[]> findPhotoById( @PathVariable int photoId ) {
         Photo photo = photoService.getPhotoById(photoId);
 
-        try (InputStream stream = minioService.getFile(photo.getPath())) {
+        if (photo.getStorage() != storageService.getStorageType())
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+
+        try (InputStream stream = storageService.getFile(photo.getPath())) {
             byte[] response = stream.readAllBytes();
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(response);
 

@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 
 import com.example.demo.enums.PhotoType;
+import com.example.demo.enums.StorageType;
 import jakarta.persistence.*;
 
 @Entity
@@ -29,21 +30,27 @@ public class Photo {
     private Application application;
 
     @Column
-    private byte[] photo;
+    @Enumerated(EnumType.STRING)
+    private StorageType storage;
 
     public Photo() {}
 
-    public Photo(String path, PhotoType type) {
+    public Photo(String path, PhotoType type, StorageType storageType) {
         this.path = path;
         this.type = type;
+        this.storage = storageType;
     }
 
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public byte[] getPhoto() {
-        return photo;
+    public StorageType getStorage() {
+        return storage;
+    }
+
+    public void setStorage(StorageType storage) {
+        this.storage = storage;
     }
 
     public void setApplication(Application application) {

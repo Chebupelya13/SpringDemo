@@ -5,8 +5,9 @@ import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.dto.response.ApplicationResponseDto;
 import com.example.demo.dto.response.ListResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
-import com.example.demo.service.MinioService;
+import com.example.demo.service.storage.MinioService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.storage.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.InputStream;
-
 @RestController
 @RequestMapping("/api/users")
 @Tag(description = "Операции с пользователями", name = "Пользователи")
 public class UserController {
 
     private final UserService userService;
-    private final MinioService minioService;
+    private final StorageService storageService;
 
     @Autowired
-    public UserController(UserService userService, MinioService minioService) {
+    public UserController(UserService userService, StorageService storageService) {
         this.userService = userService;
-        this.minioService = minioService;
+        this.storageService = storageService;
     }
 
     @GetMapping

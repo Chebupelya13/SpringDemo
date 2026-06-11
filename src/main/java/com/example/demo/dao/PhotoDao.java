@@ -2,7 +2,6 @@ package com.example.demo.dao;
 
 import com.example.demo.entity.Photo;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -10,7 +9,6 @@ public class PhotoDao {
 
     private final SessionFactory sessionFactory;
 
-    @Autowired
     public PhotoDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

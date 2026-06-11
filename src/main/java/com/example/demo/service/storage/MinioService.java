@@ -1,12 +1,14 @@
-package com.example.demo.service;
+package com.example.demo.service.storage;
 
 import com.example.demo.enums.PhotoType;
+import com.example.demo.enums.StorageType;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,22 +17,31 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
-public class MinioService {
+@ConditionalOnProperty(
+        name = "app.storage.type",
+        havingValue = "minio"
+)
+public class MinioService implements StorageService {
 
     private final MinioClient minioClient;
 
     @Value("${minio.bucket}")
     private String bucketName;
 
-    @Autowired
     public MinioService(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
 
-    public String uploadFile(MultipartFile file, PhotoType folder) {
+    @Override
+    public StorageType getStorageType() {
+        return StorageType.MINIO;
+    }
+
+    @Override
+    public String saveFile(MultipartFile file, PhotoType folder) {
         try {
             String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-            String objectKey = folder.getFolderName() + "/" + UUID.randomUUID().toString() + (extension != null ? "." + extension : "");
+            String objectKey = folder.getFolderName() + "/" + UUID.randomUUID() + (extension != null ? "." + extension : "");
 
             InputStream inputStream = file.getInputStream();
             minioClient.putObject(
@@ -47,6 +58,7 @@ public class MinioService {
         }
     }
 
+    @Override
     public InputStream getFile(String objectKey) {
         try {
             return minioClient.getObject(
@@ -60,6 +72,7 @@ public class MinioService {
         }
     }
 
+    @Override
     public void deleteFile(String objectKey) {
         try {
             minioClient.removeObject(

@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.AuthRequestDto;
 import com.example.demo.dto.response.AuthResponseDto;
-import com.example.demo.service.AuthService;
+import com.example.demo.service.security.AuthService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

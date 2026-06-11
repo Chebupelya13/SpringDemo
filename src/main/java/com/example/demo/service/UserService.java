@@ -10,6 +10,8 @@ import com.example.demo.entity.Photo;
 import com.example.demo.entity.User;
 import com.example.demo.enums.PhotoType;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.service.storage.MinioService;
+import com.example.demo.service.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,15 +33,18 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleDao roleDao;
-    private final MinioService minioService;
+    private final StorageService storageService;
 
     @Autowired
-    public UserService(UserDao userDao, UserMapper userMapper, PasswordEncoder passwordEncoder, RoleDao roledao, MinioService minioService) {
+    public UserService(
+            UserDao userDao, UserMapper userMapper, PasswordEncoder passwordEncoder,
+            RoleDao roledao, StorageService storageService
+    ) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleDao = roledao;
-        this.minioService = minioService;
+        this.storageService = storageService;
     }
 
     public List<InputStream> getUserFiles(int userId, PhotoType fileType) {
@@ -48,7 +53,7 @@ public class UserService {
         List<InputStream> usersFiles = new ArrayList<>();
 
         for (Photo photo : user.getPhotos()) {
-            usersFiles.add(minioService.getFile(photo.getPath()));
+            usersFiles.add(storageService.getFile(photo.getPath()));
         }
 
         return usersFiles;
