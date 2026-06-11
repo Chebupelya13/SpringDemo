@@ -32,7 +32,7 @@ public class OpenApiConfig {
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .info(
                         new Info()
-                                .title("My API")
+                                .title("BANK API")
                                 .version("2.0-final")
                                 .contact(new Contact().url("https://t.me/syntax3900"))
                 );
